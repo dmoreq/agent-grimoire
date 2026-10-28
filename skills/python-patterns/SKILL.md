@@ -82,6 +82,13 @@ Always type function parameters/returns, public APIs, and class attributes that 
     3. **Persistence Entity**: ORM or raw SQL mapping.
     *Invariant*: Never leak database ORM objects directly out of API routes.
 
+### Functional Core, Imperative Shell
+
+- **Shell (I/O)**: routes, adapters, and repositories parse inputs, hydrate context, call the core, and persist results.
+- **Core (computation)**: pure functions and immutable value objects. No network, database, filesystem, clock, randomness, or global state. The same input returns the same output and is testable without fakes.
+- **Explicit hydration**: accept identifiers at the shell, then fetch in one batched or bounded-concurrent step (`python-concurrency`). Never hide a per-item fetch inside a loop or inside a core function that takes only an ID.
+- **Graceful degradation**: apply it only to non-critical enrichment. Decision-critical data fails closed. A safe default must be explicit, logged or metricized, and must not silently change scoring or ranking semantics (`algorithm-optimization`).
+
 ## 4. Error Handling
 - Domain exceptions in services
 - Convert at the API boundary (exception handlers)

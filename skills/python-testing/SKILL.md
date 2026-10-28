@@ -41,6 +41,12 @@ Design and maintain fast, deterministic, high-signal Python test suites with `py
    - When virtualenvs or sibling packages exist, strip leaked environment variables (`env -u PYTHONPATH -u PYTHONHOME /abs/path/.venv/bin/python -m pytest ...`) so third-party C-extensions (`pydantic_core`, `pyarrow`) never resolve from a mismatched Python version.
 4. **Verify Actual Exit Codes**:
    - Piping test commands through `| tail` or `| grep` without `set -o pipefail` masks non-zero exit codes. Always verify the test runner's own exit status and summary line.
+5. **In-Memory Fakes Over Patching**:
+   - Exercise workflows through public entrypoints with fakes that implement the production `Protocol` (`FakeRepository`, `FakeFeatureStore`).
+   - Use `unittest.mock.patch` only at boundaries you do not own (HTTP, clock, third-party SDK) and for characterization probes (`references/golden-set-audits.md`); never patch private helpers or attributes.
+6. **Invariant and Resilience Tests**:
+   - Assert that a mandatory invariant cannot be bypassed through any public path.
+   - Assert that an upstream timeout or missing enrichment triggers the documented fallback within its latency budget.
 
 ## 2. Test Layer Strategy
 
@@ -50,6 +56,8 @@ Design and maintain fast, deterministic, high-signal Python test suites with `py
 | **Property-Based** | Parsers, serializers, round-trip invariants | `hypothesis` (`@given(...)`) |
 | **Integration** | HTTP routes, DB queries, filesystem contracts | `pytest` + `httpx` / `TestClient`, SQLite/containers |
 | **Characterization / Golden** | Locking live outputs before refactoring/migration | `references/golden-set-audits.md` |
+
+Service-layer workflows follow the high-gear pattern from Cosmic Python chapter 5: test through public entrypoints and replace repositories or gateways with in-memory fakes.
 
 ## 3. Pytest Configuration & Determinism Guardrails
 - Standard `pyproject.toml` configuration:

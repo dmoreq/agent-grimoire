@@ -42,12 +42,26 @@ Confirm the target Python version from `pyproject.toml` or `.python-version` fir
 ## 2. Core Engineering Principles
 - **Model Boundary Separation**:
   - **Untrusted I/O Boundaries** (HTTP payloads, CLI args, external configs): Use Pydantic v2 (`model_validate`, `model_dump(mode="json")`, `by_alias=True`). Distinguish confirmed empty config (`[]`) from unavailable/unreadable config (`None` or explicit error).
-  - **Internal Domain Logic & Hot Loops**: Use `@dataclass(slots=True)` (or `frozen=True, slots=True`) for 5x–10x faster instantiation and 60% lower RAM.
+  - **Internal Domain Logic & Hot Loops**: Use `@dataclass(frozen=True, slots=True)` for immutable value objects and `@dataclass(slots=True)` only for mutable internal state.
+  - Pydantic validates boundaries; it is mutable by default. Set `model_config = ConfigDict(frozen=True)` only when immutability is required.
 - **Explicit Public Surface & Typing**:
-  - Declare `__all__` explicitly in public modules; prefix internal helpers with `_`.
+  - Re-export the supported API from `__init__.py` and declare `__all__`; treat files and subpackages as private (`_internal/` or `_module.py`). Callers import the facade, so layout refactors do not break them.
+  - Choose one access shape per package: flat facade (`from pkg import Client`) or module-qualified (`import pkg; pkg.Client`). Do not mix both for the same symbol.
   - Include a PEP 561 `py.typed` marker file in every typed library package.
   - Re-export `Final` constants with `from module import NAME` (never `NAME as NAME`, which Pyright flags as a `Final` reassignment).
   - Prefer `typing.Protocol` (structural subtyping) over deep `abc.ABC` inheritance hierarchies.
+- **Keyword-Only Boundaries**:
+  - Use explicit keyword-only parameters (`*`) for public APIs.
+  - Ban undocumented `**kwargs` forwarding across layers. Reserve `**kwargs` for decorators, `functools.wraps`, and typed `Unpack[TypedDict]` forwarding.
+  - Never store mutable configuration at module level; pass defaults as keyword arguments or an explicit config object.
+- **Invariants at Construction**:
+  - Fix correctness invariants (units, ranges, required policy, safety checks) in `__init__` or a factory. A caller must not be able to disable them per call.
+  - Use per-call keywords only for documented policy choices (for example, strict versus lenient parsing).
+- **Semantic Naming**:
+  - Suffix numeric identifiers with their unit (`timeout_ms`, `cache_ttl_seconds`, `max_batch_size`).
+  - Never reuse one name for a different semantic stage or type; bind each transformation to a new name.
+  - Ban cryptic and numbered experiment names. Conventional short names (`i`, `j`, `x`, `y`, `n`) are allowed in tight scopes.
+  - Do not repeat the owning class or module noun in method names (`orders.create()`, not `orders.create_order()`). Keep the noun on flat module functions for grep-ability.
 - **Zero Import-Time Side Effects**: Never execute network I/O, database connections, or heavy file loads at module import time.
 - **Long-Running Iterations & Progress Visibility**: Add `tqdm` or structured logging with elapsed time, processed counts, and rates for loops and batch jobs exceeding 5 seconds (or >100 iterations). Throttle update intervals to avoid stdout flooding.
 - **Standalone Packaging Hygiene**: Never read checkout-relative paths (`Path(__file__).parents[N] / "data"`) at runtime in a distributable package; restrict `package-data` to explicit extensions and verify built wheels in a clean venv (`references/standalone-distribution.md`).

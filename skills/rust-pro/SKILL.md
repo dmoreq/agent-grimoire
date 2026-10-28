@@ -51,7 +51,7 @@ Senior Rust for services, crates, CLIs, and systems code. Edition 2024 requires 
 ## Language & Type System
 - Ownership, borrowing, lifetimes, NLL
 - GATs, const generics, associated types when they simplify the API
-- Newtype, PhantomData, ZSTs
+- Newtype, PhantomData, ZSTs (use newtypes for numeric units, for example `Milliseconds(u64)`)
 - Trait design, object safety, coherence
 - Native async trait methods; `async-trait` only when `dyn` is required
 
