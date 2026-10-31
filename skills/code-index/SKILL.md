@@ -45,6 +45,12 @@ kg doctor [--invalidate]       # health check; --invalidate deletes the index
 - Empty result (exit 1) with "dynamic dispatch possible" -> use grep for that
   symbol; do not retry kg blindly.
 
+## Caveats
+
+- `stats`/`hotspots`/`report` read the build-time file set: files created or
+  deleted after `kg build` are invisible or skipped until the next build.
+  Re-run `kg build` before trusting them on a changed tree.
+
 ## Rules
 
 1. `kg build` writes only under `.kg/`. Never pass `--force` unless a rebuild

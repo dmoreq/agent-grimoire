@@ -110,7 +110,7 @@ FLUTTER_COUNT="$(find "$FLUTTER_HOME/.agents/skills" -mindepth 1 -maxdepth 1 -ty
 [[ -f "$FLUTTER_HOME/.agents/skills/flutter-architecture-data/SKILL.md" ]] || fail "flutter install missing flutter-architecture-data"
 [[ -f "$FLUTTER_HOME/.agents/skills/dart-modern-idioms/SKILL.md" ]] || fail "flutter install missing dart-modern-idioms"
 [[ ! -d "$FLUTTER_HOME/.agents/skills/rust-pro" ]] || fail "flutter install included rust-pro"
-echo "  --with-flutter installs 35 skills including Dart/Flutter"
+echo "  --with-flutter installs 36 skills including Dart/Flutter"
 
 # Test 5c: running without Flutter removes previously installed Flutter skills.
 HOME="$FLUTTER_HOME" "$REPO_DIR/setup.sh" --host portable >/dev/null
