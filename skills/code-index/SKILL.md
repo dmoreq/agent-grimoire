@@ -11,50 +11,58 @@ date_added: "2026-10-31"
 
 # code-index — kg CLI wrapper
 
-Use `kg` when a navigation question needs call-graph knowledge. Fall back to
-grep when the question is textual (string search, comments, config).
+Use `kg` for call-graph navigation questions. For textual questions use
+grep.
 
-## When to use
-
-- "Who calls X?" / "Find every call site of X outside tests" -> `kg callers`
-- "What does X invoke, directly or N hops deep?" -> `kg callees --depth N`
-- "If this file changes, what must be updated?" -> `kg impact <file>`
-- Architecture trace ("which stages run in order?") -> `kg callees <entry> --depth 3`
-
-## Commands
+## Decision table
 
 ```bash
-kg build                       # once per session after pulling changes; ~1-2s on 100k LOC
-kg callers Widget.render       # -> path:line pointers, capped at 50 (--limit N)
-kg callees parse --depth 3     # transitive call closure
-kg impact app.py               # files that call into app.py
-kg stats                       # index totals
-kg hotspots --limit 10         # pain-ranking: cyclomatic + LOC + churn-90d + fix-density
-kg report                      # 4-section architecture report
-kg doctor [--invalidate]       # health check; --invalidate deletes the index
+kg build                  # run once per session after pulling changes
+kg callers X              # "who calls X?" — path:line pointers, capped at 50 (--limit N)
+kg callees X --depth 3    # "what does X invoke, N hops deep?"
+kg impact file.py         # "what breaks if this file changes?" — files calling into it
+kg symbols file.py        # "what is in this file?" — path:line kind qualname
+kg dead --limit 10        # "what is unused?" — candidates, never proof
+kg unresolved             # "where is resolution incomplete?"
+kg stats                  # index totals
+kg hotspots --limit 10    # cyclomatic + LOC + churn-90d + fix-density
+kg report                 # 4-section architecture report
+kg usage                  # journal summary (calls, latency, stale/empty rates)
+kg doctor [--invalidate]  # health check; --invalidate deletes the index
+kg mcp                    # JSON-RPC stdio server for MCP hosts (no doctor tool)
 ```
+
+## Do NOT use for
+
+- Textual search (strings, comments, config, logs) -> grep/rg.
+- Git history, blame, authorship -> git.
 
 ## Contract
 
 - Pointers: `path:line [ambiguous]`, 1-based, capped at 50 by default.
 - Staleness: kg prints `kg: K of N result files changed since build — run kg build`
-  when result files changed after the build. Re-run `kg build` when you see it.
-  kg never rebuilds on its own.
-- Exit 2 + a candidate list on stdout = ambiguous name; re-query with the
-  `Class.method` qualname shown in the list.
-- Empty result (exit 1) with "dynamic dispatch possible" -> use grep for that
-  symbol; do not retry kg blindly.
+  when result files changed after the build; rebuild then (kg never
+  rebuilds itself).
+- Exit 2 + a candidate list = ambiguous name; re-query with the
+  `Class.method` qualname from the list.
+- Empty result (exit 1) with "dynamic dispatch possible" -> use grep for
+  that symbol; do not retry kg blindly.
 
 ## Caveats
 
-- `stats`/`hotspots`/`report` read the build-time file set: files created or
-  deleted after `kg build` are invisible or skipped until the next build.
-  Re-run `kg build` before trusting them on a changed tree.
+- `stats`/`hotspots`/`report` read the build-time file set; files created or
+  deleted after `kg build` are invisible until the next build.
 
 ## Rules
 
-1. `kg build` writes only under `.kg/`. Never pass `--force` unless a rebuild
-   is explicitly needed (it re-parses everything).
-2. If `kg` is not installed, say so and use grep; do not install it unprompted.
-3. Read the pointed-to lines before claiming a caller relationship; kg gives
-   static resolution, dynamic dispatch can still hide callers.
+1. `kg build` writes only under `.kg/`. Never pass `--force` unless a
+   rebuild is explicitly needed (re-parses everything).
+2. If `kg` is not installed, say so and use grep; do not install unprompted.
+3. Read pointed-to lines before claiming a caller relationship; dynamic
+   dispatch can still hide callers.
+
+## Related Skills
+
+- Use **codebase-contracts** to keep skill claims in sync with the binary's actual contract.
+- Use **doubt-driven-development** when a pointer looks wrong; verify the line before trusting static resolution.
+- Use **verify-and-stop** to stop once the pointer answers the navigation question.
