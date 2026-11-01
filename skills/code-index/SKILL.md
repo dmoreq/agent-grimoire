@@ -21,7 +21,9 @@ kg build                  # run once per session after pulling changes
 kg callers X              # "who calls X?" — path:line pointers, capped at 50 (--limit N)
 kg callees X --depth 3    # "what does X invoke, N hops deep?"
 kg impact file.py         # "what breaks if this file changes?" — files calling into it
-kg symbols file.py        # "what is in this file?" — path:line kind qualname
+kg symbols file.py        # "what is in this file?" --outline + signatures
+kg search terms           # "where is X handled?" — bm25 symbol lookup
+kg clones                 # copy-pasted blocks — candidates, never proof
 kg dead --limit 10        # "what is unused?" — candidates, never proof
 kg unresolved             # "where is resolution incomplete?"
 kg stats                  # index totals
@@ -34,7 +36,8 @@ kg mcp                    # JSON-RPC stdio server for MCP hosts (no doctor tool)
 
 ## Do NOT use for
 
-- Textual search (strings, comments, config, logs) -> grep/rg.
+- Content search inside file bodies (strings, comments, config) -> grep/rg;
+  `kg search` matches identifier names only.
 - Git history, blame, authorship -> git.
 
 ## Contract
