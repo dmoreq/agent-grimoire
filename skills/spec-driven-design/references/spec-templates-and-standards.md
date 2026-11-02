@@ -14,8 +14,16 @@ A Goldfish reviewer runs in a fresh context with no conversation history. It is 
 
 | Tier | Hosts | Dispatch |
 | :--- | :--- | :--- |
-| 1 | Antigravity, Codex, OpenCode | Six parallel read-only subagents, one per lens |
+| 1 | Antigravity, Codex, OpenCode | Native parallel read-only subagents |
 | 2 | Zed, Grok, ZCode, single-thread CLI | Save the hypothesis first, then apply each card sequentially |
+
+### Risk-Based Brainstorm Tiering
+
+| Concept Profile | Mode | Lenses Dispatched |
+| :--- | :--- | :--- |
+| Core Tier (Internal logic, CLI helper, refactor, no external API/DB/auth) | 4-lens swarm | `Lens 1: Contrarian`, `Lens 3: Ergonomics`, `Lens 5: Observability`, `Lens 6: Maintenance` |
+| Full Tier (Touches public API, auth, database, LLM, or payments) | 7-lens swarm | Core 4 lenses + `Lens 2: Cost & Quota`, `Lens 4: Migration`, `Lens 7: Security & Threat Modeling` |
+| Specialist Research (Novel architecture, SOTA benchmark, tech selection) | On-demand | Add `Specialist Lens: SOTA & Industry Prior-Art` |
 
 ## 2. Brainstorm Lens Cards
 
@@ -119,6 +127,49 @@ Challenge:
 For each finding return: Severity, Dimension, Tech Debt Description, Maintainability Requirement.
 ```
 
+### Lens 7: Security, Privacy & Threat Modeling
+
+```text
+Skill context: spec-driven-design (skills/spec-driven-design/SKILL.md)
+
+You are the Security and Threat Modeling Goldfish. You are read-only, stateless, and hostile.
+Read the concept at: <ARTIFACT_PATH>.
+
+Challenge:
+1. Trust Boundaries: What unvalidated external input crosses trust boundaries? Where does client-side state masquerade as trusted?
+2. Data Classification & Privacy: Where is sensitive data, PII, or secrets stored or transmitted? Does logging or error handling leak them?
+3. Threat Vectors: What are the risks of injection (SQL, command, prompt injection for LLMs), SSRF, auth bypass, and multi-tenancy cross-talk?
+4. Abuse & Exhaustion: How can an adversary exhaust token budgets, saturate CPU/RAM, poison shared data, or trigger cascading denial-of-service?
+5. Authorization Fallback: Does any failure branch fail open or silently fall back to permissive default permissions?
+
+For each finding return: Severity, Dimension, Security Hazard, Hardening Requirement.
+```
+
+### Specialist Lens: SOTA & Industry Prior-Art
+
+```text
+Skill context: tech-research (skills/tech-research/SKILL.md), context7-mcp
+
+You are the SOTA and Industry Prior-Art Goldfish. You are read-only, stateless, and deeply skeptical of homegrown solutions.
+Read the concept at: <ARTIFACT_PATH>.
+
+Your mission:
+Search external industry documentation, reputable engineering publications, recent benchmarks, and SOTA research to verify if the proposed solution aligns with industry consensus or suffers from industry-level wheel reinvention.
+
+Challenge:
+1. Industry Consensus & Standards: Does a standard pattern, RFC, W3C spec, or well-established architecture already solve this problem? Is the author inventing a non-standard paradigm?
+2. Battle-Tested Ecosystem Alternatives: Does a mature, high-performance open-source library, engine, or managed component already exist that solves >= 80% of this problem with lower operational cost?
+3. SOTA Benchmarking vs Classic Simplicity: Where does the proposed method sit relative to current SOTA? Does the proposal choose a complex/novel approach where a fast, classic method achieves equal or better practical results?
+4. Known Failure Modes & Post-Mortems: What have engineering teams at scale reported when implementing this exact pattern? Are known operational pitfalls, race conditions, or scaling traps addressed in the concept?
+5. Version & Ecosystem Currency: Are the recommended libraries, protocols, or models obsolete, deprecated, or superseded by modern alternatives?
+
+Grounding rules:
+- Every finding MUST cite an external verifiable source (official doc, paper URL, GitHub repo, or engineering post-mortem).
+- Search external docs/web before making a claim.
+
+For each finding return: Severity, Dimension, Prior-Art Citation, Finding, Concrete Alternative.
+```
+
 ## 3. Heilmeier Catechism Standard
 
 A proposal passes only when a competent engineer unfamiliar with the project can answer every question from the document alone.
@@ -133,6 +184,17 @@ A proposal passes only when a competent engineer unfamiliar with the project can
 | Cost | Compute, storage, headcount, and token budget |
 | Timeline | Phases and expected duration |
 | Metrics and Exams | Mid-term and final checks that prove success |
+
+### 3.1. Arbitration Precedence Standard
+
+When orthogonal reviewers produce conflicting findings or recommendations during brainstorm reconciliation, authors and arbiters must apply this strict hierarchy:
+
+$$\text{Security \& Privacy} > \text{Correctness \& Data Integrity} > \text{Budget \& Quota Ceilings} > \text{Simplicity \& YAGNI} > \text{Ergonomics \& Feature Convenience}$$
+
+Rules:
+- A feature cannot compromise security or privacy for ergonomic convenience.
+- A feature cannot risk data corruption or breaking migrations to simplify implementation.
+- A feature cannot breach quota budgets to avoid architectural decomposition.
 
 ## 4. Feature Specification Standard
 

@@ -263,6 +263,45 @@ def test_code_review_goldfish_lenses_integrity():
     assert "references/goldfish-code-review-lenses.md" in skill_text
     assert "cr-mechanism-generalization" in skill_text
     assert "cr-codebase-reuse-and-contracts" in skill_text
+    assert "Specialist escalation" in skill_text
+    assert "Specialist escalation" in content
+    assert "Contextual logging" in content
+    assert "Type discipline" in content
+    assert "git grep -nw '<symbol>' -- ." in content
+
+
+def test_goldfish_persona_lifecycle_and_tiering_invariants():
+    """Verify tiering, lifecycle vectors, Security lens, and SOTA research in Goldfish specs."""
+    # Doubt-driven-development tiering and schema migration
+    ddd_ref = SKILLS_DIR / "doubt-driven-development" / "references" / "goldfish-review-lenses.md"
+    assert ddd_ref.exists()
+    ddd_content = ddd_ref.read_text(encoding="utf-8")
+    assert "Plan Review Scope Tiering" in ddd_content
+    assert "Fast Plan Tier" in ddd_content
+    assert "Full Architecture Tier" in ddd_content
+    assert "data migration & schema safety" in ddd_content
+
+    ddd_skill = (SKILLS_DIR / "doubt-driven-development" / "SKILL.md").read_text(encoding="utf-8")
+    assert "Fast Plan Tier" in ddd_skill
+    assert "data & schema migration" in ddd_skill
+
+    # Spec-driven-design tiering, Security lens, SOTA lens, and arbitration
+    sdd_ref = SKILLS_DIR / "spec-driven-design" / "references" / "spec-templates-and-standards.md"
+    assert sdd_ref.exists()
+    sdd_content = sdd_ref.read_text(encoding="utf-8")
+    assert "Risk-Based Brainstorm Tiering" in sdd_content
+    assert "Core Tier" in sdd_content
+    assert "Full Tier" in sdd_content
+    assert "Lens 7: Security, Privacy & Threat Modeling" in sdd_content
+    assert "Specialist Lens: SOTA & Industry Prior-Art" in sdd_content
+    assert "Arbitration Precedence Standard" in sdd_content
+    assert "Skill context: spec-driven-design (skills/spec-driven-design/SKILL.md)" in sdd_content
+    assert "Skill context: tech-research (skills/tech-research/SKILL.md), context7-mcp" in sdd_content
+
+    sdd_skill = (SKILLS_DIR / "spec-driven-design" / "SKILL.md").read_text(encoding="utf-8")
+    assert "Security & Threat Modeling" in sdd_skill
+    assert "SOTA & Industry Prior-Art" in sdd_skill
+    assert "Arbitration Precedence Standard" in sdd_skill
 
 
 HTML_REPORT_VALIDATOR = SKILLS_DIR / "html-report" / "scripts" / "check_html_report.py"

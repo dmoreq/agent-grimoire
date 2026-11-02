@@ -73,11 +73,15 @@ Find one boundary header: `## Detailed Implementation Plan`, `## Implementation 
 
 | Lens | Scope | Primary Focus |
 | :--- | :--- | :--- |
-| Zoom-Out | Full document | Simplicity, YAGNI, reuse, altitude control |
+| Zoom-Out | Full document | Simplicity, YAGNI, macro reuse, altitude control |
 | Comprehension | Full document | Undefined terms, assumed knowledge, clarity |
 | Design Critic | `FeatureRange` | Architecture, scalability, unmitigated risk |
-| Implementation Readiness | `DetailedRange` | Zero-Decision Rule, actionability, test plan |
+| Implementation Readiness | `DetailedRange` | Zero-Decision Rule, data & schema migration, test plan |
 | Codebase Details | `DetailedRange` | Document versus code, stale references, drift |
+
+### Plan Scope Tiering
+- **Fast Plan Tier** (< 100 plan lines, single-module scope): Dispatches 3 lenses: `Comprehension`, `Implementation Readiness`, `Codebase Details`.
+- **Full Architecture Tier** (>= 100 plan lines, multi-module, schema, or system change): Dispatches all 5 lenses.
 
 ### Dispatch
 - Tier 1, native parallel subagents: Antigravity `invoke_subagent`, Codex `spawn_agent`, OpenCode `Task`.

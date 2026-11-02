@@ -17,11 +17,20 @@ Every persona inherits these rules:
 
 | Diff Profile | Mode | Personas Dispatched |
 | :--- | :--- | :--- |
-| Under 100 effective LOC, one module, no new helper or rule, no async/security/public-API change | Fast path, in-thread | None; parent runs the consolidated checklist |
+| Under 100 effective LOC, one module, no new helper or rule, no async/security/crypto/public-API change | Fast path, in-thread | None; parent runs the consolidated checklist |
+| Under 100 LOC touching async, security, auth, crypto, or public-API | Specialist escalation | Dispatch `cr-correctness-invariants` + matching specialist (`cr-security-trust-boundary` or `cr-concurrency-memory-perf`) |
 | At least 100 LOC, new helpers or rules, or multi-module logic | Core 3-lens swarm | `cr-correctness-invariants`, `cr-mechanism-generalization`, `cr-codebase-reuse-and-contracts` |
 | Also touches I/O, async or threads, large datasets, auth, SQL, or filesystem paths | Full 5-lens swarm | Add `cr-concurrency-memory-perf` and `cr-security-trust-boundary` |
 
 Never merge `cr-mechanism-generalization` and `cr-codebase-reuse-and-contracts`. The first inspects the mechanism inside the diff. The second searches the repository outside the diff. Combining them blends two cognitive modes and lowers recall.
+
+### 2.1. Domain-Triggered Specialist Extensions
+
+When a diff targets specialized architectural domains, dispatch the matching domain specialist alongside the swarm:
+- **UI & Frontend changes** (HTML, CSS, components): Dispatch `A11y & UI Inclusivity Goldfish` (Skill context: `ui-accessibility` at `skills/ui-accessibility/SKILL.md`). Audits keyboard traps, semantic HTML, ARIA tags, contrast ratio, touch targets.
+- **Distributed & Queue changes** (network retries, message queues, rate limiters): Dispatch `Chaos & Resilience Goldfish`. Audits retry storms, exponential backoff, full jitter, timeouts, idempotency under partial failure.
+- **Manifest & Dependency changes** (`pyproject.toml`, `package.json`, `Cargo.toml`): Dispatch `Supply Chain & License Compliance Goldfish`. Audits copyleft license conflicts (GPL/AGPL), transitive bloat, CVE vulnerabilities.
+- **AI & LLM changes** (prompts, embeddings, agent workflows): Dispatch `Eval Rigor & AI Safety Goldfish`. Audits non-deterministic tests, prompt injection sanitizers, context truncation loss, eval benchmarks.
 
 ## 3. Three-Tier Host Adaptation
 
@@ -50,6 +59,8 @@ Audit vectors:
    double-apply effects, or state that survives a failed call.
 4. Test integrity: assertions that compare an object with itself, mocks that
    replace the unit under test, and missing negative-path tests.
+5. Contextual logging: unhandled exception paths lacking contextual parameters;
+   swallowed warnings or silent fallbacks lacking diagnostic telemetry.
 
 For each finding return:
 - Severity: Critical | Important | Suggestion | Nit
@@ -80,6 +91,8 @@ Audit vectors:
 4. YAGNI and complexity ceiling: flag single-implementation ABCs or registries,
    nesting depth >= 4, cyclomatic complexity > 10 (Critical above 20), cognitive
    complexity > 15, or a function past the hard length threshold in `rules/AGENTS.md` §3.
+5. Type discipline: untyped Any, missing return types on public boundaries,
+   and raw dictionaries used where typed dataclasses or schemas belong.
 
 Use the Three-Bucket Taxonomy from the code-minimalism generalization audit:
 general mechanism, domain heuristic, entity exception. A rule framework that only
@@ -192,8 +205,8 @@ git diff -U20 -- <target files>
 # Duplicate helper search across the repository
 git grep -nE '(def|fn) (slugify|normalize|retry|parse_|load_|validate_)' -- '*.py' '*.rs'
 
-# Caller and dangling reference search
-git grep -nw '<symbol>' -- '*.py' '*.rs' '*.md' '*.yaml' '*.toml'
+# Caller and dangling reference search (whole tree, never hand-written globs)
+git grep -nw '<symbol>' -- .
 
 # Declared dependency inventory
 sed -n '/dependencies/,/]/p' pyproject.toml

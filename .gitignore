@@ -7,6 +7,9 @@ dist/
 .DS_Store
 Thumbs.db
 
+# Local reports and designs
+docs/
+
 # Secrets
 .env
 *.env
