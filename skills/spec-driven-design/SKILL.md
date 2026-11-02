@@ -42,8 +42,14 @@ Read the predecessor artifact in this order: explicit path, concepts brief, disc
 3. When architectures diverge, apply Architecture Ownership: up to three options, no ranking, owner decides. Do not use structured question tools for open-ended exploration.
 4. Summarize the anchored hypothesis in 2-3 sentences. Wait for explicit readiness confirmation before spawning reviewers.
 
-### 2. Six-Lens Brainstorm Fan-Out
-Dispatch one read-only Goldfish subagent per lens. Use the prompt cards in `references/spec-templates-and-standards.md`.
+### 2. Multi-Lens Brainstorm Fan-Out
+Dispatch read-only Goldfish subagents per lens using risk-based tiering. Prompt cards live in `references/spec-templates-and-standards.md`.
+
+| Tier | Concept Profile | Lenses Dispatched |
+| :--- | :--- | :--- |
+| **Core Tier (4 lenses)** | Internal logic, refactor, CLI helper, no external API/DB/auth | `Contrarian/YAGNI`, `UX/Ergonomics`, `Observability/SRE`, `Maintenance/Coupling` |
+| **Full Tier (7 lenses)** | Touches public API, auth, database, LLM, or payments | Core 4 lenses + `Cost/Quota/Token`, `Migration/Compatibility`, `Security & Threat Modeling` |
+| **Specialist Research** | Novel architecture, SOTA benchmarks, tech selection | On-demand: add `Specialist Lens: SOTA & Industry Prior-Art` |
 
 | Lens | Primary Challenge |
 | :--- | :--- |
@@ -53,6 +59,10 @@ Dispatch one read-only Goldfish subagent per lens. Use the prompt cards in `refe
 | Migration / Compatibility | Schema, client, and rollback safety |
 | Observability / SRE | Can an on-call engineer debug this at 3 AM? |
 | Maintenance / Coupling | Will this be a liability in two years? |
+| Security & Threat Modeling | Trust boundaries, prompt injection, abuse, auth bypass |
+| SOTA & Industry Prior-Art | Industry consensus, battle-tested OSS alternatives, SOTA benchmarks |
+
+Apply the Arbitration Precedence Standard (`Security > Correctness > Budget > YAGNI > Ergonomics`) when lenses produce conflicting recommendations.
 
 Dispatch by host capability:
 - Tier 1, native parallel subagents: Antigravity `invoke_subagent`, Codex `spawn_agent`, OpenCode `Task`.

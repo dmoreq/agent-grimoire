@@ -19,8 +19,16 @@ Every card inherits these rules:
 
 | Tier | Hosts | Review Dispatch |
 | :--- | :--- | :--- |
-| 1 | Antigravity, Codex, OpenCode | Five parallel read-only subagents, one per lens |
-| 2 | Zed, Grok, ZCode, single-thread CLI | Save the artifact, then run five sequential cold-read passes |
+| 1 | Antigravity, Codex, OpenCode | Native parallel read-only subagents |
+| 2 | Zed, Grok, ZCode, single-thread CLI | Save the artifact, then run sequential cold-read passes |
+
+### Plan Review Scope Tiering
+
+| Plan Profile | Lenses Dispatched | Scope Focus |
+| :--- | :--- | :--- |
+| Fast Plan Tier (< 100 plan lines, single module, no architecture/schema change) | Core 3 lenses: `Comprehension`, `Implementation Readiness`, `Codebase Details` | Actionability, zero-decision, and live-code ground truth |
+| Full Architecture Tier (>= 100 plan lines, multi-module, schema, or system change) | All 5 lenses: `Zoom-Out`, `Comprehension`, `Design Critic`, `Implementation Readiness`, `Codebase Details` | Full macro architecture, SPOF, scalability, and code verification |
+| Specialist Extension (Distributed, UI, or AI plan) | Add matching domain specialist (`Chaos & Resilience`, `A11y`, or `AI Safety`) | Systemic failure modes, WCAG conformance, or eval rigors |
 
 Context isolation contract:
 
@@ -42,7 +50,7 @@ Evaluate:
 2. Root problem focus: does the design solve the cause, or apply a local band-aid to a symptom?
 3. YAGNI: which abstraction, flag, or interface exists only for a speculative future?
 4. Premature optimization: which caching, sharding, queue, or async layer lacks a measured bottleneck?
-5. Codebase reuse: search the repository for an existing component that already solves this. Do not assume absence.
+5. Codebase reuse: search architecture manifests, directory contracts, and package exports for existing components that solve this at the system level. (Leave file-level ground-truth checks to Lens 5).
 6. Altitude control: which high-level section drops into helper functions, loop variables, or pseudocode?
 7. Architectural dead-ends: which boundary or coupling blocks a foreseeable extension?
 
@@ -128,9 +136,11 @@ Evaluate:
 5. Test plan: are happy-path and edge-case tests named with the command that runs them?
 6. Phasing: does each phase leave the repository buildable and testable?
 7. Verification: are build, lint, and test pass conditions explicit?
+8. Data and schema migration: are database migrations, schema backward-compatibility, rollback scripts, and backfill mechanics explicitly pre-determined without leaving choices to the coder?
 
 Audit vectors: Zero-Decision violation, missing file entry, vague step,
-missing data shape, missing test, non-buildable phase, unverifiable acceptance.
+missing data shape, missing test, non-buildable phase, unverifiable acceptance,
+data migration & schema safety.
 
 For each finding return:
 - Severity: Critical | Important | Suggestion | Nit

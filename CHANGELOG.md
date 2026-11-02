@@ -7,14 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.9.0] - 2026-11-02
+
+### Added
+- `skills/code-index` (new): Fast local code knowledge index wrapper for the `kg` CLI with 13-subcommand decision table, deterministic drift gate, and related-skills handoffs.
+- `skills/spec-driven-design`: Added `Lens 7: Security, Privacy & Threat Modeling` and `Specialist Lens: SOTA & Industry Prior-Art` (with `tech-research` and `context7-mcp` handoffs); added Risk-Based Brainstorm Tiering (Core 4 lenses vs Full 7 lenses); codified the Arbitration Precedence Standard (`Security > Correctness > Budget > YAGNI > Ergonomics`).
+- Domain-Triggered Personas: Defined specialist extension contracts for `A11y & UI Inclusivity`, `Chaos & Resilience`, `Supply Chain & License Compliance`, and `Eval Rigor & AI Safety` across all three Goldfish skills.
+
 ### Changed
-- `rules/AGENTS.md`: Added the **Answer-First & Payload Verbatim** rule (from caveman). Lead with the outcome; never drop negations; keep code, commands, paths, identifiers, and numbers verbatim.
-- `rules/AGENTS.md`: Added the **Acceptance Criteria First** rule (from principles). State the checkable acceptance criterion before implementing; plan one verify check per step.
-- `rules/AGENTS.md`: Extended **Scope Discipline** with the orphan-cleanup duty (from principles): clean up orphans your own change created; leave pre-existing dead code in place.
-- `rules/AGENTS.md`: Extended **Token Discipline** with the think-in-code clause (from context-mode): process intermediate raw output with a script and print only the derived result.
-- `skills/code-minimalism/SKILL.md`: Added the equal-size tiebreak, the test-left-behind checklist item, and the reply disclosure line (from ponytail).
-- `tests/test_invariants.py`: Added `test_token_efficiency_adopted_rules_present` to lock the adopted clauses.
-- Source analysis: `docs/reports/2026-10-30_token-efficiency-repos-adoption-analysis.md` (drafts A-E; rtk, headroom, codegraph, and the context-mode tool rejected for bundling).
+- `skills/code-review`: Fixed routing vacuum for diffs `< 100 LOC` touching async/security/crypto via Specialist Escalation; patched Prompt Card Leak for contextual exception logging (`cr-correctness-invariants`) and type discipline (`cr-mechanism-generalization`); standardized deterministic probe to `git grep -nw '<symbol>' -- .`.
+- `skills/doubt-driven-development`: Added Plan Review Scope Tiering (Fast Plan Tier 3 lenses vs Full Architecture Tier 5 lenses); added data migration & schema safety audit vector to Lens 4 (`Implementation Readiness`); scoped macro vs micro codebase reuse between Lens 1 and Lens 5.
+- `rules/AGENTS.md`: Adopted Token Efficiency rules: **Answer-First & Payload Verbatim**, **Acceptance Criteria First**, **Scope Discipline** orphan cleanup duty, and **Token Discipline** think-in-code context hygiene.
+- `skills/code-minimalism/SKILL.md`: Added equal-size tiebreak, test-left-behind checklist, and reply disclosure line.
+- `tests/test_invariants.py`: Added automated invariant coverage for Goldfish persona lifecycle, tiering, security lenses, and token-efficiency clauses (35 passing tests).
+- Documentation: Added architectural design plan `docs/designs/2026-11-02_goldfish-persona-system-optimization.md` and Goldfish review report `docs/reports/2026-11-02_goldfish-review_goldfish-persona-system-optimization.md`.
 
 ## [2.8.0] - 2026-10-30
 

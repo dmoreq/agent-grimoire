@@ -67,7 +67,8 @@ For diff reviews, execute automated and structural gates before manual semantic 
    - **Targeted Tests**: Run only tests relevant to the modified modules (`pytest -n 4 path/to/changed_test.py` or `cargo test <module>`).
    - If pre-commit or tests fail: halt deep review immediately and report failures as a **Critical** blocker.
 2. **Risk-Based Multi-Lens Goldfish Dispatch (3-Tier)**:
-   - **Fast path** (< 100 effective LOC, one module, no new helper, no async/security/public-API change): run the checklist in-thread. Spawn no subagent.
+   - **Fast path** (< 100 effective LOC, one module, no new helper, no async/security/crypto/public-API change): run the checklist in-thread. Spawn no subagent.
+   - **Specialist escalation** (< 100 LOC touching async, security, auth, crypto, or public-API): dispatch `cr-correctness-invariants` + matching specialist (`cr-security-trust-boundary` or `cr-concurrency-memory-perf`). Run concurrently and reconcile in-thread.
    - **Core 3-lens swarm** (>= 100 LOC, new helpers/rules, multi-module): `cr-correctness-invariants`, `cr-mechanism-generalization`, `cr-codebase-reuse-and-contracts`.
    - **Full 5-lens swarm** (also I/O, async/threads, large data, auth, SQL, or paths): add `cr-concurrency-memory-perf` and `cr-security-trust-boundary`.
    - Keep lens 2 inside the diff (ad-hoc hardcoding, symptom band-aids, YAGNI, complexity) and lens 3 outside it (`git grep` reuse, stdlib, callers, contract drift). Never merge them.
