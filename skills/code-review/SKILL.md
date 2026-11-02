@@ -80,13 +80,13 @@ For diff reviews, execute automated and structural gates before manual semantic 
    - **Public Surface**: Public signature changed without backward compatibility or version bump → **Critical**.
 4. **Omission Checklist (Verify What Is Missing)**:
    - **Error Path Cleanup**: Are open resources (files, sockets, DB transactions) released in failure branches?
-   - **Callers of Deleted Symbols / References to Deleted Targets**: Did a repo-wide grep confirm every reference — code importer, sibling script, AND non-code routing reference (agent/profile config, SOUL/instruction files, docs, prompts, registry lists) — was retargeted in the same commit? Grep the whole tree (`git grep -nw '<name>' <rev> -- .`), never a hand-written glob: a glob like `profiles/*/SOUL.md` silently excludes a governing file at a different depth (e.g. a root-level SOUL/README that outranks per-profile copies), so the scope of the search becomes the scope of the blind spot. A deleted name still referenced as a routing/escalation target is a **Critical** dangling reference even when the surrounding file is prose, not code.
+   - **Callers of Deleted Symbols & Dangling References**: Confirm every reference—code importer, sibling script, and non-code config/docs—was retargeted in the same commit. Grep the whole tree (`git grep -nw '<name>' <rev> -- .`), never hand-written globs that risk missing files at different depths. A deleted target still referenced is a **Critical** dangling reference.
    - **Observability**: Are new error states logged with contextual parameters?
    - **Negative & Edge Tests**: Are empty collections, `None` inputs, and timeouts tested?
    - **Documentation Sync**: Are `CHANGELOG.md`, `__all__`, or `README.md` updated for public changes? If a directory README or spec documents the changed behavior, run a **codebase-contracts** drift check instead of guessing.
    - **Commit-Message Claims vs Artifact**: Verify each concrete claim in the commit message against the tree, not the intent. A message asserting a cleanup ("no longer references X", "removes Y") is a testable statement; if the tree still violates it, that is a finding, and the message itself becomes misleading evidence for downstream reviewers.
 
-When re-reviewing an amended commit: verify the amend delta directly (`git diff <old> <new> --name-only`) and confirm it contains ONLY the change you requested — an amend is the easiest place to smuggle unrelated edits past a reviewer who only re-reads the flagged hunk. Reproduce the original finding's own check against the new revision to confirm it is actually closed, and re-read the commit message to confirm claims that were false before are now true (or were updated).
+When re-reviewing an amended commit: verify the delta directly (`git diff <old> <new> --name-only`) to confirm it contains ONLY requested changes. Re-run the original check against the new revision to verify closure.
 5. **Semantic & Architectural Review**:
    - **Correctness**: Does what it claims; edge and error paths; no obvious race conditions.
    - **Safety & Security**: Inputs validated; parameterized queries; no hardcoded or leaked secrets.
@@ -103,7 +103,7 @@ When re-reviewing an amended commit: verify the amend delta directly (`git diff 
 - **Suggestion** — cleaner alternative with clear technical trade-off
 - **Nit** — non-blocking style preference (<= 2 per review; never block merge)
 
-Calibrate severity by reachability, not by whether the flaw exists. A real but currently-unreachable gap (a latent hole no present input path can enter) is **Minor** with a follow-up note, not **Important** — state the reachability argument explicitly so the downgrade is auditable rather than looking like leniency. Conversely, escalate a small-looking flaw that IS reachable on an ordinary path. And when a contract clause is prompt-level with no enforcement mechanism (an instruction nothing verifies), report it as a self-documented limitation rather than either a defect or a proven guarantee: name what is verified true, what is merely asserted, and what a real enforcement hook would require. Do not dress an unverifiable clause up as satisfied.
+Calibrate severity by reachability. A latent defect unreachable by current paths is **Suggestion**, not **Important**—state the reachability rationale explicitly. Escalate minor flaws that are reachable on common paths. When a contract clause lacks an automated enforcement hook, report it as an unverified limitation rather than a defect or guarantee.
 
 ## Output Format
 1. **Summary** — 1–3 sentences stating diff scope, pre-flight gate status, and overall verdict.
