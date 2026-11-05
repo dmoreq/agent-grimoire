@@ -127,9 +127,10 @@ def test_progress_visibility_rule_invariants():
 def test_token_efficiency_adopted_rules_present():
     """Verify AGENTS.md carries the clauses adopted from the token-efficiency repos."""
     rules_text = RULES_FILE.read_text(encoding="utf-8")
-    assert "Answer-First & Payload Verbatim" in rules_text, "rules/AGENTS.md is missing the Answer-First & Payload Verbatim rule"
+    assert "Adaptive Brevity & Information Density" in rules_text, "rules/AGENTS.md is missing the Adaptive Brevity & Information Density rule"
+    assert "Payload integrity" in rules_text, "Adaptive Brevity is missing the payload-integrity clause"
     assert "Acceptance Criteria First" in rules_text, "rules/AGENTS.md is missing the Acceptance Criteria First rule"
-    assert "Think in code" in rules_text, "Token Discipline is missing the think-in-code clause"
+    assert "Think in code" in rules_text, "Token & Action Discipline is missing the think-in-code clause"
     assert "Clean up the orphans your own change created" in rules_text, "Scope Discipline is missing the orphan-cleanup clause"
 
     minimalism_skill = SKILLS_DIR / "code-minimalism" / "SKILL.md"
