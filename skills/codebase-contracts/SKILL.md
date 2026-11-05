@@ -92,7 +92,6 @@ Run the audit against a directory of specs or READMEs.
 - Use **code-review** to inspect code diffs and verify that documented APIs exist.
 - Use **doubt-driven-development** when contract drift challenges an approved design decision.
 - Use **verify-and-stop** to run the decisive verification once and terminate.
-- Hand a frozen response contract to **code-index** when agent-facing CLI text needs contract guarantees.
 
 ## Final Checklist
 - [ ] Verification command discovered from the root manifest

@@ -19,6 +19,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `skills/code-index`: Noted that `kg tests` misses function-local imports.
 - `tests/test_invariants.py`: Updated token-efficiency assertions to the consolidated rule names.
 
+## [2.10.1] - 2026-11-05
+
+### Changed
+- `setup.sh`: Default install now contains 27 skills; `--all` covers 38.
+
+### Removed
+- `skills/code-index`: Removed the skill and its contract drift gate; the backing CLI is not publicly released.
+
 ## [2.9.0] - 2026-11-02
 
 ### Added
