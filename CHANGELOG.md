@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [2.10.0] - 2026-11-05
+## [2.10.1] - 2026-11-05
 
 ### Changed
 - `rules/AGENTS.md`: Consolidated §1 into three rules — **Tone, Style & Formatting (ASD-STE100)**, **Adaptive Brevity & Information Density**, and **Token & Action Discipline**. Brevity now scales to task complexity instead of a flat word cap; payload integrity (negations, code, diffs, commands) and exact-metric quantification are explicit.
