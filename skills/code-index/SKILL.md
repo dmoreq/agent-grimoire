@@ -27,6 +27,7 @@ kg tests X                   # which tests reach X? static candidates
 kg impact file               # files that call into file; --edges/--depth for deps
 kg symbols file|dir --outline  # structure + signatures
 kg symbols file --metrics    # cyclomatic/branches/nesting/effective LOC
+kg resolve --stdin < names.txt  # batch found/ambiguous/missing
 kg search terms              # bm25 lookup; --kind/--path/--exact
 kg complexity --min-cyc 11   # functions over the ceiling
 kg api file|dir              # public/exported symbol inventory
@@ -53,7 +54,7 @@ kg stats / hotspots / report # totals, pain ranking, architecture
 
 - `implementers`, `imports`, `tests`, `api`, `complexity` are static; import/
   inherit coverage is unmeasured, and `tests` misses non-`test_*` Rust
-  `#[test]` names and TS `describe`/`it` callbacks.
+  `#[test]` names, TS `describe`/`it` callbacks, and function-local imports.
 - `dead`/`clones` are candidates, not proof.
 - `stats`/`files`/`hotspots`/`report` are build-time snapshots.
 
