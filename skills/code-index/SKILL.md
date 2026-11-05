@@ -1,9 +1,9 @@
 ---
 name: code-index
 description: >-
-  Local code knowledge index via the kg CLI. Answers who-calls-this, what-does-this-call,
-  and what-is-impacted-by-this-file in one query instead of grep loops. Consultative only:
-  no hooks, no daemon, no network, writes confined to .kg/.
+  Local code knowledge index via kg. Answers who-calls, what-calls, impact,
+  implementations, test reach, and public-surface questions without grep loops.
+  Consultative only: no hooks, daemon, network, or writes outside .kg/.
 risk: safe
 source: local
 date_added: "2026-10-31"
@@ -11,61 +11,60 @@ date_added: "2026-10-31"
 
 # code-index — kg CLI wrapper
 
-Use `kg` for call-graph navigation questions. For textual questions use
-grep.
+Use `kg` for structural navigation; use grep for text.
 
 ## Decision table
 
 ```bash
-kg build                  # run once per session after pulling changes
-kg callers X              # "who calls X?" — path:line pointers, capped at 50 (--limit N)
-kg callees X --depth 3    # "what does X invoke, N hops deep?"
-kg impact file.py         # "what breaks if this file changes?" — files calling into it
-kg symbols file.py        # "what is in this file?" --outline + signatures
-kg search terms           # "where is X handled?" — bm25 symbol lookup
-kg clones                 # copy-pasted blocks — candidates, never proof
-kg dead --limit 10        # "what is unused?" — candidates, never proof
-kg unresolved             # "where is resolution incomplete?"
-kg stats                  # index totals
-kg hotspots --limit 10    # cyclomatic + LOC + churn-90d + fix-density
-kg report                 # 4-section architecture report
-kg usage                  # journal summary (calls, latency, stale/empty rates)
-kg doctor [--invalidate]  # health check; --invalidate deletes the index
-kg mcp                    # JSON-RPC stdio server for MCP hosts (no doctor tool)
+kg build                     # once per session after pulling changes
+kg callers X                 # who calls X? path:line pointers, cap 50
+kg callees X --depth 3       # what does X invoke, N hops?
+kg path A B                  # shortest call route between symbols
+kg context X                 # definition + direct callers + callees
+kg implementers X            # who inherits/implements X? resolved inherits only
+kg imports file              # what does this file import (outbound)?
+kg tests X                   # which tests reach X? static candidates
+kg impact file               # files that call into file; --edges/--depth for deps
+kg symbols file|dir --outline  # structure + signatures
+kg symbols file --metrics    # cyclomatic/branches/nesting/effective LOC
+kg resolve --stdin < names.txt  # batch found/ambiguous/missing
+kg search terms              # bm25 lookup; --kind/--path/--exact
+kg complexity --min-cyc 11   # functions over the ceiling
+kg api file|dir              # public/exported symbol inventory
+kg files --path dir          # indexed file inventory (symbols/bytes/generated)
+kg clones / dead --exclude-tests  # duplicate/dead candidates, never proof
+kg unresolved [--names]      # resolution gaps; --names gives path:line kind name
+kg stats / hotspots / report # totals, pain ranking, architecture
 ```
 
 ## Do NOT use for
 
-- Content search inside file bodies (strings, comments, config) -> grep/rg;
-  `kg search` matches identifier names only.
-- Git history, blame, authorship -> git.
+- Content search in bodies, strings, comments, config -> grep/rg. `kg search`
+  matches identifier, path, and signature tokens; bodies are not indexed.
+- Git history/blame -> git. Cross-repo -> the index is per-repo.
 
 ## Contract
 
-- Pointers: `path:line [ambiguous]`, 1-based, capped at 50 by default.
-- Staleness: kg prints `kg: K of N result files changed since build — run kg build`
-  when result files changed after the build; rebuild then (kg never
-  rebuilds itself).
-- Exit 2 + a candidate list = ambiguous name; re-query with the
-  `Class.method` qualname from the list.
-- Empty result (exit 1) with "dynamic dispatch possible" -> use grep for
-  that symbol; do not retry kg blindly.
+- Pointers: `path:line`, 1-based, cap 50 (`--limit N`, max 10000).
+- Rebuild when `kg: K of N result files changed since build`.
+- Exit 2 + candidates = ambiguous name; re-query with `Class.method`.
+- Exit 1 = no result or no index; read the reason line, then grep.
 
 ## Caveats
 
-- `stats`/`hotspots`/`report` read the build-time file set; files created or
-  deleted after `kg build` are invisible until the next build.
+- `implementers`, `imports`, `tests`, `api`, `complexity` are static; import/
+  inherit coverage is unmeasured, and `tests` misses non-`test_*` Rust
+  `#[test]` names, TS `describe`/`it` callbacks, and function-local imports.
+- `dead`/`clones` are candidates, not proof.
+- `stats`/`files`/`hotspots`/`report` are build-time snapshots.
 
 ## Rules
 
-1. `kg build` writes only under `.kg/`. Never pass `--force` unless a
-   rebuild is explicitly needed (re-parses everything).
-2. If `kg` is not installed, say so and use grep; do not install unprompted.
-3. Read pointed-to lines before claiming a caller relationship; dynamic
-   dispatch can still hide callers.
+1. `kg build` writes only under `.kg/`; avoid `--force` unless needed.
+2. If `kg` is missing, use grep; do not install unprompted.
 
 ## Related Skills
 
-- Use **codebase-contracts** to keep skill claims in sync with the binary's actual contract.
-- Use **doubt-driven-development** when a pointer looks wrong; verify the line before trusting static resolution.
-- Use **verify-and-stop** to stop once the pointer answers the navigation question.
+- Use **codebase-contracts** to keep skill claims in sync with the binary.
+- Use **doubt-driven-development** when a pointer looks wrong.
+- Use **verify-and-stop** once the pointer answers the question.

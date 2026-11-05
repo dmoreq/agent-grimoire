@@ -1,0 +1,26 @@
+# generated from target/release/kg --help on 2026-11-02 (kg 0.2.1)
+global: --root --no-journal --help
+build: --force --help --max-parse-error-rate --no-journal --root
+callers: --help --limit --no-journal --root
+callees: --depth --help --limit --no-journal --root
+context: --help --limit --no-journal --root
+implementers: --help --limit --no-journal --root
+imports: --help --limit --no-journal --root
+tests: --depth --help --limit --no-journal --root
+path: --depth --help --no-journal --root
+impact: --context --depth --edges --explain --help --limit --no-journal --root --sites
+dead: --exclude-generated --exclude-tests --help --limit --no-journal --path --root
+unresolved: --help --limit --names --no-journal --path --root
+symbols: --help --limit --metrics --no-journal --outline --root
+complexity: --exclude-generated --help --limit --min-branches --min-cyc --min-loc --min-nest --no-journal --path --root
+api: --exclude-generated --help --include-private --limit --no-journal --root
+resolve: --help --no-journal --root --stdin
+files: --help --limit --no-journal --path --root
+search: --exact --help --kind --limit --no-journal --path --root
+clones: --exclude-generated --help --limit --min-lines --no-journal --path --root
+stats: --help --no-journal --root
+hotspots: --exclude-generated --help --limit --no-journal --path --root
+report: --exclude-generated --help --no-journal --path --root
+doctor: --help --invalidate --no-journal --root
+usage: --help --limit --no-journal --root --verify
+mcp: --help --no-journal --root
