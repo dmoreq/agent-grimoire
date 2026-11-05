@@ -62,7 +62,6 @@ agent-skills/
 | Skill Name | Purpose |
 | :--- | :--- |
 | **`algorithm-optimization`** | Systematic workflow to optimize algorithms/processes against target metrics while guarding healthy cases. |
-| **`code-index`** | Local code knowledge index (kg CLI): who-calls / what-calls / impact pointers, plus dead-code, unresolved, symbols, usage journal. One query instead of grep loops. |
 | **`code-minimalism`** | Forces simplest, shortest, most minimal code (YAGNI). Reaches for stdlib before custom code, platform features before dependencies, 1-liner before 50. |
 | **`code-review`** | Systematic multi-axis review for Python & Rust (correctness, safety, performance, YAGNI/bloat, style). Mandatory quality gate. |
 | **`code-simplification`** | Safe refactoring to improve readability and reduce nesting in existing code without changing behavior. |

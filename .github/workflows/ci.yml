@@ -32,9 +32,6 @@ jobs:
       - name: Run setup script tests
         run: bash tests/test_setup_script.sh
 
-      - name: Skill contract drift (kg; skips without KG_BIN)
-        run: python3 tests/skill_contract_drift.py
-
       - name: Run package script tests
         run: bash tests/test_package_script.sh
 

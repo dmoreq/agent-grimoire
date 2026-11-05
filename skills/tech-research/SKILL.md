@@ -105,7 +105,6 @@ Keep only the 3–5 most relevant options.
 
 ## Related Skills
 - Hand the chosen direction to **spec-driven-design** for the design spec.
-- Hand local-tooling adoption decisions to **code-index** once a reference analysis picks a winner.
 - Use **doubt-driven-development** when a recommendation is about to lock in.
 - Use **algorithm-optimization** when candidates need validation on real KPIs.
 - Use **context7-mcp** for version-sensitive library docs.

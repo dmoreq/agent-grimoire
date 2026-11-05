@@ -9,15 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.10.0] - 2026-11-05
 
-### Added
-- `tests/kg_contract_manifest.txt` (new): Static `kg` CLI contract generated from kg 0.2.1, so the drift gate runs in CI without `KG_BIN`.
-- `skills/code-index`: Added `kg resolve --stdin` for batch `found`/`ambiguous`/`missing` triage.
-
 ### Changed
 - `rules/AGENTS.md`: Consolidated §1 into three rules — **Tone, Style & Formatting (ASD-STE100)**, **Adaptive Brevity & Information Density**, and **Token & Action Discipline**. Brevity now scales to task complexity instead of a flat word cap; payload integrity (negations, code, diffs, commands) and exact-metric quantification are explicit.
-- `tests/skill_contract_drift.py`: Gates every `kg` command in all `skills/*/SKILL.md` (inline backticks and fenced blocks) against the static manifest; with `KG_BIN` set, also fails when the binary and manifest disagree.
-- `skills/code-index`: Noted that `kg tests` misses function-local imports.
 - `tests/test_invariants.py`: Updated token-efficiency assertions to the consolidated rule names.
+
+### Removed
+- `skills/code-index`: Removed the skill and its contract drift gate; the backing CLI is not publicly released.
 
 ## [2.9.0] - 2026-11-02
 
