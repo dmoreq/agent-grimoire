@@ -35,7 +35,7 @@ Simplify code for clarity and maintainability without changing behavior. Focus o
 
 ## Process
 1. Understand responsibility, callers, edge cases, and existing tests.
-2. Start from confirmed **code-smells** rows. Do not run a second smell detector. Apply the recipe that matches the smell name. Names such as `data`, `temp`, and `result` are still renamed to domain words. Dead code is removed only when **codebase-minimalism** has confirmed it is unused.
+2. Start only from a refactor plan the user has approved. Do not run a second smell detector. Apply the recipe that matches the smell name. Do not delete a dead-code, webhook, or `getattr` row. Those stay with `deprecation-migration`.
 3. Apply one simplification at a time.
 4. Verify targeted tests/build still pass (`pytest -n 4 path/to/test_module.py`). Do not run full test suites or pre-commit hooks between incremental simplification edits.
 5. Stop when a new teammate would understand it faster.

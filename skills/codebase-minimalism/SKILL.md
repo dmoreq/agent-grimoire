@@ -1,9 +1,9 @@
 ---
 name: codebase-minimalism
 description: >-
-  Audit semantic duplication, shadow flags, reinvented utilities, and DTO clones
-  across Python, TypeScript, Dart, Go, and Rust using a symbol harvest.
-  Not for YAGNI-on-write, local readability refactors, or public API sunsets.
+  Find as much excess LOC as possible from semantic duplication and write a
+  refactor plan for the user to approve. Not for editing code, YAGNI-on-write,
+  smell cleanup, or public API sunsets.
 risk: safe
 source: local
 date_added: "2026-11-06"
@@ -11,7 +11,7 @@ date_added: "2026-11-06"
 
 # Codebase Minimalism
 
-Harvest symbols and cluster semantic duplication across modules and languages. Produce a `Legacy -> Canonical` map. Do not write new code under YAGNI rules here (`code-minimalism` owns that).
+The KPI is excess LOC placed in a refactor plan. Find duplicate concepts across modules. Do not edit code. The user approves the plan before any skill edits. Do not write new code under YAGNI rules here (`code-minimalism` owns that). A new shared symbol is allowed in the plan only when it replaces deleted copies.
 
 - Load `references/semantic-duplication-matrix.md` when classifying alerts.
 - Load `references/refactor-blueprint.md` when building the canonical table.
@@ -33,8 +33,6 @@ Harvest symbols and cluster semantic duplication across modules and languages. P
 
 ## Workflow
 
-Before the harvest, write the cleanup targets for the scoped files: `50%` and `75%` of scoped LOC. Scoped LOC is the line count of the files in this bounded context, not the whole repository. Do not run the extractor until both targets are written.
-
 ### 1. Harvest
 
 Avoid sequential file reads. Run the bundled extractor:
@@ -44,7 +42,7 @@ python3 skills/codebase-minimalism/scripts/universal_extractor.py <root> \
   --out-dir .tmp/codebase-minimalism
 ```
 
-Read `universal_summary.md` only. Add `--full-symbols` when a specific alert needs the symbol dump. Optional `--synonyms map.json` supplies domain aliases. Outputs must stay inside `--out-dir` (default `.tmp/codebase-minimalism/`).
+Read `.tmp/codebase-minimalism/universal_summary.md` only. Add `--full-symbols` when a specific alert needs the symbol dump. Optional `--synonyms map.json` supplies domain aliases. Outputs must stay inside `--out-dir`.
 
 ### 2. Cluster
 
@@ -56,11 +54,19 @@ Keep the pass in-thread when the cluster is under ~100 lines (`rules/AGENTS.md` 
 
 1. Canonical type or Enum versus shadow flags and DTO clones.
 2. Duplicate helpers versus stdlib or an existing shared module.
-3. Accuracy and side effects. Hand off measured latency questions; do not invent numbers.
+3. Accuracy and side effects. Unmeasured latency goes to `python-performance`. Do not invent numbers.
 
 ### 4. Blueprint
 
-Write the lexicon in `references/refactor-blueprint.md`. Add `Reducible LOC: N` on each row. `N` is lines removed minus lines added if that replacement landed. Use `Reducible LOC: unknown` when no replacement is sketched. Do not invent `N`. Close with `Reducible LOC total: N`, the sum of the numeric rows. Then write `Cleanup level: P%` where `P` = that total / scoped LOC, plus `50% target: met` or `not met` and `75% target: met` or `not met`. If the total is unknown, write `Cleanup level: unknown` and mark both targets `not met`. Stop. Implement only if the user asked. Optional saved report: `docs/reports/YYYY-MM-DD_codebase-minimalism-audit_<topic>.md` with a slug matching `^[a-z0-9]+(-[a-z0-9]+)*$`.
+Write the lexicon in `references/refactor-blueprint.md`. Each proposed row has a benefit and `cut_loc`: lines the later edit would delete minus lines it would add. Do not invent `cut_loc`. Mark `blocked` for a public signature, an unproven dead-code candidate, a webhook, or a `getattr` target, and send those to `deprecation-migration`. Blocked rows are not in the KPI.
+
+### 5. KPI
+
+`Excess LOC found` is the sum of `cut_loc` on proposed rows only. This skill does not report a smell count. If there is no proposed row, effectiveness is `n/a`.
+
+- Excess LOC found: N
+
+Stop. Do not edit the scanned code. Optional saved report: `docs/reports/YYYY-MM-DD_codebase-minimalism-audit_<topic>.md` with a slug matching `^[a-z0-9]+(-[a-z0-9]+)*$`.
 
 ## Gotchas
 
@@ -74,13 +80,13 @@ Write the lexicon in `references/refactor-blueprint.md`. Add `Reducible LOC: N` 
 - Use **code-minimalism** when the finding is "do not write this helper" on a new path.
 - Use **deprecation-migration** when the canonical replacement is a public or facade symbol.
 - Use **python-testing** to lock inputs and outputs before any edit.
-- Use **verify-and-stop** after the table is written unless the user asked to implement.
+- Use **verify-and-stop** after the plan and the LOC KPI are written.
 
 ## Final Checklist
 
 - [ ] Extractor ran; summary read; no full-symbol dump unless needed
 - [ ] Alerts clustered by domain; each kept alert confirmed in source
-- [ ] Targets `50%` and `75%` were written before the harvest
-- [ ] `Legacy -> Canonical` table produced for one bounded context, with `Reducible LOC`, a total, and a cleanup level against both targets
-- [ ] No edit unless requested; handoffs named when an edit is requested
+- [ ] The plan lists benefit and `cut_loc` for each proposed row
+- [ ] KPI is excess LOC found only
+- [ ] No scanned code was edited
 - [ ] Greedy DRY and public-surface checks applied

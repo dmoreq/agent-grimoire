@@ -1,6 +1,6 @@
 # Refactor Blueprint
 
-Load this reference after clustering harvest alerts. Produce a table. Do not edit code unless the user asked.
+Load this reference after clustering harvest alerts. Produce a table for the user to approve. Do not edit the scanned code in this skill.
 
 ## Canonical lexicon
 

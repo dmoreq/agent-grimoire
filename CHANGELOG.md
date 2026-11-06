@@ -10,12 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [3.0.1] - 2026-11-06
 
 ### Added
-- `skills/code-smells` (new): Fowler catalog of 21 smell types, a Python structural scanner, and handoffs from `code-review` and `code-simplification`.
+- `skills/code-smells` (new): Fowler catalog of 21 smell types and a Python structural scanner. The skill writes a refactor plan for the user to approve. It does not edit the scanned code. Its KPI is smells found and smells in plan.
 
 ### Changed
-- Smell detection lives in `code-smells`. `code-review` no longer restates complexity or identical-line rules. `code-simplification` and `code-minimalism` consume those rows instead of measuring them again.
-- `code-review`, `code-smells`, and `codebase-minimalism` reports include `Reducible LOC` per finding and a total.
-- Those three reviews declare `50%` and `75%` scoped-LOC cleanup targets before they start, then report whether each target is met.
+- Smell detection lives in `code-smells`. `code-review` no longer restates complexity or identical-line rules. It records a handoff. An extreme breach is more than double the hard cap in `rules/AGENTS.md` §3 with no written justification.
+- `codebase-minimalism` writes an excess-LOC refactor plan and does not edit the scanned code. Its KPI is excess LOC found. It does not report a smell count.
+- `code-simplification` edits only after the user approves that plan. Dead-code, webhook, and `getattr` rows stay with `deprecation-migration`.
 - `setup.sh` / `README.md`: Default install is 29 of 40 skills; `--all` covers 40.
 
 ## [3.0.0] - 2026-11-06
