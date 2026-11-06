@@ -33,6 +33,8 @@ Harvest symbols and cluster semantic duplication across modules and languages. P
 
 ## Workflow
 
+Before the harvest, write the cleanup targets for the scoped files: `50%` and `75%` of scoped LOC. Scoped LOC is the line count of the files in this bounded context, not the whole repository. Do not run the extractor until both targets are written.
+
 ### 1. Harvest
 
 Avoid sequential file reads. Run the bundled extractor:
@@ -58,7 +60,7 @@ Keep the pass in-thread when the cluster is under ~100 lines (`rules/AGENTS.md` 
 
 ### 4. Blueprint
 
-Write the lexicon in `references/refactor-blueprint.md`. Stop. Implement only if the user asked. Optional saved report: `docs/reports/YYYY-MM-DD_codebase-minimalism-audit_<topic>.md` with a slug matching `^[a-z0-9]+(-[a-z0-9]+)*$`.
+Write the lexicon in `references/refactor-blueprint.md`. Add `Reducible LOC: N` on each row. `N` is lines removed minus lines added if that replacement landed. Use `Reducible LOC: unknown` when no replacement is sketched. Do not invent `N`. Close with `Reducible LOC total: N`, the sum of the numeric rows. Then write `Cleanup level: P%` where `P` = that total / scoped LOC, plus `50% target: met` or `not met` and `75% target: met` or `not met`. If the total is unknown, write `Cleanup level: unknown` and mark both targets `not met`. Stop. Implement only if the user asked. Optional saved report: `docs/reports/YYYY-MM-DD_codebase-minimalism-audit_<topic>.md` with a slug matching `^[a-z0-9]+(-[a-z0-9]+)*$`.
 
 ## Gotchas
 
@@ -78,6 +80,7 @@ Write the lexicon in `references/refactor-blueprint.md`. Stop. Implement only if
 
 - [ ] Extractor ran; summary read; no full-symbol dump unless needed
 - [ ] Alerts clustered by domain; each kept alert confirmed in source
-- [ ] `Legacy -> Canonical` table produced for one bounded context
+- [ ] Targets `50%` and `75%` were written before the harvest
+- [ ] `Legacy -> Canonical` table produced for one bounded context, with `Reducible LOC`, a total, and a cleanup level against both targets
 - [ ] No edit unless requested; handoffs named when an edit is requested
 - [ ] Greedy DRY and public-surface checks applied

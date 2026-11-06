@@ -38,6 +38,7 @@ Keep review-only requests read-only. Implement fixes through the language skill 
 ## Related Skills
 - Use **python-pro** to apply the requested fix in the language idiomatic to the codebase.
 - Use **code-simplification** when the main issue is structural complexity or nesting in existing code.
+- Use **code-smells** when a diff or tree needs a named Fowler smell table beyond a single complexity number.
 - Use **code-minimalism** when the diff contains bloat, unrequested abstractions, or premature dependencies.
 - Use **codebase-minimalism** when duplication or shadow flags span modules or languages beyond the diff.
 - Use **deprecation-migration** when the diff or review surfaces a legacy API that should be sunset.
@@ -59,6 +60,8 @@ For all modes:
 - Reproduce important delegated findings through the actual consumer when possible.
 - Resolve every method and class a README or spec advertises against the built artifact; a documented API absent from the code is a **Critical** finding.
 - When reviewing a refactor or deletion plan, verify that old and new paths were executed on identical inputs with matching observable outputs.
+
+Before findings, write cleanup targets `50%` and `75%` of scoped LOC. Scoped LOC counts only the files under review.
 
 For diff reviews, execute automated and structural gates before manual semantic review:
 1. **Automated Quality Pre-Flight Gate (Targeted & Deduplicated)**:
@@ -92,11 +95,9 @@ When re-reviewing an amended commit: verify the delta directly (`git diff <old> 
    - **Correctness**: Does what it claims; edge and error paths; no obvious race conditions.
    - **Safety & Security**: Inputs validated; parameterized queries; no hardcoded or leaked secrets.
    - **Performance & Concurrency**: No extra work on hot paths; no shared mutable state across async tasks/threads without locks.
-   - **Maintainability & Complexity**:
-     - Cyclomatic Complexity > 10, Cognitive Complexity > 15, or Nesting Depth >= 4 → **Important** (hand off to `code-simplification`).
-     - Cyclomatic Complexity > 20 or Cognitive Complexity > 20 without justification → **Critical**.
-     - Unjustified code duplication (> 15 identical lines) → **Important**.
-   - **Over-Engineering & YAGNI**: No single-implementation interfaces, unrequested dependencies, or speculative abstractions; deliberate shortcuts annotated with `# ponytail: <limit>`.
+   - **Maintainability**: Do not detect smells in this skill. Structural smells, complexity breaches, and identical-line duplication are **code-smells**. Cross-module semantic duplication is **codebase-minimalism**. Speculative abstractions are **code-minimalism**.
+   - A confirmed **code-smells** breach of a hard threshold in `rules/AGENTS.md` §3 is **Important**. A breach that skill marks extreme is **Critical**.
+   - **Over-Engineering & YAGNI**: No single-implementation interfaces, unrequested dependencies, or speculative abstractions; deliberate shortcuts annotated with `# ponytail: <limit>`. Hand the detection of those shapes to **code-minimalism**.
 
 ## Severity Levels (Text Only — No Emoji)
 - **Critical** — must fix before merge (bugs, security flaws, data loss, test/lint failures, breaking API shifts)
@@ -112,7 +113,10 @@ Calibrate severity by reachability. A latent defect unreachable by current paths
    - **Location**: `path/to/file.py#L42-L46`
    - **Failure Scenario**: Concrete input or race condition that triggers the defect.
    - **Correction & Acceptance**: Smallest fix direction, drop-in replacement diff when helpful, and regression test criteria.
+   - **Reducible LOC**: `N`, lines removed minus lines added if that fix landed. Use `unknown` when no replacement is sketched. Do not invent `N`.
    - **Rationale**: Operational, security, or data integrity impact.
-3. **Positive Notes** — Highlight clean patterns or effective tests (if any).
-4. **Questions** — Clarify ambiguous architectural assumptions (if any).
-5. **Reconciliation Verdict** (multi-agent review only) — Record `PROPOSE FIX`, `CONTEST`, `ESCALATE`, or `DECLINE` per finding. `CONTEST` requires a file and symbol, spec clause, or command output. Never change severity while contesting. `ESCALATE` when the proof is outside every readable artifact.
+3. **Reducible LOC total** — Sum of the numeric `Reducible LOC` values. Omit rows marked `unknown`.
+4. **Cleanup level** — `P%` = Reducible LOC total / scoped LOC. Mark each of `50%` and `75%` as `met` or `not met`. Unknown total: `Cleanup level: unknown`, both `not met`.
+5. **Positive Notes** — Highlight clean patterns or effective tests (if any).
+6. **Questions** — Clarify ambiguous architectural assumptions (if any).
+7. **Reconciliation Verdict** (multi-agent review only) — Record `PROPOSE FIX`, `CONTEST`, `ESCALATE`, or `DECLINE` per finding. `CONTEST` requires a file and symbol, spec clause, or command output. Never change severity while contesting. `ESCALATE` when the proof is outside every readable artifact.
