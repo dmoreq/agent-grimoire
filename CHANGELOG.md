@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.11.0] - 2026-11-06
+
+### Added
+- `skills/codebase-minimalism` (new): Cross-module semantic duplication harvest (shadow flags, reinvented helpers, DTO clones, service bypass) with one stdlib extractor, canonical-symbol blueprint, and handoffs to `code-minimalism`, `deprecation-migration`, `python-testing`, and `verify-and-stop`.
+
+### Changed
+- `skills/code-minimalism` and `skills/code-review`: Related-skill handoffs into `codebase-minimalism` for repo-wide semantic harvest vs YAGNI-on-write vs diff review.
+- `setup.sh` / `README.md`: Default install is 28 of 39 skills; `--all` covers 39.
+
 ## [2.10.0] - 2026-11-05
 
 ### Added

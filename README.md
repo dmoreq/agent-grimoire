@@ -16,6 +16,7 @@ agent-skills/
 │   ├── code-review/                 # Multi-axis review + YAGNI/bloat quality gate (+ 3 references)
 │   ├── code-simplification/         # Safe refactoring, reducing nesting & accidental complexity
 │   ├── codebase-contracts/          # Peanuts/Hay README contracts + spec/code drift audit (+ 1 reference)
+│   ├── codebase-minimalism/         # Cross-module semantic duplication harvest (+ 2 references, script)
 │   ├── context7-mcp/                # Live documentation lookup for libraries/frameworks
 │   ├── data-science/                # EDA, modeling, statistics, causal inference & A/B (+ script & reference)
 │   ├── data-storytelling/           # Decision-ready narratives for business stakeholders
@@ -66,6 +67,7 @@ agent-skills/
 | **`code-review`** | Systematic multi-axis review for Python & Rust (correctness, safety, performance, YAGNI/bloat, style). Mandatory quality gate. |
 | **`code-simplification`** | Safe refactoring to improve readability and reduce nesting in existing code without changing behavior. |
 | **`codebase-contracts`** | Generate Peanuts/Hay directory README contracts from code, then audit spec and README drift across six vectors. |
+| **`codebase-minimalism`** | Harvest symbols and audit semantic duplication (shadow flags, reinvented helpers, DTO clones) across modules and languages. |
 | **`context7-mcp`** | Fetching up-to-date documentation and code references via Context7 MCP. |
 | **`data-science`** | Statistical modeling, machine learning, A/B testing, exploratory analysis, and causal inference. |
 | **`data-storytelling`** | Decision narrative from **already-validated** metrics. Does not analyze or invent numbers. |
@@ -154,6 +156,7 @@ agent-skills/
 | Five-lens Goldfish review dispatch and reconciliation | `doubt-driven-development` + `references/goldfish-review-lenses.md` | Ad-hoc code review |
 | Spec drafting, brainstorm lenses, Gate 1 and Gate 2 | `spec-driven-design` | Implementation, review verdicts |
 | Directory README contracts, Peanuts/Hay, drift audit | `codebase-contracts` | Feature specs, diff review |
+| Cross-module semantic duplication audit and `Legacy -> Canonical` map | `codebase-minimalism` | YAGNI-on-write (`code-minimalism`), local nesting (`code-simplification`), public sunset (`deprecation-migration`) |
 | Live library docs | `context7-mcp` | SOTA comparison |
 
 ---
@@ -164,6 +167,7 @@ agent-skills/
 | :--- | :--- | :--- | :--- | :--- |
 | **Discovery** | **`context7-mcp`** | Need version-sensitive docs/API | `python-pro`, `python-concurrency`, `polars-duckdb`, `plotly-dash`, `tech-research` | Optional |
 | **Discovery** | **`codebase-contracts`** | Unknown codebase state or stale docs | `spec-driven-design` (ground the spec); `code-review` (contract drift); `verify-and-stop` | Optional |
+| **Cleanup / Dedup** | **`codebase-minimalism`** | Multi-module shadow flags, reinvented helpers, or DTO clones | Harvest summary + canonical map; `code-minimalism` (YAGNI-on-write); `deprecation-migration` (public sunset); `python-testing`; `verify-and-stop` | Optional |
 | **Discovery** | **`tech-research`** | Need SOTA, alternatives, trade-offs | `spec-driven-design` (turn evidence into a spec); `doubt-driven-development` (to lock); `deprecation-migration` (replace legacy); `technical-reporting` (formal report) | Optional |
 | **Decision** | **`spec-driven-design`** | Vague feature or open architecture | `doubt-driven-development` (five-lens review); `ux-product-shaper` (product shaping); `python-patterns`; `code-minimalism` | **Required before non-trivial implementation** |
 | **Decision** | **`doubt-driven-development`** | Non-trivial choice from research/architecture | `spec-driven-design` (audited spec); `ux-critic` (rendered-UI critique); `python-testing` (lock risks into tests); `code-review` (via implementation) | Optional, conditional |
@@ -224,6 +228,12 @@ codebase-contracts
     ├─ current contracts ─► spec-driven-design
     ├─ drift report ─► code-review
     └─ verified contracts ─► verify-and-stop
+
+codebase-minimalism
+    ├─ YAGNI-on-write finding ─► code-minimalism
+    ├─ public/facade canonical ─► deprecation-migration
+    ├─ characterization tests ─► python-testing
+    └─ harvest table done ─► verify-and-stop
 
 spec-driven-design
     ├─ approved spec ─► doubt-driven-development (five-lens review)
@@ -372,10 +382,10 @@ Skills are installed into the portable Agent Skills root (`~/.agents/skills`) an
 
 ```bash
 chmod +x setup.sh
-./setup.sh                 # Installs 27 of 38 skills (skips 3 Rust + 8 Flutter/Dart)
-./setup.sh --with-rust     # 30 of 38: adds Rust skills
-./setup.sh --with-flutter  # 35 of 38: adds Flutter/Dart skills
-./setup.sh --all           # 38 of 38: adds both optional groups
+./setup.sh                 # Installs 28 of 39 skills (skips 3 Rust + 8 Flutter/Dart)
+./setup.sh --with-rust     # 31 of 39: adds Rust skills
+./setup.sh --with-flutter  # 36 of 39: adds Flutter/Dart skills
+./setup.sh --all           # 39 of 39: adds both optional groups
 ```
 
 Useful flags:

@@ -39,6 +39,7 @@ Keep review-only requests read-only. Implement fixes through the language skill 
 - Use **python-pro** to apply the requested fix in the language idiomatic to the codebase.
 - Use **code-simplification** when the main issue is structural complexity or nesting in existing code.
 - Use **code-minimalism** when the diff contains bloat, unrequested abstractions, or premature dependencies.
+- Use **codebase-minimalism** when duplication or shadow flags span modules or languages beyond the diff.
 - Use **deprecation-migration** when the diff or review surfaces a legacy API that should be sunset.
 - Use **codebase-contracts** when a directory README or spec documents the changed behavior.
 - Use **python-testing** or crate tests when behavior changed without tests.
