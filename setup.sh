@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
-# Sync Global Agent Rules + Skills to Antigravity, Grok Build, OpenCode, Codex, Zed, and ZCode.
+# Sync Agent Grimoire rules and skills to Antigravity, Grok Build, OpenCode, Codex, Zed, and ZCode.
 # Default: user-global, skips Rust skills. See --help.
 set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RULES_FILE="$REPO_DIR/rules/AGENTS.md"
 SKILLS_DIR="$REPO_DIR/skills"
+MANIFEST_NAME=".agent-grimoire-managed"
+LEGACY_MANIFEST_NAME=".agent-skills-managed"
 
 SCOPE="user"          # user | project
 MODE="copy"           # copy | link
@@ -48,7 +50,7 @@ Options:
   --without-rust     Skip Rust skills (default).
   --with-flutter     Include Flutter/Dart skills. Default: skipped.
   --without-flutter  Skip Flutter/Dart skills (default).
-  --all              Include both Rust and Flutter/Dart skills (all 38). The default already targets every detected host.
+  --all              Include both Rust and Flutter/Dart skills (all 39). The default already targets every detected host.
   --link             Symlink skill folders from this repo (dev). Default is copy.
   --mirror-native    Also copy skills into native host dirs (duplicates ~/.agents/skills; for old hosts)
   --force            Replace unmanaged same-name skill dirs and create host dirs even if the product is not detected
@@ -183,6 +185,12 @@ manifest_has() {
     [[ -f "$manifest" ]] && grep -qxF "$name" "$manifest"
 }
 
+# True when this repo installed the skill under the current or the pre-rename manifest.
+managed_here() {
+    local dest="$1" name="$2"
+    manifest_has "$dest/$MANIFEST_NAME" "$name" || manifest_has "$dest/$LEGACY_MANIFEST_NAME" "$name"
+}
+
 # True when an existing skill dir is an unmodified copy from this repo.
 is_managed_copy() {
     local skill="$1" dest_skill="$2"
@@ -194,14 +202,15 @@ prune_our_skills() {
     local dest="$1"
     [[ -d "$dest" ]] || return 0
     assert_not_source_tree "$dest"
-    local manifest="$dest/.agent-skills-managed"
+    local manifest="$dest/$MANIFEST_NAME"
+    local legacy="$dest/$LEGACY_MANIFEST_NAME"
     local skill name dest_skill
     for skill in "$SKILLS_DIR"/*; do
         [[ -d "$skill" ]] || continue
         name="$(basename "$skill")"
         dest_skill="$dest/$name"
         [[ -e "$dest_skill" || -L "$dest_skill" ]] || continue
-        if manifest_has "$manifest" "$name" || is_managed_copy "$skill" "$dest_skill" || $FORCE; then
+        if managed_here "$dest" "$name" || is_managed_copy "$skill" "$dest_skill" || $FORCE; then
             if $DRY_RUN; then
                 log "  prune $dest_skill"
             else
@@ -211,14 +220,19 @@ prune_our_skills() {
             log "  skip unmanaged $dest_skill (not installed by this repo; use --force)"
         fi
     done
-    if ! $DRY_RUN && [[ -f "$manifest" ]]; then
+    if ! $DRY_RUN; then
         local tmp="$manifest.tmp.$$"
         : > "$tmp"
-        while IFS= read -r name; do
-            [[ -e "$dest/$name" || -L "$dest/$name" ]] && printf '%s\n' "$name" >> "$tmp"
-        done < "$manifest"
+        local source_manifest
+        for source_manifest in "$manifest" "$legacy"; do
+            [[ -f "$source_manifest" ]] || continue
+            while IFS= read -r name; do
+                [[ -e "$dest/$name" || -L "$dest/$name" ]] && printf '%s\n' "$name" >> "$tmp"
+            done < "$source_manifest"
+        done
         sort -u "$tmp" -o "$tmp"
         mv -f "$tmp" "$manifest"
+        rm -f -- "$legacy"
     fi
 }
 
@@ -229,8 +243,9 @@ sync_skills() {
     if ! $DRY_RUN; then
         mkdir -p "$dest"
     fi
-    local manifest="$dest/.agent-skills-managed"
-    local manifest_tmp="$dest/.agent-skills-managed.tmp.$$"
+    local manifest="$dest/$MANIFEST_NAME"
+    local legacy="$dest/$LEGACY_MANIFEST_NAME"
+    local manifest_tmp="$dest/$MANIFEST_NAME.tmp.$$"
     if ! $DRY_RUN; then
         : > "$manifest_tmp"
     fi
@@ -242,7 +257,7 @@ sync_skills() {
 
         if should_skip_skill "$name"; then
             if [[ -e "$dest_skill" || -L "$dest_skill" ]]; then
-                if manifest_has "$manifest" "$name" || is_managed_copy "$skill" "$dest_skill" || $FORCE; then
+                if managed_here "$dest" "$name" || is_managed_copy "$skill" "$dest_skill" || $FORCE; then
                     if $DRY_RUN; then
                         log "  prune skipped optional skill $name from $dest"
                     else
@@ -254,7 +269,7 @@ sync_skills() {
         fi
 
         if [[ -e "$dest_skill" || -L "$dest_skill" ]]; then
-            if ! manifest_has "$manifest" "$name" && ! is_managed_copy "$skill" "$dest_skill" && ! $FORCE; then
+            if ! managed_here "$dest" "$name" && ! is_managed_copy "$skill" "$dest_skill" && ! $FORCE; then
                 log "  skip unmanaged $dest_skill (not installed by this repo; use --force)"
                 continue
             fi
@@ -279,6 +294,7 @@ sync_skills() {
     if ! $DRY_RUN; then
         sort -u "$manifest_tmp" -o "$manifest_tmp"
         mv -f "$manifest_tmp" "$manifest"
+        rm -f -- "$legacy"
     fi
 }
 
@@ -444,7 +460,7 @@ fi
 N_SKILLS="$(skill_count)"
 
 log "========================================================"
-log "==> Agent Skills Setup"
+log "==> Agent Grimoire Setup"
 log "    repo:        $REPO_DIR"
 log "    scope:       $SCOPE"
 log "    mode:        $MODE"
@@ -477,7 +493,7 @@ if [[ "$SCOPE" == "project" ]]; then
     install_rules_file "$PROJECT_AGENTS" "$RULES_FILE"
     INSTALLED+=("project|$PROJECT_AGENTS|$PROJECT_SKILLS")
 else
-    # Portable Agent Skills root scanned by Grok, Codex, Zed, and other Agent Skills hosts.
+    # Portable skill root (~/.agents/skills) scanned by Grok, Codex, Zed, and OpenCode.
     if host_wanted portable; then
         DEST="$HOME/.agents/skills"
         log "==> [portable] ~/.agents/skills"

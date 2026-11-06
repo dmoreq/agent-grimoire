@@ -15,7 +15,7 @@ Build offline archives from tracked repository content.
 
 Options:
   --skills-only   Package only skills.tar.gz and skills.zip
-  --bundle-only   Package only agent-skills.tar.gz and agent-skills.zip
+  --bundle-only   Package only agent-grimoire.tar.gz and agent-grimoire.zip
   --help          Show this help
 
 Environment:
@@ -58,7 +58,7 @@ mkdir -p "$DIST_DIR"
 STAGE="$(mktemp -d "$DIST_DIR/.stage.XXXXXX")"
 trap 'rm -rf -- "$STAGE"' EXIT
 
-NAME="$(basename "$REPO_DIR")"
+BUNDLE_PREFIX="agent-grimoire"
 BUILT=()
 
 if $BUILD_SKILLS; then
@@ -70,11 +70,11 @@ fi
 
 if $BUILD_BUNDLE; then
     echo "==> Creating full offline bundles from tracked content"
-    git -C "$REPO_DIR" archive --format=tar.gz --prefix="$NAME/" \
-        -o "$STAGE/agent-skills.tar.gz" HEAD
-    git -C "$REPO_DIR" archive --format=zip --prefix="$NAME/" \
-        -o "$STAGE/agent-skills.zip" HEAD
-    BUILT+=("$STAGE/agent-skills.tar.gz" "$STAGE/agent-skills.zip")
+    git -C "$REPO_DIR" archive --format=tar.gz --prefix="$BUNDLE_PREFIX/" \
+        -o "$STAGE/$BUNDLE_PREFIX.tar.gz" HEAD
+    git -C "$REPO_DIR" archive --format=zip --prefix="$BUNDLE_PREFIX/" \
+        -o "$STAGE/$BUNDLE_PREFIX.zip" HEAD
+    BUILT+=("$STAGE/$BUNDLE_PREFIX.tar.gz" "$STAGE/$BUNDLE_PREFIX.zip")
 fi
 
 # Verify every archive before publishing. A failed build leaves the previous
@@ -87,8 +87,8 @@ for archive in "${BUILT[@]}"; do
 done
 
 if $BUILD_BUNDLE; then
-    TAR_LIST="$(tar -tzf "$STAGE/agent-skills.tar.gz")"
-    ZIP_LIST="$(unzip -Z1 "$STAGE/agent-skills.zip")"
+    TAR_LIST="$(tar -tzf "$STAGE/$BUNDLE_PREFIX.tar.gz")"
+    ZIP_LIST="$(unzip -Z1 "$STAGE/$BUNDLE_PREFIX.zip")"
     for forbidden in '/.zcode/' '/docs/' '/.git/' '/.env' '/.tmp/' '/dist/'; do
         if [[ "$TAR_LIST" == *"$forbidden"* ]]; then
             matches="$(printf '%s\n' "$TAR_LIST" | grep -F "$forbidden" | head -3 | tr '\n' ' ')"
@@ -100,7 +100,7 @@ if $BUILD_BUNDLE; then
             exit 1
         fi
     done
-    for required in "$NAME/skills/html-report/SKILL.md" "$NAME/rules/AGENTS.md" "$NAME/setup.sh" "$NAME/README.md"; do
+    for required in "$BUNDLE_PREFIX/skills/html-report/SKILL.md" "$BUNDLE_PREFIX/rules/AGENTS.md" "$BUNDLE_PREFIX/setup.sh" "$BUNDLE_PREFIX/README.md"; do
         if ! grep -Fqx "$required" <<< "$TAR_LIST"; then
             echo "ERROR: bundle is missing required path: $required" >&2
             exit 1

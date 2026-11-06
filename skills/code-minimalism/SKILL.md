@@ -5,6 +5,7 @@ description: >-
   stdlib before custom code, platform features before dependencies, one line before fifty.
   Use for /minimal, /ponytail, "be lazy", "simplest solution", "zero bloat", "yagni",
   or auditing generalized mechanisms versus ad-hoc copies.
+  Not for repo-wide semantic duplication harvest (codebase-minimalism).
 risk: safe
 source: local
 date_added: "2026-09-22"
@@ -27,12 +28,14 @@ Channels a pragmatic senior engineer: the best code is the code never written. Q
 ## When Not to Use
 - Non-coding requests (general prose, translation, stakeholder narratives)
 - Broad architectural redesigns requiring multi-system migrations (`deprecation-migration`)
+- Repo-wide semantic duplication harvest of shadow flags, DTO clones, or reinvented utilities (`codebase-minimalism`)
 - When the user explicitly requests full enterprise scaffolding
 
 ## Related Skills
 - Use **python-pro** to implement the minimal design in typed, tested Python.
 - Use **code-simplification** to clean up messy control flow in existing code without changing behavior.
 - Use **code-review** to verify that a pull request respects YAGNI and complexity budgets.
+- Use **codebase-minimalism** for a repo-wide harvest of shadow flags, DTO clones, or reinvented utilities.
 - Use **verify-and-stop** to confirm minimal acceptance criteria and terminate cleanly.
 
 ## 1. Concrete Anti-Bloat Heuristics
