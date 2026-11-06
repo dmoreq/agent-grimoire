@@ -6,9 +6,9 @@ Load this reference when classifying harvest alerts. Do not treat name overlap a
 
 1. **Variable / Variable** — Boolean or string flags (`is_`, `has_`, `can_`, `enable_`, `use_`) whose tokens overlap an Enum name or member. Canonical home is the Enum.
 2. **Function / Function** — Helpers in different files sharing two or more name tokens with Jaccard >= 0.5. Candidate for one shared function. Same-file pairs are ignored.
-3. **Function / Variable** — `get`/`calc`/`check`/`is` functions that overlap a CONSTANT. Prefer the constant or a lookup table.
-4. **Function / Module** — Raw HTTP or client calls (`requests`, `urllib`, `fetch`, `axios`, `http.Get`, `reqwest`, `dio`) while a `*client*` or `*sdk*` symbol exists. Candidate bypass, not a rewrite.
-5. **Type / Type** — Models or interfaces in different files sharing two or more name tokens (DTO clones).
+3. **Function / Variable** — `get_`/`calc_`/`check_`/`is_` (or camelCase `getX`) functions that overlap a CONSTANT on two or more tokens. Prefer the constant or a lookup table.
+4. **Function / Module** — Raw HTTP or client calls (`requests`, `urllib.request`, `http.client`, `fetch`, `axios`, `http.Get`, `reqwest`, `dio`) while a `*client*` or `*sdk*` symbol exists. Candidate bypass, not a rewrite.
+5. **Type / Type** — Models or interfaces in different files sharing two or more name tokens (DTO clones). One shared token is not enough.
 
 ## Python-only candidates
 

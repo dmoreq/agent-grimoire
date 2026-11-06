@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.0] - 2026-11-06
+
+### Changed
+- Product name is **Agent Grimoire** (formerly agent-skills). GitHub slug, README, setup banner, and offline archives use `agent-grimoire`.
+- `dist/agent-grimoire.tar.gz` and `dist/agent-grimoire.zip` replace `dist/agent-skills.tar.gz` and `dist/agent-skills.zip`. The archive prefix is `agent-grimoire/`.
+- Install manifest is `.agent-grimoire-managed`. Prune still reads `.agent-skills-managed` from an existing install, then rewrites the new file and removes the old one.
+- Host install path stays `~/.agents/skills`. Skill directory names are unchanged.
+
+### Fixed
+- `codebase-minimalism` extractor: SCREAMING_SNAKE tokenization, dead-code call counting, route-decorator matching, TypeScript `type` vs `enum`, Python `Flag`/`IntFlag`, `urllib.parse` false HTTP bypass, keyword-only flag params, one-token DTO equality, and Dart function harvest.
+
 ## [2.11.0] - 2026-11-06
 
 ### Added

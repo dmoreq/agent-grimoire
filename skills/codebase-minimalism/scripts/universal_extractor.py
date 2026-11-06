@@ -54,18 +54,29 @@ EXTENSION_MAP = {
 }
 STOPWORDS = {"get", "set", "def", "for", "the", "and", "data", "info", "func"}
 FLAG_PREFIXES = ("is_", "has_", "can_", "enable_", "use_")
-CALC_PREFIXES = ("get", "calc", "check", "is")
+CAMEL_FLAG = re.compile(r"^(is|has|can|enable|use)[A-Z0-9_]")
+CALC_SNAKE_PREFIXES = ("get_", "calc_", "check_", "is_")
+CALC_CAMEL = re.compile(r"^(get|calc|check|is)[A-Z]")
 DEAD_SKIP_NAMES = frozenset({"main", "run", "handler"})
-ROUTE_DECORATOR_MARKS = ("route", "fixture", "get", "post", "put", "patch", "delete")
+ROUTE_DECORATOR_MARKS = frozenset({"route", "fixture", "get", "post", "put", "patch", "delete"})
+ENUM_BASES = frozenset({"Enum", "IntEnum", "StrEnum", "ReprEnum", "Flag", "IntFlag"})
 BYPASS_PREFIXES = (
     "requests.",
-    "urllib.",
+    "urllib.request",
     "http.client",
     "http.Get",
     "http.Client",
+    "axios.",
+    "dio.",
+    "reqwest.",
+    "reqwest::",
 )
 BYPASS_NAMES = frozenset({"fetch", "axios", "reqwest", "dio", "requests"})
 CLIENT_MARKS = ("client", "sdk")
+_BYPASS_CALL_RE = re.compile(
+    r"\b(?:requests\.\w+|urllib\.request(?:\.\w+)?|http\.client(?:\.\w+)?|"
+    r"http\.Get|http\.Client|fetch\s*\(|axios\.\w+|dio\.\w+|reqwest(?:::\w+|\.\w+))"
+)
 
 LOGGER = logging.getLogger("codebase-minimalism")
 
@@ -99,15 +110,16 @@ class Alert:
 
 
 def tokenize_name(name: str) -> set[str]:
-    cleaned = re.sub(r"[^a-zA-Z0-9_]", " ", name)
-    words = re.findall(r"[A-Z]?[a-z]+|[A-Z]+(?=[A-Z][a-z]|\d|\W|$|\d+)", cleaned)
-    if not words:
-        words = cleaned.split("_")
+    cleaned = re.sub(r"[^a-zA-Z0-9_]+", "_", name).strip("_")
     tokens: set[str] = set()
-    for word in words:
-        clean = word.lower().strip("_")
-        if len(clean) > 2 and clean not in STOPWORDS:
-            tokens.add(clean)
+    for part in cleaned.split("_"):
+        if not part:
+            continue
+        words = re.findall(r"[A-Z]?[a-z]+|[A-Z]+(?=[A-Z][a-z]|\d|$)|[A-Z]+$", part)
+        for word in words or [part]:
+            clean = word.lower()
+            if len(clean) > 2 and clean not in STOPWORDS:
+                tokens.add(clean)
     return tokens
 
 
@@ -148,15 +160,32 @@ def _class_members(node: ast.ClassDef) -> list[str]:
     return members
 
 
-def _walk_calls(node: ast.AST) -> list[str]:
+def _walk_body_calls(node: ast.FunctionDef | ast.AsyncFunctionDef) -> list[str]:
     calls: list[str] = []
-    for child in ast.walk(node):
-        if not isinstance(child, ast.Call):
-            continue
-        name = _expr_name(child.func)
-        if name and name not in calls:
-            calls.append(name)
+    for stmt in node.body:
+        for child in ast.walk(stmt):
+            if not isinstance(child, ast.Call):
+                continue
+            name = _expr_name(child.func)
+            if name and name not in calls:
+                calls.append(name)
     return calls
+
+
+def _function_params(node: ast.FunctionDef | ast.AsyncFunctionDef) -> list[dict[str, str]]:
+    args = [*node.args.posonlyargs, *node.args.args, *node.args.kwonlyargs]
+    params: list[dict[str, str]] = []
+    for arg in args:
+        if arg.arg in ("self", "cls"):
+            continue
+        params.append(
+            {"name": arg.arg, "type": ast.unparse(arg.annotation) if arg.annotation else ""}
+        )
+    return params
+
+
+def _is_enum_class(bases: list[str]) -> bool:
+    return any(base.split(".")[-1] in ENUM_BASES for base in bases)
 
 
 class PythonCollector(ast.NodeVisitor):
@@ -164,10 +193,12 @@ class PythonCollector(ast.NodeVisitor):
         self.rel_path = rel_path
         self.symbols: list[Symbol] = []
         self.class_stack: list[str] = []
+        self.module_calls: list[str] = []
+        self._fn_depth = 0
 
     def visit_ClassDef(self, node: ast.ClassDef) -> None:
         bases = [_expr_name(base) for base in node.bases]
-        kind = "enum" if any("Enum" in base for base in bases) else "model"
+        kind = "enum" if _is_enum_class(bases) else "model"
         self.symbols.append(
             Symbol(
                 name=node.name,
@@ -184,10 +215,23 @@ class PythonCollector(ast.NodeVisitor):
         self.class_stack.pop()
 
     def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
+        self._fn_depth += 1
         self._add_function(node)
+        self.generic_visit(node)
+        self._fn_depth -= 1
 
     def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> None:
+        self._fn_depth += 1
         self._add_function(node)
+        self.generic_visit(node)
+        self._fn_depth -= 1
+
+    def visit_Call(self, node: ast.Call) -> None:
+        if self._fn_depth == 0:
+            name = _expr_name(node.func)
+            if name and name not in self.module_calls:
+                self.module_calls.append(name)
+        self.generic_visit(node)
 
     def visit_Assign(self, node: ast.Assign) -> None:
         if self.class_stack:
@@ -210,14 +254,10 @@ class PythonCollector(ast.NodeVisitor):
     def _add_function(self, node: ast.FunctionDef | ast.AsyncFunctionDef) -> None:
         parent = self.class_stack[-1] if self.class_stack else None
         qualified = f"{parent}.{node.name}" if parent else node.name
-        params = [
-            {"name": arg.arg, "type": ast.unparse(arg.annotation) if arg.annotation else ""}
-            for arg in node.args.args
-            if arg.arg not in ("self", "cls")
-        ]
+        params = _function_params(node)
         body = [stmt for stmt in node.body if not _is_docstring(stmt)]
         call_node = _call_from_stmt(body[0]) if len(body) == 1 else None
-        calls = _walk_calls(node)
+        calls = _walk_body_calls(node)
         loc = (node.end_lineno or node.lineno) - node.lineno + 1
         self.symbols.append(
             Symbol(
@@ -235,7 +275,6 @@ class PythonCollector(ast.NodeVisitor):
                 forward_target=_expr_name(call_node.func) if call_node else None,
             )
         )
-        self.generic_visit(node)
 
 
 def parse_python(rel_path: str, content: str) -> list[Symbol]:
@@ -246,6 +285,18 @@ def parse_python(rel_path: str, content: str) -> list[Symbol]:
         return []
     collector = PythonCollector(rel_path)
     collector.visit(tree)
+    if collector.module_calls:
+        collector.symbols.append(
+            Symbol(
+                name="<module>",
+                kind="module",
+                file=rel_path,
+                line=1,
+                language="python",
+                calls=collector.module_calls,
+                qualified_name="<module>",
+            )
+        )
     return collector.symbols
 
 
@@ -270,7 +321,7 @@ def _parse_parameter(raw: str, lang: str) -> dict[str, str] | None:
 
 def parse_regex_enums(rel_path: str, content: str, lang: str) -> list[Symbol]:
     symbols: list[Symbol] = []
-    pattern = re.compile(r"\b(?:enum|type)\s+([A-Za-z0-9_]+)\s*(?:=\s*)?\{([^}]+)\}", re.MULTILINE)
+    pattern = re.compile(r"\b(?:export\s+)?enum\s+([A-Za-z0-9_]+)\s*(?:=\s*)?\{([^}]+)\}", re.MULTILINE)
     for match in pattern.finditer(content):
         members = [w for w in re.findall(r"\b([A-Za-z0-9_]+)\b", match.group(2)) if not w.isdigit()]
         symbols.append(
@@ -312,6 +363,11 @@ _FN_PATTERNS = (
     re.compile(r"func\s+(?:\([^)]+\)\s+)?([A-Za-z0-9_]+)\s*\(([^)]*)\)"),
     re.compile(r"(?:pub\s+)?(?:async\s+)?fn\s+([A-Za-z0-9_]+)\s*(?:<[^>]+>)?\s*\(([^)]*)\)"),
     re.compile(r"\b(?:export\s+)?(?:const|let|var)\s+([A-Za-z0-9_]+)\s*=\s*(?:async\s*)?\(([^)]*)\)\s*=>"),
+    re.compile(
+        r"(?:^|[;{}\n])\s*(?:(?:static|async|override|export|public|private|protected)\s+)*"
+        r"(?:[A-Za-z_][\w.<>,\[\]?]*)\s+([a-zA-Z_]\w*)\s*\(([^)]*)\)\s*(?:async\s*)?(?:=>|\{)",
+        re.MULTILINE,
+    ),
 )
 
 
@@ -361,10 +417,44 @@ def parse_regex_constants(rel_path: str, content: str, lang: str) -> list[Symbol
 
 def parse_regex_file(rel_path: str, content: str, lang: str) -> list[Symbol]:
     symbols = parse_regex_enums(rel_path, content, lang)
-    symbols.extend(parse_regex_models(rel_path, content, lang))
+    enum_names = {s.name for s in symbols}
+    for model in parse_regex_models(rel_path, content, lang):
+        if model.name not in enum_names:
+            symbols.append(model)
     symbols.extend(parse_regex_functions(rel_path, content, lang))
     symbols.extend(parse_regex_constants(rel_path, content, lang))
+    attach_regex_calls(symbols, content)
     return symbols
+
+
+def _normalize_call_lexeme(raw: str) -> str:
+    text = raw.replace("(", "").strip()
+    if text.startswith("fetch"):
+        return "fetch"
+    return text
+
+
+def _function_at_or_before(functions: list[Symbol], lineno: int) -> Symbol | None:
+    owner: Symbol | None = None
+    for fn in functions:
+        if fn.line <= lineno:
+            owner = fn
+            continue
+        break
+    return owner
+
+
+def attach_regex_calls(symbols: list[Symbol], content: str) -> None:
+    functions = sorted((s for s in symbols if s.kind == "function"), key=lambda s: s.line)
+    if not functions:
+        return
+    for match in _BYPASS_CALL_RE.finditer(content):
+        owner = _function_at_or_before(functions, _line_of(content, match.start()))
+        if owner is None:
+            continue
+        call = _normalize_call_lexeme(match.group(0))
+        if call not in owner.calls:
+            owner.calls.append(call)
 
 
 def iter_source_files(root: Path) -> Iterator[tuple[Path, str, str]]:
@@ -411,20 +501,29 @@ def harvest(root: Path) -> list[Symbol]:
 
 def _is_flag_param(param: dict[str, str]) -> bool:
     name = param.get("name", "")
-    typ = param.get("type", "")
-    return name.startswith(FLAG_PREFIXES) or typ == "bool"
+    typ = param.get("type", "").lower()
+    if name.startswith(FLAG_PREFIXES) or CAMEL_FLAG.match(name):
+        return True
+    return "bool" in typ
+
+
+def _is_calculator_name(name: str) -> bool:
+    return name.lower().startswith(CALC_SNAKE_PREFIXES) or bool(CALC_CAMEL.match(name))
 
 
 def detect_variable_variable(symbols: list[Symbol], synonyms: dict[str, str]) -> list[Alert]:
     alerts: list[Alert] = []
     enums = [s for s in symbols if s.kind == "enum"]
     functions = [s for s in symbols if s.kind == "function"]
+    models = [s for s in symbols if s.kind == "model"]
     for enum in enums:
         enum_tokens = expand_tokens(tokenize_name(enum.name), synonyms)
         for member in enum.members:
             enum_tokens |= expand_tokens(tokenize_name(member), synonyms)
         for fn in functions:
             alerts.extend(_flag_overlaps(enum, enum_tokens, fn, synonyms))
+        for model in models:
+            alerts.extend(_flag_field_overlaps(enum, enum_tokens, model, synonyms))
     return alerts
 
 
@@ -446,6 +545,30 @@ def _flag_overlaps(
                 shadow_entity=f"Parameter '{param['name']}' in `{fn.qualified_name or fn.name}()`",
                 shadow_file=fn.file,
                 reason=f"Boolean flag '{param['name']}' shadows Enum '{enum.name}'. Matched: {sorted(overlap)}.",
+                confidence="HIGH",
+            )
+        )
+    return alerts
+
+
+def _flag_field_overlaps(
+    enum: Symbol, enum_tokens: set[str], model: Symbol, synonyms: dict[str, str]
+) -> list[Alert]:
+    alerts: list[Alert] = []
+    for member in model.members:
+        if not _is_flag_param({"name": member, "type": ""}):
+            continue
+        overlap = expand_tokens(tokenize_name(member), synonyms) & enum_tokens
+        if not overlap:
+            continue
+        alerts.append(
+            Alert(
+                duplication_type="variable/variable",
+                primary_entity=f"Enum {enum.name}",
+                primary_file=enum.file,
+                shadow_entity=f"Field '{member}' on `{model.name}`",
+                shadow_file=model.file,
+                reason=f"Boolean flag '{member}' shadows Enum '{enum.name}'. Matched: {sorted(overlap)}.",
                 confidence="HIGH",
             )
         )
@@ -514,7 +637,7 @@ def detect_function_variable(symbols: list[Symbol], synonyms: dict[str, str]) ->
     for const in constants:
         const_tokens = expand_tokens(tokenize_name(const.name), synonyms)
         for fn in functions:
-            if not fn.name.lower().startswith(CALC_PREFIXES):
+            if not _is_calculator_name(fn.name):
                 continue
             overlap = const_tokens & expand_tokens(tokenize_name(fn.name), synonyms)
             if len(overlap) < 2:
@@ -539,17 +662,21 @@ def _is_bypass_call(call: str) -> bool:
     return any(call.startswith(prefix) for prefix in BYPASS_PREFIXES)
 
 
-def _has_client_symbol(symbols: list[Symbol]) -> bool:
-    for symbol in symbols:
-        lower = symbol.name.lower()
-        if any(mark in lower for mark in CLIENT_MARKS):
-            return True
-    return False
+def _client_symbols(symbols: list[Symbol]) -> list[Symbol]:
+    clients = [
+        symbol
+        for symbol in symbols
+        if symbol.kind != "module" and any(mark in symbol.name.lower() for mark in CLIENT_MARKS)
+    ]
+    clients.sort(key=lambda s: (s.file, s.line, s.name))
+    return clients
 
 
 def detect_function_module(symbols: list[Symbol]) -> list[Alert]:
-    if not _has_client_symbol(symbols):
+    clients = _client_symbols(symbols)
+    if not clients:
         return []
+    primary = clients[0]
     alerts: list[Alert] = []
     for fn in symbols:
         if fn.kind != "function":
@@ -560,8 +687,8 @@ def detect_function_module(symbols: list[Symbol]) -> list[Alert]:
         alerts.append(
             Alert(
                 duplication_type="function/module",
-                primary_entity="Project client/SDK symbol",
-                primary_file="",
+                primary_entity=f"{primary.kind} `{primary.name}`",
+                primary_file=primary.file,
                 shadow_entity=f"Function `{fn.qualified_name or fn.name}()`",
                 shadow_file=fn.file,
                 reason=f"Raw HTTP/client call {hits} bypasses an existing client/SDK symbol.",
@@ -583,9 +710,7 @@ def detect_type_type(symbols: list[Symbol], synonyms: dict[str, str], cap: int) 
                 continue
             tokens_b = expand_tokens(tokenize_name(model_b.name), synonyms)
             intersection = tokens_a & tokens_b
-            if len(intersection) < 2 and tokens_a != tokens_b:
-                continue
-            if not intersection:
+            if len(intersection) < 2:
                 continue
             alerts.append(
                 Alert(
@@ -621,19 +746,35 @@ def wrapper_candidates(symbols: list[Symbol]) -> list[dict[str, Any]]:
 
 def _is_route(fn: Symbol) -> bool:
     for decorator in fn.decorators:
-        low = decorator.lower()
-        if any(mark in low for mark in ROUTE_DECORATOR_MARKS):
+        segments = {part.lower() for part in decorator.split(".")}
+        if segments & ROUTE_DECORATOR_MARKS:
             return True
     return False
+
+
+def _is_self_call(fn: Symbol, call: str) -> bool:
+    return call in {fn.name, fn.qualified_name, f"self.{fn.name}", f"cls.{fn.name}"}
+
+
+def _count_targets(call: str) -> list[str]:
+    if "." not in call:
+        return [call]
+    head, tail = call.rsplit(".", 1)
+    if head in {"self", "cls"}:
+        return [tail, call]
+    return [call]
 
 
 def dead_code_candidates(symbols: list[Symbol]) -> list[dict[str, Any]]:
     functions = [s for s in symbols if s.kind == "function" and s.language == "python"]
     counts: dict[str, int] = defaultdict(int)
-    for fn in functions:
-        for call in fn.calls:
-            counts[call] += 1
-            counts[call.split(".")[-1]] += 1
+    callers = [s for s in symbols if s.language == "python" and s.kind in {"function", "module"}]
+    for caller in callers:
+        for call in caller.calls:
+            if caller.kind == "function" and _is_self_call(caller, call):
+                continue
+            for target in _count_targets(call):
+                counts[target] += 1
     rows: list[dict[str, Any]] = []
     for fn in functions:
         if fn.name.startswith("_") or fn.name in DEAD_SKIP_NAMES or _is_route(fn):

@@ -1,13 +1,13 @@
-# Agent Skills
+# Agent Grimoire
 
-A curated, token-efficient collection of **Global Agent Rules** and **Custom Skills** designed for the **Google Antigravity**, **Zed**, **Grok**, **OpenAI Codex**, **OpenCode**, and **ZCode Desktop** coding assistant environments.
+Agent Grimoire is a portable rules kernel and skill pack for coding agents (formerly agent-skills). It installs one `AGENTS.md` and a curated skill catalog to Antigravity, Grok, Codex, Zed, OpenCode, and ZCode.
 
 ---
 
 ## Repository Structure
 
 ```text
-agent-skills/
+agent-grimoire/
 ├── rules/
 │   └── AGENTS.md                    # Global agent behavioral directives & kernel standards
 ├── skills/
@@ -363,7 +363,7 @@ code-review
 
 ## Installation & Setup
 
-Skills are installed into the portable Agent Skills root (`~/.agents/skills`) and native host trees. Filtering with `--host codex`, `grok`, `opencode`, or `zed` also installs the portable root those hosts read. Antigravity and ZCode use their native roots.
+Skills install into `~/.agents/skills` because that is the root those hosts already scan, plus each host's native tree. Filtering with `--host codex`, `grok`, `opencode`, or `zed` also installs that portable root. Antigravity and ZCode use their native roots. The product name is Agent Grimoire. The install path stays `~/.agents/skills`.
 
 ### Host Discovery Paths
 
@@ -404,7 +404,7 @@ Useful flags:
 ./setup.sh --force                  # replace unmanaged same-name skill dirs and create undetected host dirs
 ```
 
-Rules files are written atomically. If an existing file differs, the installer creates `AGENTS.md.bak.<timestamp>.<pid>` and preserves custom `##` sections. Skill roots record installed names in `.agent-skills-managed`; pruning removes only managed skills.
+Rules files are written atomically. If an existing file differs, the installer creates `AGENTS.md.bak.<timestamp>.<pid>` and preserves custom `##` sections. Skill roots record installed names in `.agent-grimoire-managed`. Pruning still reads a pre-rename `.agent-skills-managed` file, then rewrites the new manifest and removes the old one. Pruning removes only managed skills.
 
 Restart each agent session after install.
 
@@ -436,7 +436,7 @@ To package skills for transfer to an offline system:
 chmod +x package.sh
 ./package.sh
 ./package.sh --skills-only          # only skills.tar.gz and skills.zip
-./package.sh --bundle-only          # only agent-skills.tar.gz and agent-skills.zip
+./package.sh --bundle-only          # only agent-grimoire.tar.gz and agent-grimoire.zip
 DIST_DIR=/tmp/out ./package.sh      # custom output directory
 ```
 
@@ -444,4 +444,4 @@ Packages are built from `git archive HEAD`, so untracked and ignored files (`.zc
 
 Packages generated in `dist/`:
 - **`dist/skills.tar.gz` & `dist/skills.zip`**: Standalone skills package.
-- **`dist/agent-skills.tar.gz` & `dist/agent-skills.zip`**: Complete offline bundle (`skills/`, `rules/`, `tests/`, `setup.sh`, `README.md`, `CHANGELOG.md`).
+- **`dist/agent-grimoire.tar.gz` & `dist/agent-grimoire.zip`**: Complete offline bundle (`skills/`, `rules/`, `tests/`, `setup.sh`, `README.md`, `CHANGELOG.md`).

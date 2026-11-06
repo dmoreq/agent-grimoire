@@ -97,10 +97,24 @@ INSTALL_HOME="$TEST_HOME/install"
 HOME="$INSTALL_HOME" "$REPO_DIR/setup.sh" --host portable >/dev/null
 SKILL_COUNT="$(find "$INSTALL_HOME/.agents/skills" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')"
 [[ "$SKILL_COUNT" == "28" ]] || fail "portable install wrote $SKILL_COUNT skills, expected 28"
-[[ -f "$INSTALL_HOME/.agents/skills/.agent-skills-managed" ]] || fail "portable install did not write a manifest"
+[[ -f "$INSTALL_HOME/.agents/skills/.agent-grimoire-managed" ]] || fail "portable install did not write a manifest"
+[[ ! -e "$INSTALL_HOME/.agents/skills/.agent-skills-managed" ]] || fail "portable install wrote the legacy manifest"
 [[ ! -d "$INSTALL_HOME/.agents/skills/rust-pro" ]] || fail "portable install included rust-pro"
 [[ ! -d "$INSTALL_HOME/.agents/skills/flutter-architecture-data" ]] || fail "portable install included Flutter by default"
 echo "  Non-dry portable install writes 28 base skills and a manifest"
+
+# Test 5a: a pre-rename manifest still authorizes an update, then is replaced.
+LEGACY_HOME="$TEST_HOME/legacy"
+mkdir -p "$LEGACY_HOME/.agents/skills/code-review"
+printf 'stale skill\n' > "$LEGACY_HOME/.agents/skills/code-review/SKILL.md"
+printf 'code-review\n' > "$LEGACY_HOME/.agents/skills/.agent-skills-managed"
+HOME="$LEGACY_HOME" "$REPO_DIR/setup.sh" --host portable >/dev/null
+LEGACY_DEST="$LEGACY_HOME/.agents/skills"
+[[ -f "$LEGACY_DEST/.agent-grimoire-managed" ]] || fail "legacy install did not write the new manifest"
+[[ ! -e "$LEGACY_DEST/.agent-skills-managed" ]] || fail "legacy install kept the old manifest"
+grep -qxF "code-review" "$LEGACY_DEST/.agent-grimoire-managed" || fail "legacy install dropped code-review"
+grep -Fq "name: code-review" "$LEGACY_DEST/code-review/SKILL.md" || fail "legacy manifest did not authorize the skill update"
+echo "  Legacy manifest authorizes the update and is removed"
 
 # Test 5b: --with-flutter installs 36 skills including Dart/Flutter.
 FLUTTER_HOME="$TEST_HOME/flutter"
