@@ -94,3 +94,11 @@ Commands whose output is candidates: `reuse`, `unresolved`, `mem query`, `mem ge
 
 - Pointers lead with `path:line`; open only the targeted line range via editor tools, never dumping whole files into context.
 - `aw symbols <file> --outline` replaces reading whole source files when you only need definition inventories and signatures.
+
+## Fallback When aw is Unavailable
+
+When neither `aw` CLI nor MCP `agent-weave` is available in the environment:
+- **Callers & References**: Run targeted regex searches (`rg -n --column "\b<symbol>\b"` or `git grep -n "\b<symbol>\b"`) constrained to relevant directories and file extensions.
+- **Bounded Line Reads**: Read only target line intervals (`read_file` with `StartLine`/`EndLine` or `sed -n 'L1,L2p'`). Never dump unbounded source files into context.
+- **Surroundings & Signatures**: Use compiler diagnostics, language servers, or focused grep for signatures rather than loading full modules.
+- **Dependency Impact**: Inspect top-of-file `import` / `use` statements and module manifests directly instead of crawling arbitrary directories.

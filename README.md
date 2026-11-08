@@ -407,6 +407,8 @@ Useful flags:
 ./setup.sh --without-rust           # skip Rust skills (default)
 ./setup.sh --with-flutter           # include Flutter/Dart skills
 ./setup.sh --without-flutter        # skip Flutter/Dart skills (default)
+./setup.sh --with-aw                # include aw-first skill (default)
+./setup.sh --without-aw             # skip aw-first skill (for environments without aw)
 ./setup.sh --all                    # include both Rust and Flutter/Dart skills
 ./setup.sh --dry-run                # print destinations only
 ./setup.sh --host zed,codex         # subset of hosts; portable root is auto-included

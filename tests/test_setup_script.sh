@@ -59,6 +59,14 @@ assert_contains "$OUT_ALL" "skill rust-pro ->" "--all did not include Rust"
 assert_contains "$OUT_ALL" "skill flutter-ui-responsive-a11y ->" "--all did not include Flutter"
 echo "  --all syncs both optional groups"
 
+# Test 2d: --without-aw skips aw-first; default includes aw-first.
+assert_contains "$OUT_DEFAULT" "skill aw-first ->" "aw-first was not synced by default"
+OUT_NO_AW="$("$REPO_DIR/setup.sh" --dry-run --without-aw)"
+assert_not_contains "$OUT_NO_AW" "skill aw-first ->" "aw-first was synced with --without-aw"
+OUT_WITH_AW="$("$REPO_DIR/setup.sh" --dry-run --without-aw --with-aw)"
+assert_contains "$OUT_WITH_AW" "skill aw-first ->" "aw-first was not synced after --with-aw"
+echo "  --without-aw skips aw-first and --with-aw re-enables it"
+
 # Test 3: Filtered hosts that read ~/.agents/skills also install portable skills.
 for host in codex grok zed; do
     OUT_HOST="$("$REPO_DIR/setup.sh" --dry-run --host "$host")"

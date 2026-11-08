@@ -19,6 +19,7 @@ HOSTS_FILTER_SET=false
 SUPPORTED_HOSTS=("portable" "antigravity" "grok" "opencode" "codex" "zed" "zcode")
 WITH_RUST=false       # skip Rust skills by default
 WITH_FLUTTER=false    # skip Flutter/Dart skills by default
+WITH_AW=true          # include aw-first skill by default
 
 # Rust skills skipped by default unless --with-rust is passed
 RUST_SKILLS=("rust-pro" "rust-async-patterns" "pyo3-maturin")
@@ -50,6 +51,8 @@ Options:
   --without-rust     Skip Rust skills (default).
   --with-flutter     Include Flutter/Dart skills. Default: skipped.
   --without-flutter  Skip Flutter/Dart skills (default).
+  --with-aw          Include aw-first skill (default).
+  --without-aw       Skip aw-first skill (for environments without aw).
   --all              Include both Rust and Flutter/Dart skills (all 42). The default already targets every detected host.
   --link             Symlink skill folders from this repo (dev). Default is copy.
   --mirror-native    Also copy skills into native host dirs (duplicates ~/.agents/skills; for old hosts)
@@ -111,12 +114,19 @@ is_flutter_skill() {
     return 1
 }
 
+is_aw_skill() {
+    [[ "$1" == "aw-first" ]]
+}
+
 should_skip_skill() {
     local name="$1"
     if ! $WITH_RUST && is_rust_skill "$name"; then
         return 0
     fi
     if ! $WITH_FLUTTER && is_flutter_skill "$name"; then
+        return 0
+    fi
+    if ! $WITH_AW && is_aw_skill "$name"; then
         return 0
     fi
     return 1
@@ -419,6 +429,8 @@ while [[ $# -gt 0 ]]; do
         --without-rust) WITH_RUST=false; shift ;;
         --with-flutter) WITH_FLUTTER=true; shift ;;
         --without-flutter) WITH_FLUTTER=false; shift ;;
+        --with-aw) WITH_AW=true; shift ;;
+        --without-aw) WITH_AW=false; shift ;;
         --all)     WITH_RUST=true; WITH_FLUTTER=true; shift ;;
         --link)    MODE="link"; shift ;;
         --mirror-native) MIRROR_NATIVE=true; shift ;;
@@ -474,6 +486,11 @@ if $WITH_FLUTTER; then
     log "    flutter skills: enabled (8 Dart/Flutter skills)"
 else
     log "    flutter skills: skipped by default (pass --with-flutter to enable)"
+fi
+if $WITH_AW; then
+    log "    aw skill:    enabled (aw-first; default; pass --without-aw to skip)"
+else
+    log "    aw skill:    skipped (pass --with-aw to enable)"
 fi
 $DRY_RUN && log "    dry-run:     yes"
 log "========================================================"

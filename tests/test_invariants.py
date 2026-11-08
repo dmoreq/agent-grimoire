@@ -914,6 +914,8 @@ def test_setup_flags_and_hosts_are_documented():
         "--without-rust",
         "--with-flutter",
         "--without-flutter",
+        "--with-aw",
+        "--without-aw",
         "--all",
         "--link",
         "--mirror-native",

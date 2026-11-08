@@ -68,7 +68,7 @@ repository's `AGENTS.md`, not here.
 
 ## 3. Code Quality & Verification
 - **Code Navigation Invariant**:
-  When locating callers, callees, the impact of a change, the call route between two symbols, a symbol's surroundings, a file's imports, or searching existing helpers, follow the **`aw-first`** routing policy and query `aw` (CLI or MCP `agent-weave`) first before reading entire source files or running broad greps. Verify pointed lines directly.
+  When locating callers, callees, the impact of a change, the call route between two symbols, a symbol's surroundings, a file's imports, or searching existing helpers, follow the **`aw-first`** routing policy and query `aw` (CLI or MCP `agent-weave`) first before reading entire source files or running broad greps. If `aw` is unavailable in the environment, fall back to targeted `rg` / `grep` and bounded line reads. Verify pointed lines directly.
 - Use the project's formatter and linter when available (`make format`, `make lint`, Ruff, Black, Biome, etc.).
 - **Acceptance Criteria First**: Before implementing, state the checkable acceptance criterion (a reproducing test, a passing command). Transform vague tasks into verifiable goals. For multi-step work, plan one verify check per step. Weak criteria ("make it work") force clarification loops.
 - **Targeted Test Execution & Parallelism**:
