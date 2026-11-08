@@ -149,9 +149,9 @@ Before handoff, fail the design system if any check fails:
 
 ## Related Skills
 - Use **ux-product-shaper** for the product brief, Surface Mode, and 8-state contract before tokens.
+- Use **dashboard-design** when component tokens and specs target operational or analytics monitoring dashboards.
 - Use **ui-accessibility** to audit contrast, focus, target size, and reduced motion.
 - Use **html-report** to implement the system in a single-file HTML deliverable (`dossier`, `zen-garden`, or `chronicle`).
 - Use **plotly-dash** to implement the system in a server-backed Dash application.
 - Use **deprecation-migration** when retiring tokens or components with active consumers.
-- Use **ui-accessibility** to audit contrast, focus, target size, and reduced motion.
 - Use **flutter-ui-responsive-a11y** when the design tokens are implemented in Flutter via Material 3 `ThemeExtension`.

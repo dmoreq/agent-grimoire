@@ -23,6 +23,7 @@ Simplify code for clarity and maintainability without changing behavior. Focus o
 - You do not yet understand the code
 - Performance-critical path where simpler form is measurably worse
 - Broad redesign or rewrite is the real goal
+- The task is to name which Fowler smell applies (`code-smells`)
 - No tests and behavior is risky to change without characterization first
 
 ## Core Principles
@@ -34,13 +35,7 @@ Simplify code for clarity and maintainability without changing behavior. Focus o
 
 ## Process
 1. Understand responsibility, callers, edge cases, and existing tests.
-2. Identify opportunities:
-   - deep nesting → guard clauses / early returns / helpers
-   - long functions → split by single responsibility
-   - nested ternaries / conditional chains → clear branching or dispatch
-   - weak names (`data`, `temp`, `result`) → domain-specific names
-   - duplication → shared canonical helper when stable
-   - dead code → remove only when confirmed unused
+2. Start only from a refactor plan the user has approved. Do not run a second smell detector. Apply the recipe that matches the smell name. Do not delete a dead-code, webhook, or `getattr` row. Those stay with `deprecation-migration`.
 3. Apply one simplification at a time.
 4. Verify targeted tests/build still pass (`pytest -n 4 path/to/test_module.py`). Do not run full test suites or pre-commit hooks between incremental simplification edits.
 5. Stop when a new teammate would understand it faster.
@@ -67,6 +62,7 @@ Simplify code for clarity and maintainability without changing behavior. Focus o
 
 ## Related Skills
 - Triggered from **code-review** when structural complexity is flagged.
+- Use **code-smells** when the code needs a named Fowler smell before a rewrite.
 - Use **code-minimalism** if the primary problem is speculative over-engineering or unnecessary libraries.
 - Use **python-testing** (or crate tests) to lock behavior before simplifying.
 - Before merge: **code-review**.

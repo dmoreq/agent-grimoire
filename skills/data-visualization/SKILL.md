@@ -26,6 +26,7 @@ Create clear, accurate, readable charts with Plotly (default for interactive/HTM
 - Computing statistical metrics or running A/B tests (`data-science`)
 
 ## Related Skills
+- Use **dashboard-design** when embedding charts into multi-metric KPI strips, ranked breakdown lists, or monitoring grids.
 - Use **ui-accessibility** to audit chart contrast, legends, and text alternatives for WCAG 2.2.
 - Use **data-science** or **polars-duckdb** to compute and validate metrics before plotting.
 - Use **html-report** when exported SVG or Plotly figures must be assembled into one offline HTML deliverable (`dossier`, `zen-garden`, or `chronicle`).

@@ -1,12 +1,12 @@
 # Refactor Blueprint
 
-Load this reference after clustering harvest alerts. Produce a table. Do not edit code unless the user asked.
+Load this reference after clustering harvest alerts. Produce a table for the user to approve. Do not edit the scanned code in this skill.
 
 ## Canonical lexicon
 
-| Legacy symbol | File | Canonical symbol | File | Dimension | Action |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| `is_done` | `mod.py` | `Status.DONE` | `status.py` | variable/variable | Replace flag with Enum |
+| Legacy symbol | File | Canonical symbol | File | Dimension | Action | Reducible LOC |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `is_done` | `mod.py` | `Status.DONE` | `status.py` | variable/variable | Replace flag with Enum | 4 |
 
 One bounded context per table. Stop after one context unless the user asked for more.
 

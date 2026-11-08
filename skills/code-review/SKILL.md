@@ -36,10 +36,12 @@ Keep review-only requests read-only. Implement fixes through the language skill 
 - Prove artifact reachability using the loader's true resolution paths rather than flat directory probes.
 
 ## Related Skills
+- Use **aw-first** to map change blast radius, reverse call closures, and call route impact (`aw callers`, `aw callees`, `aw impact`).
 - Use **python-pro** to apply the requested fix in the language idiomatic to the codebase.
 - Use **code-simplification** when the main issue is structural complexity or nesting in existing code.
+- Use **code-smells** when the user needs a smell refactor plan and a smell count.
 - Use **code-minimalism** when the diff contains bloat, unrequested abstractions, or premature dependencies.
-- Use **codebase-minimalism** when duplication or shadow flags span modules or languages beyond the diff.
+- Use **codebase-minimalism** when the user says slim, debloat, reduce LOC, cut excess lines, or review the codebase for duplicate or excess code.
 - Use **deprecation-migration** when the diff or review surfaces a legacy API that should be sunset.
 - Use **codebase-contracts** when a directory README or spec documents the changed behavior.
 - Use **python-testing** or crate tests when behavior changed without tests.
@@ -92,11 +94,9 @@ When re-reviewing an amended commit: verify the delta directly (`git diff <old> 
    - **Correctness**: Does what it claims; edge and error paths; no obvious race conditions.
    - **Safety & Security**: Inputs validated; parameterized queries; no hardcoded or leaked secrets.
    - **Performance & Concurrency**: No extra work on hot paths; no shared mutable state across async tasks/threads without locks.
-   - **Maintainability & Complexity**:
-     - Cyclomatic Complexity > 10, Cognitive Complexity > 15, or Nesting Depth >= 4 → **Important** (hand off to `code-simplification`).
-     - Cyclomatic Complexity > 20 or Cognitive Complexity > 20 without justification → **Critical**.
-     - Unjustified code duplication (> 15 identical lines) → **Important**.
-   - **Over-Engineering & YAGNI**: No single-implementation interfaces, unrequested dependencies, or speculative abstractions; deliberate shortcuts annotated with `# ponytail: <limit>`.
+   - **Maintainability**: Do not detect smells here. Hand structural smells to **code-smells** and cross-module duplication to **codebase-minimalism**. Do not open a second finding for the same row.
+   - When a **code-smells** plan marks a hard-threshold breach from `rules/AGENTS.md` §3, record **Important**. Record **Critical** only when that plan marks it extreme: more than double the hard cap, with no written justification.
+   - **Over-Engineering & YAGNI**: No single-implementation interfaces, unrequested dependencies, or speculative abstractions. Shortcuts use `# ponytail: <limit>`.
 
 ## Severity Levels (Text Only — No Emoji)
 - **Critical** — must fix before merge (bugs, security flaws, data loss, test/lint failures, breaking API shifts)

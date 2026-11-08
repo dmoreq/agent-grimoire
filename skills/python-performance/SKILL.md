@@ -26,6 +26,7 @@ Load `references/implementation-playbook.md` **only** for a named profiler recip
 - Premature micro-optimization off the critical path
 
 ## Related Skills
+- Use **aw-first** to trace callers, callees, and symbol surroundings around profiled hotspots (`aw callers`, `aw context`).
 - Use **polars-duckdb** when migrating slow Pandas/Python loops to vectorized Polars or DuckDB.
 - Use **python-concurrency** when the bottleneck is I/O wait or needs multi-core CPU parallelism.
 - Use **pyo3-maturin** when a confirmed CPU hotspot cannot be accelerated further in Python.

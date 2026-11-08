@@ -12,12 +12,15 @@ agent-grimoire/
 │   └── AGENTS.md                    # Global agent behavioral directives & kernel standards
 ├── skills/
 │   ├── algorithm-optimization/      # Systematic KPI & algorithm improvement loop (+ 4 references)
+│   ├── aw-first/                    # Fast code-intelligence routing (aw CLI & agent-weave MCP)
 │   ├── code-minimalism/             # YAGNI-first minimalist code generation (+ 2 references)
 │   ├── code-review/                 # Multi-axis review + YAGNI/bloat quality gate (+ 3 references)
+│   ├── code-smells/                 # Fowler smell catalog and Python structural scan (+ 1 reference, script)
 │   ├── code-simplification/         # Safe refactoring, reducing nesting & accidental complexity
 │   ├── codebase-contracts/          # Peanuts/Hay README contracts + spec/code drift audit (+ 1 reference)
 │   ├── codebase-minimalism/         # Cross-module semantic duplication harvest (+ 2 references, script)
 │   ├── context7-mcp/                # Live documentation lookup for libraries/frameworks
+│   ├── dashboard-design/            # Clean, honest dashboard UI, KPI strips & monitoring grids (+ 10 references)
 │   ├── data-science/                # EDA, modeling, statistics, causal inference & A/B (+ script & reference)
 │   ├── data-storytelling/           # Decision-ready narratives for business stakeholders
 │   ├── data-visualization/          # Plotly-first charts, layout optimization & anti-overlap QA
@@ -63,12 +66,15 @@ agent-grimoire/
 | Skill Name | Purpose |
 | :--- | :--- |
 | **`algorithm-optimization`** | Systematic workflow to optimize algorithms/processes against target metrics while guarding healthy cases. |
+| **`aw-first`** | Routing policy for code agents with the `aw` code index: callers, callees, impact, paths, helper search, duplicate detection, and memory. |
 | **`code-minimalism`** | Forces simplest, shortest, most minimal code (YAGNI). Reaches for stdlib before custom code, platform features before dependencies, 1-liner before 50. |
 | **`code-review`** | Systematic multi-axis review for Python & Rust (correctness, safety, performance, YAGNI/bloat, style). Mandatory quality gate. |
+| **`code-smells`** | Name Fowler smell types. A Python script reports structural candidates. The other types are a manual pass. |
 | **`code-simplification`** | Safe refactoring to improve readability and reduce nesting in existing code without changing behavior. |
 | **`codebase-contracts`** | Generate Peanuts/Hay directory README contracts from code, then audit spec and README drift across six vectors. |
 | **`codebase-minimalism`** | Harvest symbols and audit semantic duplication (shadow flags, reinvented helpers, DTO clones) across modules and languages. |
 | **`context7-mcp`** | Fetching up-to-date documentation and code references via Context7 MCP. |
+| **`dashboard-design`** | Clean, honest dashboard UI: KPI cards, charts, heatmaps, comparison periods, ranked breakdowns, date range pickers, filters, and screenshot QA. |
 | **`data-science`** | Statistical modeling, machine learning, A/B testing, exploratory analysis, and causal inference. |
 | **`data-storytelling`** | Decision narrative from **already-validated** metrics. Does not analyze or invent numbers. |
 | **`data-visualization`** | Plotly-first clean visual creation, SVG export, text density hygiene, and anti-overlap QA. |
@@ -120,6 +126,7 @@ agent-grimoire/
 | Tone, no emoji, LaTeX minimization, ASD-STE100, git/secrets, memory safety, temp files | `rules/AGENTS.md` §1 & §4 | Skills |
 | YAGNI Code Generation Ladder (stdlib/native first) | `rules/AGENTS.md` §2 | Skills (kernel-wide) |
 | Verify-and-Stop Invariant (runaway prevention) | `rules/AGENTS.md` §3 + `verify-and-stop` | Ongoing loops |
+| Static code graph navigation, helper discovery, duplicate detection | `aw-first` | Broad grep loops, full file reads |
 | Subagent delegation, parallel planning & peer-review | `rules/AGENTS.md` §1 | Skills |
 | Skip formal reports; tables first; date-prefixed files | `rules/AGENTS.md` §5 stub | Full viz encyclopedias |
 | Aggressive YAGNI intensity tiers (`lite` / `full` / `ultra`) | `code-minimalism` | `AGENTS.md` |
@@ -127,6 +134,7 @@ agent-grimoire/
 | Saved Markdown, Mermaid allowlist, asset paths | `technical-reporting` | HTML reports, Plotly, QBR narrative |
 | Single-file HTML layout, dual-theme and print CSS, client-side filtering | `html-report` | Markdown reports, chart design, server apps |
 | Product UI visual design, 3-tier tokens, component specs, responsive layout | `design-system` | Markdown reports, chart design, UX research |
+| Operational/analytics dashboard layout, KPI strips, first-glance monitoring | `dashboard-design` | Generic web forms, single charts, raw reports |
 | UX research, Surface Mode, IA, 8-state contract | `ux-product-shaper` | Visual design, implementation |
 | WCAG 2.2, keyboard/focus, accessibility audit | `ui-accessibility` | Visual style, token generation |
 | Adversarial UI critique, heuristic evaluation, steering vocabulary | `ux-critic` | Implementation, code review |
@@ -147,6 +155,7 @@ agent-grimoire/
 | Rust types, errors, unsafe | `rust-pro` | Tokio task design |
 | Tokio structured concurrency | `rust-async-patterns` | Sync Rust |
 | Merge quality gate | `code-review` | Other skill YAML |
+| Fowler smell catalog and structural candidates | `code-smells` | Correctness review (`code-review`), local rewrite (`code-simplification`), semantic duplication (`codebase-minimalism`) |
 | Flutter MVVM layers, Repository/Service, `Result<T>` | `flutter-architecture-data` | Widget code, state management skill choice |
 | Dart 3 idioms, Effective Dart, strict analysis | `dart-modern-idioms` | Widget code, test structure |
 | Flutter testing strategy (Fakes, golden, integration) | `flutter-testing-verification` | Feature implementation |
@@ -195,6 +204,7 @@ agent-grimoire/
 | **Optimization** | **`algorithm-optimization`** | KPI/quality degradation on real data | `data-visualization` (charts); `technical-reporting` or `html-report` (saved deliverable) | Optional |
 | **Testing** | **`python-testing`** | Logic change from `python-pro` or cleanup | Pre-merge verification safety net | **Required for logic changes** |
 | **Cleanup** | **`code-simplification`** | Deep nesting, Cyclomatic/Cognitive complexity flagged | Verified by tests; returned to `code-review` | Optional |
+| **Smells** | **`code-smells`** | Named Fowler smells in a Python tree or a review | Candidate table; `code-simplification` for a rewrite; `codebase-minimalism` for semantic duplication; `verify-and-stop` | Optional |
 | **QA Gate** | **`code-review`** | PR/diff from implementation or refactoring | Merged when passing six review axes and complexity gates; `codebase-contracts` for drift; `ui-accessibility` for UI review; `html-report` for an HTML audit page | **Required on merge path** |
 | **Flutter Architecture** | **`flutter-architecture-data`** | New Flutter project or feature | `dart-modern-idioms` (language); `flutter-state-management` (state); `flutter-testing-verification` (tests); `flutter-codegen-release` (models) | Optional |
 | **Dart Idioms** | **`dart-modern-idioms`** | Writing or reviewing Dart code | `code-review` (merge gate); `flutter-architecture-data` (architecture) | Optional |
@@ -311,6 +321,7 @@ python-pro
 code-review
     ├─ fix code ─► python-pro
     ├─ reduce complexity ─► code-simplification
+    ├─ name Fowler smells ─► code-smells
     ├─ trim bloat ─► code-minimalism
     ├─ check documented contracts ─► codebase-contracts
     ├─ UI and WCAG review ─► ui-accessibility
@@ -355,6 +366,7 @@ code-review
 | Optimize quality / accuracy / KPI on real data | **`algorithm-optimization`** |
 | Write or debug pytest suites | **`python-testing`** |
 | Refactor working code to reduce nesting/complexity | **`code-simplification`** |
+| Name Fowler code smells in a Python tree | **`code-smells`** |
 | Review PR/diff before merge (correctness, safety, YAGNI) | **`code-review`** |
 | Look up version-sensitive library docs | **`context7-mcp`** |
 | Safely sunset or migrate legacy APIs/systems | **`deprecation-migration`** |
@@ -382,10 +394,10 @@ Skills install into `~/.agents/skills` because that is the root those hosts alre
 
 ```bash
 chmod +x setup.sh
-./setup.sh                 # Installs 28 of 39 skills (skips 3 Rust + 8 Flutter/Dart)
-./setup.sh --with-rust     # 31 of 39: adds Rust skills
-./setup.sh --with-flutter  # 36 of 39: adds Flutter/Dart skills
-./setup.sh --all           # 39 of 39: adds both optional groups
+./setup.sh                 # Installs 31 of 42 skills (skips 3 Rust + 8 Flutter/Dart)
+./setup.sh --with-rust     # 34 of 42: adds Rust skills
+./setup.sh --with-flutter  # 39 of 42: adds Flutter/Dart skills
+./setup.sh --all           # 42 of 42: adds both optional groups
 ```
 
 Useful flags:
@@ -395,6 +407,8 @@ Useful flags:
 ./setup.sh --without-rust           # skip Rust skills (default)
 ./setup.sh --with-flutter           # include Flutter/Dart skills
 ./setup.sh --without-flutter        # skip Flutter/Dart skills (default)
+./setup.sh --with-aw                # include aw-first skill (default)
+./setup.sh --without-aw             # skip aw-first skill (for environments without aw)
 ./setup.sh --all                    # include both Rust and Flutter/Dart skills
 ./setup.sh --dry-run                # print destinations only
 ./setup.sh --host zed,codex         # subset of hosts; portable root is auto-included

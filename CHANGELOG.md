@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.1.0] - 2026-11-08
+
+### Added
+- `skills/dashboard-design` (new): Clean, honest, wordless dashboard UI for web and native with KPI strips, same-elapsed-time comparisons, sparklines, ranked breakdowns, popover date pickers, responsive grids, and screenshot QA (+ 10 references).
+- `skills/aw-first` (new): Fast code-intelligence routing policy for code agents with the `aw` code index (`agent-weave` CLI & MCP) for symbol callers, callees, impact closures, shortest call paths, definition surroundings, canonical helper search, duplicate detection, and project memory.
+- Global Rule: `Optimization Impossibility Consensus Gate (EGM Dual-Expert Review)` in `rules/AGENTS.md` §1 requiring at least two independent expert Goldfish reviewers under EGM in isolated contexts to independently investigate and reach consensus before declaring an optimization unachievable.
+- Global Rule: `Code Navigation Invariant` in `rules/AGENTS.md` §3 routing symbol lookups to `aw-first`.
+
+### Changed
+- `codebase-minimalism` also triggers on slim, debloat, reduce LOC, cut excess lines, and review a codebase for duplicate or excess code.
+- Integrated `aw-first` into `code-minimalism`, `codebase-minimalism`, `code-review`, `algorithm-optimization`, and `python-performance`.
+- Integrated `dashboard-design` into `design-system`, `data-visualization`, and `ux-product-shaper`.
+- `setup.sh` / `README.md`: Default portable install is 31 of 42 skills; `--all` covers 42.
+
+## [3.0.1] - 2026-11-06
+
+### Added
+- `skills/code-smells` (new): Fowler catalog of 21 smell types and a Python structural scanner. The skill writes a refactor plan for the user to approve. It does not edit the scanned code. Its KPI is smells found and smells in plan.
+
+### Changed
+- Smell detection lives in `code-smells`. `code-review` no longer restates complexity or identical-line rules. It records a handoff. An extreme breach is more than double the hard cap in `rules/AGENTS.md` §3 with no written justification.
+- `codebase-minimalism` writes an excess-LOC refactor plan and does not edit the scanned code. Its KPI is excess LOC found. It does not report a smell count.
+- `code-simplification` edits only after the user approves that plan. Dead-code, webhook, and `getattr` rows stay with `deprecation-migration`.
+- `setup.sh` / `README.md`: Default install is 29 of 40 skills; `--all` covers 40.
+
 ## [3.0.0] - 2026-11-06
 
 ### Changed

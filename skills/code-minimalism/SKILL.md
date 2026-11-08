@@ -29,13 +29,16 @@ Channels a pragmatic senior engineer: the best code is the code never written. Q
 - Non-coding requests (general prose, translation, stakeholder narratives)
 - Broad architectural redesigns requiring multi-system migrations (`deprecation-migration`)
 - Repo-wide semantic duplication harvest of shadow flags, DTO clones, or reinvented utilities (`codebase-minimalism`)
+- Naming a Fowler smell or measuring function length and branch count (`code-smells`)
 - When the user explicitly requests full enterprise scaffolding
 
 ## Related Skills
+- Use **aw-first** to discover canonical existing helpers and interfaces (`aw search`) before implementing new types or utilities.
 - Use **python-pro** to implement the minimal design in typed, tested Python.
 - Use **code-simplification** to clean up messy control flow in existing code without changing behavior.
 - Use **code-review** to verify that a pull request respects YAGNI and complexity budgets.
-- Use **codebase-minimalism** for a repo-wide harvest of shadow flags, DTO clones, or reinvented utilities.
+- Use **codebase-minimalism** for slim, debloat, reduce LOC, or a repo-wide harvest of shadow flags, DTO clones, or reinvented utilities.
+- Use **code-smells** to name a structural smell or measure function length and branch count. Do not restate those thresholds here.
 - Use **verify-and-stop** to confirm minimal acceptance criteria and terminate cleanly.
 
 ## 1. Concrete Anti-Bloat Heuristics
@@ -57,7 +60,7 @@ Follow the Code Generation Ladder defined in `rules/AGENTS.md` §2. In this skil
 When auditing an existing module for bloat, duplicate dialect branches, or export sprawl (see `references/generalization-and-export-audits.md` for the full 10-step protocol):
 1. **Verify Live Execution Paths First**: Grep the production entry point before calling a class "the architecture" or "dead". Exported stage classes used only by tests are false generalizations; symbols imported by sibling packages are live contracts even if omitted from `__all__`.
 2. **Separate General Mechanisms, Domain Heuristics, and Entity Exceptions**: Do not equate moving hardcoded rules into a JSON file or a generic rules engine with generalization—a rules framework only relocates exceptions without validating their assumptions.
-3. **Measure Hotspots Programmatically with `ast`**: Treat functions > 40 effective lines as a soft inspection trigger and > 50 as a hard finding; also flag > 12 branch nodes (`If`, `BoolOp`, `IfExp`). Follow `rules/AGENTS.md` §3 for the canonical thresholds, and count duplicate regex/keyword decision sites across the package rather than guessing ad-hoc percentages from filenames.
+3. **Structural hotspots**: Do not re-measure function length or branch count here. Take those rows from **code-smells**. Follow `rules/AGENTS.md` §3 for the canonical thresholds. This step only counts duplicate regex or keyword decision sites across the package.
 4. **Lock Public Outputs Before Collapsing Copies**: Run the production entry point on representative inputs and lock public return fields before merging duplicate branches or deleting shims. Separate copy elimination from control-flow reordering into distinct commits.
 5. **Keep Commit Slices Import- and Typecheck-Clean**: Dropping a re-export shim and retargeting its callers must land in the same commit so `pre-commit` / `pyright` never sees a broken intermediate tree.
 
