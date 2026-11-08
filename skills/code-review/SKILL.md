@@ -36,11 +36,12 @@ Keep review-only requests read-only. Implement fixes through the language skill 
 - Prove artifact reachability using the loader's true resolution paths rather than flat directory probes.
 
 ## Related Skills
+- Use **aw-first** to map change blast radius, reverse call closures, and call route impact (`aw callers`, `aw callees`, `aw impact`).
 - Use **python-pro** to apply the requested fix in the language idiomatic to the codebase.
 - Use **code-simplification** when the main issue is structural complexity or nesting in existing code.
 - Use **code-smells** when the user needs a smell refactor plan and a smell count.
 - Use **code-minimalism** when the diff contains bloat, unrequested abstractions, or premature dependencies.
-- Use **codebase-minimalism** when the user needs an excess-LOC refactor plan.
+- Use **codebase-minimalism** when the user says slim, debloat, reduce LOC, cut excess lines, or review the codebase for duplicate or excess code.
 - Use **deprecation-migration** when the diff or review surfaces a legacy API that should be sunset.
 - Use **codebase-contracts** when a directory README or spec documents the changed behavior.
 - Use **python-testing** or crate tests when behavior changed without tests.

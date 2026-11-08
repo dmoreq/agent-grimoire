@@ -105,5 +105,6 @@ Hand the brief to `design-system` for tokens, component specs, and responsive ru
 
 ## Related Skills
 - Use **spec-driven-design** for the approved feature spec and Critical User Journeys before shaping.
+- Use **dashboard-design** when shaping operational, analytics, or metric monitoring surfaces.
 - Use **design-system** to turn the brief into tokens, component specs, and responsive rules.
 - Use **ux-critic** to red-team the rendered result after implementation.

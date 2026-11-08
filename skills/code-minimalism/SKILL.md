@@ -33,10 +33,11 @@ Channels a pragmatic senior engineer: the best code is the code never written. Q
 - When the user explicitly requests full enterprise scaffolding
 
 ## Related Skills
+- Use **aw-first** to discover canonical existing helpers and interfaces (`aw search`) before implementing new types or utilities.
 - Use **python-pro** to implement the minimal design in typed, tested Python.
 - Use **code-simplification** to clean up messy control flow in existing code without changing behavior.
 - Use **code-review** to verify that a pull request respects YAGNI and complexity budgets.
-- Use **codebase-minimalism** for a repo-wide harvest of shadow flags, DTO clones, or reinvented utilities.
+- Use **codebase-minimalism** for slim, debloat, reduce LOC, or a repo-wide harvest of shadow flags, DTO clones, or reinvented utilities.
 - Use **code-smells** to name a structural smell or measure function length and branch count. Do not restate those thresholds here.
 - Use **verify-and-stop** to confirm minimal acceptance criteria and terminate cleanly.
 

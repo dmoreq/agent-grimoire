@@ -1,9 +1,11 @@
 ---
 name: codebase-minimalism
 description: >-
-  Find as much excess LOC as possible from semantic duplication and write a
-  refactor plan for the user to approve. Not for editing code, YAGNI-on-write,
-  smell cleanup, or public API sunsets.
+  Write an excess-LOC refactor plan for duplicate concepts, shadow flags, DTO
+  clones, or reinvented helpers. Trigger on slim, debloat, reduce LOC, cut
+  excess lines, or review a codebase for duplicate or excess code.
+  Not for a bug-only diff review, a smell-only scan, editing code,
+  YAGNI-on-write, or public API sunsets.
 risk: safe
 source: local
 date_added: "2026-11-06"
@@ -18,6 +20,8 @@ The KPI is excess LOC placed in a refactor plan. Find duplicate concepts across 
 
 ## When to Use
 
+- The user says slim, debloat, reduce LOC, cut excess lines, or review the codebase for duplicate or excess code.
+- The scope is the tree or more than one module, not a single bug diff.
 - Reinvented helpers, validators, or formatters appear in more than one directory or language.
 - Shadow boolean flags or string categories duplicate an Enum or typed state.
 - DTOs and models proliferate (`UserData`, `UserProfile`, `UserDTO`) with overlapping fields.
@@ -77,6 +81,7 @@ Stop. Do not edit the scanned code. Optional saved report: `docs/reports/YYYY-MM
 
 ## Related Skills
 
+- Use **aw-first** for fast static index queries (`aw reuse`, `aw impact`, `aw callers`) to detect semantic duplication, client bypasses, and 1-caller wrappers.
 - Use **code-minimalism** when the finding is "do not write this helper" on a new path.
 - Use **deprecation-migration** when the canonical replacement is a public or facade symbol.
 - Use **python-testing** to lock inputs and outputs before any edit.

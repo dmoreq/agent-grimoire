@@ -28,3 +28,6 @@ __pycache__/
 
 # ZCode session state
 .zcode/
+
+# Agent Weave code index and memory
+.aw/

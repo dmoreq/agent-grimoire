@@ -37,6 +37,11 @@ repository's `AGENTS.md`, not here.
     - Feed the reviewer only the isolated deliverable + contract/criteria (strip author reasoning).
     - Run review passes concurrently as streams complete. Canonical fix-review bounds: diff/code review `<= 2` cycles; spec/design review `<= 3` cycles. Skills must reference these bounds, not restate them.
     - Reconcile and resolve all Critical and Important findings before declaring completion.
+  - **Optimization Impossibility Consensus Gate (EGM Dual-Expert Review)**:
+    - Whenever an agent determines that an optimization request (runtime latency, throughput, memory, algorithmic complexity, structural simplification, or quality KPI) cannot be achieved or is infeasible, it must not return a superficial, dismissive, or cursory response.
+    - The agent must dispatch at least two independent expert reviewers (stateless Goldfish personas under the Extended Goldfish Model, EGM) with distinct specialized lenses (e.g., Performance & Systems Goldfish, Algorithmic / Contrarian Goldfish, SOTA / Industry Prior-Art Goldfish) in isolated contexts.
+    - Both experts must independently research alternative formulations, algorithmic paradigms, or structural redesigns, and cross-examine the claimed limitation.
+    - Only when both independent expert reviewers reach documented consensus that the optimization is genuinely mathematically, physically, or structurally infeasible under explicit system constraints may the negative conclusion and its trade-offs be reported to the user, backed by concrete evidence and metrics.
 
 ## 2. Project Behavior & Constraints
 - **Rules File Discovery**: Before the first edit in a repository, locate and read its `AGENTS.md`. Treat the conventions it states as binding for that repository. Do not read `CLAUDE.md`, `GEMINI.md`, or other agent rules files.
@@ -62,6 +67,8 @@ repository's `AGENTS.md`, not here.
   - State the contradiction in plain text and ask for resolution. Never plan or execute a mutating tool call in the same turn that the contradiction is found.
 
 ## 3. Code Quality & Verification
+- **Code Navigation Invariant**:
+  When locating callers, callees, the impact of a change, the call route between two symbols, a symbol's surroundings, a file's imports, or searching existing helpers, follow the **`aw-first`** routing policy and query `aw` (CLI or MCP `agent-weave`) first before reading entire source files or running broad greps. Verify pointed lines directly.
 - Use the project's formatter and linter when available (`make format`, `make lint`, Ruff, Black, Biome, etc.).
 - **Acceptance Criteria First**: Before implementing, state the checkable acceptance criterion (a reproducing test, a passing command). Transform vague tasks into verifiable goals. For multi-step work, plan one verify check per step. Weak criteria ("make it work") force clarification loops.
 - **Targeted Test Execution & Parallelism**:
@@ -122,3 +129,4 @@ repository's `AGENTS.md`, not here.
 - Adversarial UI critique and heuristic evaluation live in **`ux-critic`**.
 - Minimalism and YAGNI doctrine for UI lives in **`design-system`** and **`ux-product-shaper`**; accessibility invariants remain non-negotiable in **`ui-accessibility`**.
 - Plotly chart design, anti-overlap, and SVG export live in **`data-visualization`**.
+- Operational and analytics dashboard layouts, KPI strips, and first-glance monitoring live in **`dashboard-design`**.

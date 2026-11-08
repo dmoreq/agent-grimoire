@@ -861,6 +861,7 @@ def test_readme_reference_counts_match_directories():
         "code-minimalism": 2,
         "code-review": 3,
         "codebase-contracts": 1,
+        "dashboard-design": 10,
         "deprecation-migration": 2,
         "design-system": 1,
         "doubt-driven-development": 1,

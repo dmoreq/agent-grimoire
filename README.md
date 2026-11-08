@@ -12,6 +12,7 @@ agent-grimoire/
 │   └── AGENTS.md                    # Global agent behavioral directives & kernel standards
 ├── skills/
 │   ├── algorithm-optimization/      # Systematic KPI & algorithm improvement loop (+ 4 references)
+│   ├── aw-first/                    # Fast code-intelligence routing (aw CLI & agent-weave MCP)
 │   ├── code-minimalism/             # YAGNI-first minimalist code generation (+ 2 references)
 │   ├── code-review/                 # Multi-axis review + YAGNI/bloat quality gate (+ 3 references)
 │   ├── code-smells/                 # Fowler smell catalog and Python structural scan (+ 1 reference, script)
@@ -19,6 +20,7 @@ agent-grimoire/
 │   ├── codebase-contracts/          # Peanuts/Hay README contracts + spec/code drift audit (+ 1 reference)
 │   ├── codebase-minimalism/         # Cross-module semantic duplication harvest (+ 2 references, script)
 │   ├── context7-mcp/                # Live documentation lookup for libraries/frameworks
+│   ├── dashboard-design/            # Clean, honest dashboard UI, KPI strips & monitoring grids (+ 10 references)
 │   ├── data-science/                # EDA, modeling, statistics, causal inference & A/B (+ script & reference)
 │   ├── data-storytelling/           # Decision-ready narratives for business stakeholders
 │   ├── data-visualization/          # Plotly-first charts, layout optimization & anti-overlap QA
@@ -64,6 +66,7 @@ agent-grimoire/
 | Skill Name | Purpose |
 | :--- | :--- |
 | **`algorithm-optimization`** | Systematic workflow to optimize algorithms/processes against target metrics while guarding healthy cases. |
+| **`aw-first`** | Routing policy for code agents with the `aw` code index: callers, callees, impact, paths, helper search, duplicate detection, and memory. |
 | **`code-minimalism`** | Forces simplest, shortest, most minimal code (YAGNI). Reaches for stdlib before custom code, platform features before dependencies, 1-liner before 50. |
 | **`code-review`** | Systematic multi-axis review for Python & Rust (correctness, safety, performance, YAGNI/bloat, style). Mandatory quality gate. |
 | **`code-smells`** | Name Fowler smell types. A Python script reports structural candidates. The other types are a manual pass. |
@@ -71,6 +74,7 @@ agent-grimoire/
 | **`codebase-contracts`** | Generate Peanuts/Hay directory README contracts from code, then audit spec and README drift across six vectors. |
 | **`codebase-minimalism`** | Harvest symbols and audit semantic duplication (shadow flags, reinvented helpers, DTO clones) across modules and languages. |
 | **`context7-mcp`** | Fetching up-to-date documentation and code references via Context7 MCP. |
+| **`dashboard-design`** | Clean, honest dashboard UI: KPI cards, charts, heatmaps, comparison periods, ranked breakdowns, date range pickers, filters, and screenshot QA. |
 | **`data-science`** | Statistical modeling, machine learning, A/B testing, exploratory analysis, and causal inference. |
 | **`data-storytelling`** | Decision narrative from **already-validated** metrics. Does not analyze or invent numbers. |
 | **`data-visualization`** | Plotly-first clean visual creation, SVG export, text density hygiene, and anti-overlap QA. |
@@ -122,6 +126,7 @@ agent-grimoire/
 | Tone, no emoji, LaTeX minimization, ASD-STE100, git/secrets, memory safety, temp files | `rules/AGENTS.md` §1 & §4 | Skills |
 | YAGNI Code Generation Ladder (stdlib/native first) | `rules/AGENTS.md` §2 | Skills (kernel-wide) |
 | Verify-and-Stop Invariant (runaway prevention) | `rules/AGENTS.md` §3 + `verify-and-stop` | Ongoing loops |
+| Static code graph navigation, helper discovery, duplicate detection | `aw-first` | Broad grep loops, full file reads |
 | Subagent delegation, parallel planning & peer-review | `rules/AGENTS.md` §1 | Skills |
 | Skip formal reports; tables first; date-prefixed files | `rules/AGENTS.md` §5 stub | Full viz encyclopedias |
 | Aggressive YAGNI intensity tiers (`lite` / `full` / `ultra`) | `code-minimalism` | `AGENTS.md` |
@@ -129,6 +134,7 @@ agent-grimoire/
 | Saved Markdown, Mermaid allowlist, asset paths | `technical-reporting` | HTML reports, Plotly, QBR narrative |
 | Single-file HTML layout, dual-theme and print CSS, client-side filtering | `html-report` | Markdown reports, chart design, server apps |
 | Product UI visual design, 3-tier tokens, component specs, responsive layout | `design-system` | Markdown reports, chart design, UX research |
+| Operational/analytics dashboard layout, KPI strips, first-glance monitoring | `dashboard-design` | Generic web forms, single charts, raw reports |
 | UX research, Surface Mode, IA, 8-state contract | `ux-product-shaper` | Visual design, implementation |
 | WCAG 2.2, keyboard/focus, accessibility audit | `ui-accessibility` | Visual style, token generation |
 | Adversarial UI critique, heuristic evaluation, steering vocabulary | `ux-critic` | Implementation, code review |
@@ -388,10 +394,10 @@ Skills install into `~/.agents/skills` because that is the root those hosts alre
 
 ```bash
 chmod +x setup.sh
-./setup.sh                 # Installs 29 of 40 skills (skips 3 Rust + 8 Flutter/Dart)
-./setup.sh --with-rust     # 32 of 40: adds Rust skills
-./setup.sh --with-flutter  # 37 of 40: adds Flutter/Dart skills
-./setup.sh --all           # 40 of 40: adds both optional groups
+./setup.sh                 # Installs 31 of 42 skills (skips 3 Rust + 8 Flutter/Dart)
+./setup.sh --with-rust     # 34 of 42: adds Rust skills
+./setup.sh --with-flutter  # 39 of 42: adds Flutter/Dart skills
+./setup.sh --all           # 42 of 42: adds both optional groups
 ```
 
 Useful flags:
