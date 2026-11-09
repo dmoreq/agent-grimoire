@@ -271,6 +271,40 @@ sync_skills() {
     if ! $DRY_RUN; then
         : > "$manifest_tmp"
     fi
+
+    # Prune any previously managed skill that no longer exists in this repo (e.g. renamed aw-first)
+    local old_manifest old_name
+    local all_manifests=("$manifest")
+    for legacy_name in "${LEGACY_MANIFEST_NAMES[@]}"; do
+        all_manifests+=("$dest/$legacy_name")
+    done
+    for old_manifest in "${all_manifests[@]}"; do
+        [[ -f "$old_manifest" ]] || continue
+        while IFS= read -r old_name; do
+            [[ -n "$old_name" ]] || continue
+            if [[ ! -d "$SKILLS_DIR/$old_name" ]]; then
+                if [[ -e "$dest/$old_name" || -L "$dest/$old_name" ]]; then
+                    if $DRY_RUN; then
+                        log "  prune removed skill $old_name from $dest"
+                    else
+                        rm -rf -- "$dest/$old_name"
+                    fi
+                fi
+            fi
+        done < "$old_manifest"
+    done
+
+    # Explicitly remove legacy renamed skills
+    for legacy_skill in "aw-first"; do
+        if [[ -e "$dest/$legacy_skill" || -L "$dest/$legacy_skill" ]]; then
+            if $DRY_RUN; then
+                log "  prune legacy renamed skill $legacy_skill from $dest"
+            else
+                rm -rf -- "$dest/$legacy_skill"
+            fi
+        fi
+    done
+
     local skill name dest_skill stage
     for skill in "$SKILLS_DIR"/*; do
         [[ -d "$skill" ]] || continue
