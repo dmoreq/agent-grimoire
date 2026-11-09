@@ -59,13 +59,22 @@ assert_contains "$OUT_ALL" "skill rust-pro ->" "--all did not include Rust"
 assert_contains "$OUT_ALL" "skill flutter-ui-responsive-a11y ->" "--all did not include Flutter"
 echo "  --all syncs both optional groups"
 
-# Test 2d: --without-aw skips aw-first; default includes aw-first.
-assert_contains "$OUT_DEFAULT" "skill aw-first ->" "aw-first was not synced by default"
+# Test 2d: --without-engram skips engram-first; default includes engram-first.
+assert_contains "$OUT_DEFAULT" "skill engram-first ->" "engram-first was not synced by default"
+OUT_NO_ENGRAM="$("$REPO_DIR/setup.sh" --dry-run --without-engram)"
+assert_not_contains "$OUT_NO_ENGRAM" "skill engram-first ->" "engram-first was synced with --without-engram"
+OUT_WITH_ENGRAM="$("$REPO_DIR/setup.sh" --dry-run --without-engram --with-engram)"
+assert_contains "$OUT_WITH_ENGRAM" "skill engram-first ->" "engram-first was not synced after --with-engram"
+# Test 2d1: legacy aw/eg aliases keep working.
 OUT_NO_AW="$("$REPO_DIR/setup.sh" --dry-run --without-aw)"
-assert_not_contains "$OUT_NO_AW" "skill aw-first ->" "aw-first was synced with --without-aw"
-OUT_WITH_AW="$("$REPO_DIR/setup.sh" --dry-run --without-aw --with-aw)"
-assert_contains "$OUT_WITH_AW" "skill aw-first ->" "aw-first was not synced after --with-aw"
-echo "  --without-aw skips aw-first and --with-aw re-enables it"
+assert_not_contains "$OUT_NO_AW" "skill engram-first ->" "engram-first was synced with --without-aw"
+OUT_WITH_AW="$("$REPO_DIR/setup.sh" --dry-run --without-engram --with-aw)"
+assert_contains "$OUT_WITH_AW" "skill engram-first ->" "engram-first was not synced after --with-aw"
+OUT_NO_EG="$("$REPO_DIR/setup.sh" --dry-run --without-eg)"
+assert_not_contains "$OUT_NO_EG" "skill engram-first ->" "engram-first was synced with --without-eg"
+OUT_WITH_EG="$("$REPO_DIR/setup.sh" --dry-run --without-engram --with-eg)"
+assert_contains "$OUT_WITH_EG" "skill engram-first ->" "engram-first was not synced after --with-eg"
+echo "  --without-engram skips engram-first, and all flag aliases are accepted"
 
 # Test 3: Filtered hosts that read ~/.agents/skills also install portable skills.
 for host in codex grok zed; do
@@ -105,24 +114,40 @@ INSTALL_HOME="$TEST_HOME/install"
 HOME="$INSTALL_HOME" "$REPO_DIR/setup.sh" --host portable >/dev/null
 SKILL_COUNT="$(find "$INSTALL_HOME/.agents/skills" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')"
 [[ "$SKILL_COUNT" == "32" ]] || fail "portable install wrote $SKILL_COUNT skills, expected 32"
-[[ -f "$INSTALL_HOME/.agents/skills/.agent-grimoire-managed" ]] || fail "portable install did not write a manifest"
+[[ -f "$INSTALL_HOME/.agents/skills/.precept-managed" ]] || fail "portable install did not write a manifest"
+[[ ! -e "$INSTALL_HOME/.agents/skills/.agent-grimoire-managed" ]] || fail "portable install wrote the grimoire manifest"
 [[ ! -e "$INSTALL_HOME/.agents/skills/.agent-skills-managed" ]] || fail "portable install wrote the legacy manifest"
 [[ ! -d "$INSTALL_HOME/.agents/skills/rust-pro" ]] || fail "portable install included rust-pro"
 [[ ! -d "$INSTALL_HOME/.agents/skills/flutter-architecture-data" ]] || fail "portable install included Flutter by default"
 echo "  Non-dry portable install writes 32 base skills and a manifest"
 
-# Test 5a: a pre-rename manifest still authorizes an update, then is replaced.
+# Test 5a: a pre-rename .agent-skills-managed manifest authorizes an update, then is replaced.
 LEGACY_HOME="$TEST_HOME/legacy"
 mkdir -p "$LEGACY_HOME/.agents/skills/code-review"
 printf 'stale skill\n' > "$LEGACY_HOME/.agents/skills/code-review/SKILL.md"
 printf 'code-review\n' > "$LEGACY_HOME/.agents/skills/.agent-skills-managed"
 HOME="$LEGACY_HOME" "$REPO_DIR/setup.sh" --host portable >/dev/null
 LEGACY_DEST="$LEGACY_HOME/.agents/skills"
-[[ -f "$LEGACY_DEST/.agent-grimoire-managed" ]] || fail "legacy install did not write the new manifest"
+[[ -f "$LEGACY_DEST/.precept-managed" ]] || fail "legacy install did not write the new manifest"
 [[ ! -e "$LEGACY_DEST/.agent-skills-managed" ]] || fail "legacy install kept the old manifest"
-grep -qxF "code-review" "$LEGACY_DEST/.agent-grimoire-managed" || fail "legacy install dropped code-review"
+[[ ! -e "$LEGACY_DEST/.agent-grimoire-managed" ]] || fail "legacy install left a grimoire manifest"
+grep -qxF "code-review" "$LEGACY_DEST/.precept-managed" || fail "legacy install dropped code-review"
 grep -Fq "name: code-review" "$LEGACY_DEST/code-review/SKILL.md" || fail "legacy manifest did not authorize the skill update"
-echo "  Legacy manifest authorizes the update and is removed"
+echo "  .agent-skills-managed authorizes the update and is removed"
+
+# Test 5a2: a .agent-grimoire-managed manifest also migrates into .precept-managed.
+GRIMOIRE_HOME="$TEST_HOME/grimoire"
+mkdir -p "$GRIMOIRE_HOME/.agents/skills/code-review"
+printf 'stale skill\n' > "$GRIMOIRE_HOME/.agents/skills/code-review/SKILL.md"
+printf 'code-review\n' > "$GRIMOIRE_HOME/.agents/skills/.agent-grimoire-managed"
+HOME="$GRIMOIRE_HOME" "$REPO_DIR/setup.sh" --host portable >/dev/null
+GRIMOIRE_DEST="$GRIMOIRE_HOME/.agents/skills"
+[[ -f "$GRIMOIRE_DEST/.precept-managed" ]] || fail "grimoire install did not write the new manifest"
+[[ ! -e "$GRIMOIRE_DEST/.agent-grimoire-managed" ]] || fail "grimoire install kept the old manifest"
+[[ ! -e "$GRIMOIRE_DEST/.agent-skills-managed" ]] || fail "grimoire install left a legacy skills manifest"
+grep -qxF "code-review" "$GRIMOIRE_DEST/.precept-managed" || fail "grimoire install dropped code-review"
+grep -Fq "name: code-review" "$GRIMOIRE_DEST/code-review/SKILL.md" || fail "grimoire manifest did not authorize the skill update"
+echo "  .agent-grimoire-managed migrates into .precept-managed and is removed"
 
 # Test 5b: --with-flutter installs 40 skills including Dart/Flutter.
 FLUTTER_HOME="$TEST_HOME/flutter"

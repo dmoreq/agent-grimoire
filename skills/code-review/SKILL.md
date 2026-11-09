@@ -36,7 +36,7 @@ Keep review-only requests read-only. Implement fixes through the language skill 
 - Prove artifact reachability using the loader's true resolution paths rather than flat directory probes.
 
 ## Related Skills
-- Use **aw-first** to map change blast radius, reverse call closures, and call route impact (`aw callers`, `aw callees`, `aw impact`).
+- Use **engram-first** to map change blast radius, reverse call closures, and call route impact (`eg callers`, `eg callees`, `eg impact`).
 - Use **python-pro** to apply the requested fix in the language idiomatic to the codebase.
 - Use **code-simplification** when the main issue is structural complexity or nesting in existing code.
 - Use **code-smells** when the user needs a smell refactor plan and a smell count.

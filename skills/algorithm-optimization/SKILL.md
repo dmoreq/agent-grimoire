@@ -29,7 +29,7 @@ Systematically improve algorithm or ranking quality KPIs on real evaluation case
 - Exploratory dataset profiling or A/B experiment design (`data-science`)
 
 ## Related Skills
-- Use **aw-first** to trace execution paths and call hierarchies (`aw path`, `aw callers`, `aw context`).
+- Use **engram-first** to trace execution paths and call hierarchies (`eg path`, `eg callers`, `eg context`).
 - Use **data-science** for statistical significance testing and experiment design.
 - Use **python-performance** when the bottleneck is latency, CPU, or RAM rather than quality KPIs.
 - Use **data-visualization** for before/after KPI charts. Save Markdown via **technical-reporting** or a single-file HTML page via **html-report**.

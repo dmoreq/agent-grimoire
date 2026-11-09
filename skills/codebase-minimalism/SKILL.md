@@ -81,7 +81,7 @@ Stop. Do not edit the scanned code. Optional saved report: `docs/reports/YYYY-MM
 
 ## Related Skills
 
-- Use **aw-first** for fast static index queries (`aw reuse`, `aw impact`, `aw callers`) to detect semantic duplication, client bypasses, and 1-caller wrappers.
+- Use **engram-first** for fast static index queries (`eg reuse`, `eg impact`, `eg callers`) to detect semantic duplication, client bypasses, and 1-caller wrappers.
 - Use **code-minimalism** when the finding is "do not write this helper" on a new path.
 - Use **deprecation-migration** when the canonical replacement is a public or facade symbol.
 - Use **python-testing** to lock inputs and outputs before any edit.
