@@ -1,0 +1,68 @@
+# Modern Rust .pre-commit-config.yaml
+# Production quality stack: Typos, Cargo Fmt, Clippy, and pre-push test gates.
+# Adapted from agent-weave (kg) standard configuration.
+
+minimum_pre_commit_version: "3.2.0"
+default_install_hook_types:
+  - pre-commit
+  - pre-push
+default_stages:
+  - pre-commit
+
+repos:
+  # 1. Standard Git & File Hygiene
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-merge-conflict
+      - id: trailing-whitespace
+        exclude: ^(docs/|tests/fixtures/)
+      - id: end-of-file-fixer
+        exclude: ^(docs/|tests/fixtures/)
+      - id: check-yaml
+        args: [--unsafe]
+      - id: check-toml
+
+  # 2. Fast Source Code Spellchecking
+  - repo: https://github.com/crate-ci/typos
+    rev: v1.29.4
+    hooks:
+      - id: typos
+        name: typos
+        files: ^(src/|Cargo\.(toml|lock)$)
+
+  # 3. Rust Tooling & Local Invariant Gates
+  - repo: local
+    hooks:
+      # Git whitespace error check
+      - id: git-diff-check
+        name: git diff whitespace check
+        entry: git diff --cached --check
+        language: system
+        pass_filenames: false
+        always_run: true
+
+      # Rust Code Formatting
+      - id: cargo-fmt
+        name: cargo fmt
+        entry: cargo fmt --all -- --check
+        language: system
+        types: [rust]
+        pass_filenames: false
+
+      # Rust Linter & Complexity Gate
+      - id: cargo-clippy
+        name: cargo clippy
+        entry: cargo clippy --all-targets -- -D warnings
+        language: system
+        files: \.(rs|sql|toml)$
+        pass_filenames: false
+
+      # Pre-push Integration Test Suite Gate
+      - id: cargo-test
+        name: cargo test (pre-push)
+        entry: cargo test --locked
+        language: system
+        stages: [pre-push]
+        pass_filenames: false
+        always_run: true

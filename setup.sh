@@ -53,7 +53,7 @@ Options:
   --without-flutter  Skip Flutter/Dart skills (default).
   --with-aw          Include aw-first skill (default).
   --without-aw       Skip aw-first skill (for environments without aw).
-  --all              Include both Rust and Flutter/Dart skills (all 42). The default already targets every detected host.
+  --all              Include both Rust and Flutter/Dart skills (all 43). The default already targets every detected host.
   --link             Symlink skill folders from this repo (dev). Default is copy.
   --mirror-native    Also copy skills into native host dirs (duplicates ~/.agents/skills; for old hosts)
   --force            Replace unmanaged same-name skill dirs and create host dirs even if the product is not detected

@@ -1,0 +1,39 @@
+# Universal Baseline .pre-commit-config.yaml
+# Language-agnostic file hygiene, security checks, and git validation.
+
+minimum_pre_commit_version: "3.2.0"
+default_install_hook_types:
+  - pre-commit
+  - pre-push
+default_stages:
+  - pre-commit
+
+repos:
+  # 1. Standard Git & File Hygiene
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-merge-conflict
+      - id: trailing-whitespace
+        exclude: ^(docs/|tests/fixtures/)
+      - id: end-of-file-fixer
+        exclude: ^(docs/|tests/fixtures/)
+      - id: check-yaml
+        args: [--unsafe]
+      - id: check-toml
+      - id: check-json
+      - id: check-case-conflict
+      - id: check-added-large-files
+        args: ["--maxkb=5000"]
+      - id: mixed-line-ending
+      - id: detect-private-key
+
+  # 2. Fast Whitespace Diff Verification
+  - repo: local
+    hooks:
+      - id: git-diff-check
+        name: git diff whitespace check
+        entry: git diff --cached --check
+        language: system
+        pass_filenames: false
+        always_run: true
