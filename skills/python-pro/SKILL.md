@@ -30,6 +30,7 @@ Load `references/standalone-distribution.md` when packaging a library into a sta
 - Use **python-patterns** when architecture (framework/layout/ADR) is still open.
 - Use **context7-mcp** when a library or framework API is version-sensitive.
 - Use **python-testing** to protect behavior with targeted `pytest` suites.
+- Use **precommit-initialization** to install and configure pre-commit hooks and Ruff/Bandit verification gates.
 - Before merge: **code-review**.
 - Use **verify-and-stop** to confirm the decisive check and terminate cleanly.
 

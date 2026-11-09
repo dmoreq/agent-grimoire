@@ -12,14 +12,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - `skills/dashboard-design` (new): Clean, honest, wordless dashboard UI for web and native with KPI strips, same-elapsed-time comparisons, sparklines, ranked breakdowns, popover date pickers, responsive grids, and screenshot QA (+ 10 references).
 - `skills/aw-first` (new): Fast code-intelligence routing policy for code agents with the `aw` code index (`agent-weave` CLI & MCP) for symbol callers, callees, impact closures, shortest call paths, definition surroundings, canonical helper search, duplicate detection, and project memory.
+- `skills/precommit-initialization` (new): Initialize, standardize, and maintain multi-stage pre-commit hooks, security leakage prevention, and code hygiene across Python, Rust, and polyglot repositories (+ 4 references).
+- Centralized `.pre-commit-config.yaml` at repository root for Git hygiene, Ruff linting/formatting, whitespace verification, and pre-push invariant test suite execution.
+- Installer Flags: `--with-aw` and `--without-aw` in `setup.sh` to configure `aw-first` installation for environments without `aw`.
 - Global Rule: `Optimization Impossibility Consensus Gate (EGM Dual-Expert Review)` in `rules/AGENTS.md` §1 requiring at least two independent expert Goldfish reviewers under EGM in isolated contexts to independently investigate and reach consensus before declaring an optimization unachievable.
-- Global Rule: `Code Navigation Invariant` in `rules/AGENTS.md` §3 routing symbol lookups to `aw-first`.
+- Global Rule: `Code Navigation Invariant` in `rules/AGENTS.md` §3 routing symbol lookups to `aw-first` with explicit fallback for environments without `aw`.
 
 ### Changed
 - `codebase-minimalism` also triggers on slim, debloat, reduce LOC, cut excess lines, and review a codebase for duplicate or excess code.
 - Integrated `aw-first` into `code-minimalism`, `codebase-minimalism`, `code-review`, `algorithm-optimization`, and `python-performance`.
 - Integrated `dashboard-design` into `design-system`, `data-visualization`, and `ux-product-shaper`.
-- `setup.sh` / `README.md`: Default portable install is 31 of 42 skills; `--all` covers 42.
+- Integrated `precommit-initialization` into `python-pro`, `rust-pro`, `code-review`, and `verify-and-stop`.
+- `setup.sh` / `README.md`: Default portable install is 32 of 43 skills; `--all` covers 43.
 
 ## [3.0.1] - 2026-11-06
 

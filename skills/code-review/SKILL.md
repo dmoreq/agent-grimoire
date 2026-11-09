@@ -45,6 +45,7 @@ Keep review-only requests read-only. Implement fixes through the language skill 
 - Use **deprecation-migration** when the diff or review surfaces a legacy API that should be sunset.
 - Use **codebase-contracts** when a directory README or spec documents the changed behavior.
 - Use **python-testing** or crate tests when behavior changed without tests.
+- Use **precommit-initialization** to set up automated pre-commit and pre-push gates before review.
 - Use **rust-async-patterns** when reviewing async Rust task, channel, or cancellation code.
 - Use **ui-accessibility** for UI and WCAG review.
 - Use **technical-reporting** for a Markdown audit handoff, or **html-report** for a single-file HTML audit page.

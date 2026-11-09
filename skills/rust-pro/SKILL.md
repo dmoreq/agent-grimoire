@@ -27,6 +27,7 @@ Senior Rust for services, crates, CLIs, and systems code. Edition 2024 requires 
 ## Related Skills
 - Use **rust-async-patterns** when the work is Tokio/tasks/channels/streams.
 - Use **pyo3-maturin** only when exposing Rust as a Python extension.
+- Use **precommit-initialization** to configure git pre-commit/pre-push hooks for cargo fmt, clippy, and invariant gates.
 - Before merge: **code-review**.
 
 ## Core Principles

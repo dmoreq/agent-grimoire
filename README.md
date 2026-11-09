@@ -38,6 +38,7 @@ agent-grimoire/
 │   ├── html-report/                 # Single-file HTML reports, blocking visual gate, print-ready PDF (+ 2 references, validator)
 │   ├── plotly-dash/                 # Interactive Python data apps with Plotly Dash & clean callbacks
 │   ├── polars-duckdb/               # High-performance DataFrame & local SQL ETL (+ migration reference)
+│   ├── precommit-initialization/    # Multi-stage git hooks, hygiene gates & multi-stack templates (+ 4 references)
 │   ├── pyo3-maturin/                # Rust native extensions with PyO3 & Maturin for CPU hotspots
 │   ├── python-concurrency/          # Concurrency models: asyncio, thread pool, process pool
 │   ├── python-patterns/             # Architecture-time: framework, layout, ADR (+ parser reference)
@@ -92,6 +93,7 @@ agent-grimoire/
 | **`html-report`** | Single-file, self-contained HTML reports with a blocking structural and rendered visual gate, single-preset output from three Zen presets, dual-theme tokens, and print/PDF fidelity. |
 | **`plotly-dash`** | Production-grade Plotly Dash apps with modular layouts, disciplined callbacks, state hygiene & performance. |
 | **`polars-duckdb`** | High-performance tabular data wrangling, ETL, and analytical SQL with Polars, DuckDB, PyArrow, and Pandas 2.x. |
+| **`precommit-initialization`** | Initialize, standardize, and maintain pre-commit hooks, multi-stage pipelines (pre-commit, pre-push), and security hygiene gates across Python, Rust, and polyglot repositories. |
 | **`pyo3-maturin`** | High-performance Rust native extensions with PyO3 and Maturin for CPU-bound hotspots. *(Rust skill)* |
 | **`python-concurrency`** | Concurrency models: `asyncio` for I/O, `ThreadPool` for blocking I/O, `ProcessPool` for CPU. |
 | **`python-patterns`** | Architecture-time: framework, project layout, ADR. Executor choice lives in `python-concurrency`. |
@@ -394,10 +396,10 @@ Skills install into `~/.agents/skills` because that is the root those hosts alre
 
 ```bash
 chmod +x setup.sh
-./setup.sh                 # Installs 31 of 42 skills (skips 3 Rust + 8 Flutter/Dart)
-./setup.sh --with-rust     # 34 of 42: adds Rust skills
-./setup.sh --with-flutter  # 39 of 42: adds Flutter/Dart skills
-./setup.sh --all           # 42 of 42: adds both optional groups
+./setup.sh                 # Installs 32 of 43 skills (skips 3 Rust + 8 Flutter/Dart)
+./setup.sh --with-rust     # 35 of 43: adds Rust skills
+./setup.sh --with-flutter  # 40 of 43: adds Flutter/Dart skills
+./setup.sh --all           # 43 of 43: adds both optional groups
 ```
 
 Useful flags:

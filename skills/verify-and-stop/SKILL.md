@@ -85,4 +85,5 @@ Keep existing untracked files untouched and out of the commit unless the user ex
 ## Related Skills
 - Use **python-testing** to write or debug targeted test assertions.
 - Use **code-review** for pre-merge multi-axis inspection.
+- Use **precommit-initialization** to configure targeted git hook gates.
 - Use **code-minimalism** to ensure the verified solution remains minimal.
