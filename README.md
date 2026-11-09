@@ -55,8 +55,9 @@ precept/
 │   ├── ux-product-shaper/           # Surface Mode, IA, 8-state product briefs (+ 1 reference)
 │   └── verify-and-stop/             # Termination discipline, decisive checks & runaway prevention (+ 1 reference)
 ├── tests/                           # Automated schema validation & invariant verification
-├── setup.sh                         # Unified setup (default skips Rust; --with-rust to enable)
+├── setup.sh                         # Unified setup (skips Rust & Flutter by default; see --help)
 ├── package.sh                       # Offline distribution packager (tar.gz & zip)
+├── CHANGELOG.md                     # Keep a Changelog version history & release notes
 └── README.md
 ```
 

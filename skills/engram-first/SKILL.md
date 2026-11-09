@@ -5,7 +5,7 @@ description: >-
   (CLI or MCP engram) first for callers, callees, impact, call paths,
   symbol surroundings, imports, helper search, duplicate detection, and memory.
 risk: safe
-source: "external: /Users/quy.doan/Workspace/kg"
+source: local
 date_added: "2026-11-08"
 ---
 
