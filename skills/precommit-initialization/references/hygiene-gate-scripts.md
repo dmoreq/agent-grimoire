@@ -107,7 +107,7 @@ REPO_ROOT="$$(cd "$$(dirname "$$0")/../.." && pwd)"
 cd "$$REPO_ROOT"
 
 # Scan source code for file write primitives outside sandbox
-FORBIDDEN_WRITES=$$(grep -rnE '(std::fs::write|open\(.*["'\''][wa]' src/ | grep -v '\.aw/' || true)
+FORBIDDEN_WRITES=$$(grep -rnE '(std::fs::write|open\(.*["'\''][wa]' src/ | grep -v '\.engram/' || true)
 
 if [ -n "$$FORBIDDEN_WRITES" ]; then
   echo "SECURITY ERROR [unconfined-write]: File writes must target sandbox root only:" >&2

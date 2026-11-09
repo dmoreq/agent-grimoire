@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.0.0] - 2026-11-09
+
+### Changed
+- Product name is **Precept** (formerly agent-grimoire / agent-skills). GitHub slug, README, setup banner, and offline archives use `precept`.
+- `dist/precept.tar.gz` and `dist/precept.zip` replace `dist/agent-grimoire.tar.gz` and `dist/agent-grimoire.zip`. The archive prefix is `precept/`.
+- Companion tool sync: `skills/aw-first` renamed to `skills/engram-first`. Updated routing policy, command references (`eg`), MCP server reference (`engram`), and memory paths (`.engram/`).
+- Install manifest is `.precept-managed`. Setup automatically migrates both legacy manifests (`.agent-skills-managed` and `.agent-grimoire-managed`) to `.precept-managed` and removes the old files.
+- Installer Flags: `--with-engram` and `--without-engram` in `setup.sh` (with backward-compatible aliases `--with-aw`, `--without-aw`, `--with-eg`, `--without-eg`).
+- Global Rule: Updated `Code Navigation Invariant` in `rules/AGENTS.md` §3 to route to `engram-first` and `eg`.
+
 ## [3.1.0] - 2026-11-08
 
 ### Added

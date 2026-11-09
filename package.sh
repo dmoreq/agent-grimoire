@@ -15,7 +15,7 @@ Build offline archives from tracked repository content.
 
 Options:
   --skills-only   Package only skills.tar.gz and skills.zip
-  --bundle-only   Package only agent-grimoire.tar.gz and agent-grimoire.zip
+  --bundle-only   Package only precept.tar.gz and precept.zip
   --help          Show this help
 
 Environment:
@@ -58,7 +58,7 @@ mkdir -p "$DIST_DIR"
 STAGE="$(mktemp -d "$DIST_DIR/.stage.XXXXXX")"
 trap 'rm -rf -- "$STAGE"' EXIT
 
-BUNDLE_PREFIX="agent-grimoire"
+BUNDLE_PREFIX="precept"
 BUILT=()
 
 if $BUILD_SKILLS; then

@@ -1,18 +1,17 @@
-# Agent Grimoire
+# Precept
 
-Agent Grimoire is a portable rules kernel and skill pack for coding agents (formerly agent-skills). It installs one `AGENTS.md` and a curated skill catalog to Antigravity, Grok, Codex, Zed, OpenCode, and ZCode.
+Precept is a portable rules kernel and skill pack for coding agents (formerly agent-grimoire / agent-skills). It installs one `AGENTS.md` and a curated skill catalog to Antigravity, Grok, Codex, Zed, OpenCode, and ZCode.
 
 ---
 
 ## Repository Structure
 
 ```text
-agent-grimoire/
+precept/
 ├── rules/
 │   └── AGENTS.md                    # Global agent behavioral directives & kernel standards
 ├── skills/
 │   ├── algorithm-optimization/      # Systematic KPI & algorithm improvement loop (+ 4 references)
-│   ├── aw-first/                    # Fast code-intelligence routing (aw CLI & agent-weave MCP)
 │   ├── code-minimalism/             # YAGNI-first minimalist code generation (+ 2 references)
 │   ├── code-review/                 # Multi-axis review + YAGNI/bloat quality gate (+ 3 references)
 │   ├── code-smells/                 # Fowler smell catalog and Python structural scan (+ 1 reference, script)
@@ -28,6 +27,7 @@ agent-grimoire/
 │   ├── design-system/               # 3-tier DTCG tokens, component specs, responsive rules (+ 1 reference)
 │   ├── doubt-driven-development/    # Adversarial stress-testing of non-trivial architectural choices (+ 1 reference)
 │   ├── dart-modern-idioms/          # Dart 3.x idioms, Effective Dart, async safety, strict analysis (+ 1 reference)
+│   ├── engram-first/                # Fast code-intelligence routing (eg CLI & engram MCP)
 │   ├── flutter-architecture-data/   # Feature-first MVVM, Repository/Service, Result<T> (+ 1 reference)
 │   ├── flutter-codegen-release/     # build_runner, flavors, obfuscation, CI/CD (+ 1 reference)
 │   ├── flutter-navigation-routing/  # go_router, deep linking, auth guards (+ 1 reference)
@@ -67,7 +67,6 @@ agent-grimoire/
 | Skill Name | Purpose |
 | :--- | :--- |
 | **`algorithm-optimization`** | Systematic workflow to optimize algorithms/processes against target metrics while guarding healthy cases. |
-| **`aw-first`** | Routing policy for code agents with the `aw` code index: callers, callees, impact, paths, helper search, duplicate detection, and memory. |
 | **`code-minimalism`** | Forces simplest, shortest, most minimal code (YAGNI). Reaches for stdlib before custom code, platform features before dependencies, 1-liner before 50. |
 | **`code-review`** | Systematic multi-axis review for Python & Rust (correctness, safety, performance, YAGNI/bloat, style). Mandatory quality gate. |
 | **`code-smells`** | Name Fowler smell types. A Python script reports structural candidates. The other types are a manual pass. |
@@ -83,6 +82,7 @@ agent-grimoire/
 | **`design-system`** | Build minimalist 3-tier W3C DTCG tokens, dual light/dark themes, component specs, and responsive layout with a YAGNI token diet. |
 | **`doubt-driven-development`** | Adversarial review to stress-test high-risk decisions and uncover unstated assumptions. |
 | **`dart-modern-idioms`** | Dart 3.x sealed classes, exhaustive switches, pattern matching, records, Effective Dart, async safety, strict analysis. |
+| **`engram-first`** | Routing policy for code agents with the `eg` code index: callers, callees, impact, paths, helper search, duplicate detection, and memory. |
 | **`flutter-architecture-data`** | Feature-first MVVM architecture, Repository/Service patterns, `Result<T>`/`Command`, immutable models, DI. |
 | **`flutter-codegen-release`** | `build_runner` codegen, dependency hygiene, crash bootstrap, flavors, obfuscation, CI/CD release gates. |
 | **`flutter-navigation-routing`** | Declarative `go_router` navigation, deep linking, auth redirect guards, nested shell routes. |
@@ -128,7 +128,7 @@ agent-grimoire/
 | Tone, no emoji, LaTeX minimization, ASD-STE100, git/secrets, memory safety, temp files | `rules/AGENTS.md` §1 & §4 | Skills |
 | YAGNI Code Generation Ladder (stdlib/native first) | `rules/AGENTS.md` §2 | Skills (kernel-wide) |
 | Verify-and-Stop Invariant (runaway prevention) | `rules/AGENTS.md` §3 + `verify-and-stop` | Ongoing loops |
-| Static code graph navigation, helper discovery, duplicate detection | `aw-first` | Broad grep loops, full file reads |
+| Static code graph navigation, helper discovery, duplicate detection | `engram-first` | Broad grep loops, full file reads |
 | Subagent delegation, parallel planning & peer-review | `rules/AGENTS.md` §1 | Skills |
 | Skip formal reports; tables first; date-prefixed files | `rules/AGENTS.md` §5 stub | Full viz encyclopedias |
 | Aggressive YAGNI intensity tiers (`lite` / `full` / `ultra`) | `code-minimalism` | `AGENTS.md` |
@@ -377,7 +377,7 @@ code-review
 
 ## Installation & Setup
 
-Skills install into `~/.agents/skills` because that is the root those hosts already scan, plus each host's native tree. Filtering with `--host codex`, `grok`, `opencode`, or `zed` also installs that portable root. Antigravity and ZCode use their native roots. The product name is Agent Grimoire. The install path stays `~/.agents/skills`.
+Skills install into `~/.agents/skills` because that is the root those hosts already scan, plus each host's native tree. Filtering with `--host codex`, `grok`, `opencode`, or `zed` also installs that portable root. Antigravity and ZCode use their native roots. The product name is Precept. The install path stays `~/.agents/skills`.
 
 ### Host Discovery Paths
 
@@ -409,8 +409,8 @@ Useful flags:
 ./setup.sh --without-rust           # skip Rust skills (default)
 ./setup.sh --with-flutter           # include Flutter/Dart skills
 ./setup.sh --without-flutter        # skip Flutter/Dart skills (default)
-./setup.sh --with-aw                # include aw-first skill (default)
-./setup.sh --without-aw             # skip aw-first skill (for environments without aw)
+./setup.sh --with-engram            # include engram-first skill (default)
+./setup.sh --without-engram         # skip engram-first skill (for environments without eg)
 ./setup.sh --all                    # include both Rust and Flutter/Dart skills
 ./setup.sh --dry-run                # print destinations only
 ./setup.sh --host zed,codex         # subset of hosts; portable root is auto-included
@@ -420,7 +420,7 @@ Useful flags:
 ./setup.sh --force                  # replace unmanaged same-name skill dirs and create undetected host dirs
 ```
 
-Rules files are written atomically. If an existing file differs, the installer creates `AGENTS.md.bak.<timestamp>.<pid>` and preserves custom `##` sections. Skill roots record installed names in `.agent-grimoire-managed`. Pruning still reads a pre-rename `.agent-skills-managed` file, then rewrites the new manifest and removes the old one. Pruning removes only managed skills.
+Rules files are written atomically. If an existing file differs, the installer creates `AGENTS.md.bak.<timestamp>.<pid>` and preserves custom `##` sections. Skill roots record installed names in `.precept-managed`. Pruning still reads the legacy `.agent-grimoire-managed` and `.agent-skills-managed` files, consolidates their entries into `.precept-managed`, and removes both old manifests. Pruning removes only managed skills.
 
 Restart each agent session after install.
 
@@ -452,7 +452,7 @@ To package skills for transfer to an offline system:
 chmod +x package.sh
 ./package.sh
 ./package.sh --skills-only          # only skills.tar.gz and skills.zip
-./package.sh --bundle-only          # only agent-grimoire.tar.gz and agent-grimoire.zip
+./package.sh --bundle-only          # only precept.tar.gz and precept.zip
 DIST_DIR=/tmp/out ./package.sh      # custom output directory
 ```
 
@@ -460,4 +460,4 @@ Packages are built from `git archive HEAD`, so untracked and ignored files (`.zc
 
 Packages generated in `dist/`:
 - **`dist/skills.tar.gz` & `dist/skills.zip`**: Standalone skills package.
-- **`dist/agent-grimoire.tar.gz` & `dist/agent-grimoire.zip`**: Complete offline bundle (`skills/`, `rules/`, `tests/`, `setup.sh`, `README.md`, `CHANGELOG.md`).
+- **`dist/precept.tar.gz` & `dist/precept.zip`**: Complete offline bundle (`skills/`, `rules/`, `tests/`, `setup.sh`, `README.md`, `CHANGELOG.md`).

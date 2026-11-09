@@ -33,7 +33,7 @@ Channels a pragmatic senior engineer: the best code is the code never written. Q
 - When the user explicitly requests full enterprise scaffolding
 
 ## Related Skills
-- Use **aw-first** to discover canonical existing helpers and interfaces (`aw search`) before implementing new types or utilities.
+- Use **engram-first** to discover canonical existing helpers and interfaces (`eg search`) before implementing new types or utilities.
 - Use **python-pro** to implement the minimal design in typed, tested Python.
 - Use **code-simplification** to clean up messy control flow in existing code without changing behavior.
 - Use **code-review** to verify that a pull request respects YAGNI and complexity budgets.

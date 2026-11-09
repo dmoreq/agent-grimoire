@@ -1,5 +1,5 @@
 # .pre-commit-config.yaml
-# Agent Grimoire repository pre-commit and pre-push hooks
+# Precept repository pre-commit and pre-push hooks
 # Enforces formatting, file hygiene, and invariant test coverage
 
 minimum_pre_commit_version: "3.2.0"

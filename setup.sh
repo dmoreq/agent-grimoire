@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-# Sync Agent Grimoire rules and skills to Antigravity, Grok Build, OpenCode, Codex, Zed, and ZCode.
+# Sync Precept rules and skills to Antigravity, Grok Build, OpenCode, Codex, Zed, and ZCode.
 # Default: user-global, skips Rust skills. See --help.
 set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RULES_FILE="$REPO_DIR/rules/AGENTS.md"
 SKILLS_DIR="$REPO_DIR/skills"
-MANIFEST_NAME=".agent-grimoire-managed"
-LEGACY_MANIFEST_NAME=".agent-skills-managed"
+MANIFEST_NAME=".precept-managed"
+LEGACY_MANIFEST_NAMES=(".agent-grimoire-managed" ".agent-skills-managed")
 
 SCOPE="user"          # user | project
 MODE="copy"           # copy | link
@@ -19,7 +19,7 @@ HOSTS_FILTER_SET=false
 SUPPORTED_HOSTS=("portable" "antigravity" "grok" "opencode" "codex" "zed" "zcode")
 WITH_RUST=false       # skip Rust skills by default
 WITH_FLUTTER=false    # skip Flutter/Dart skills by default
-WITH_AW=true          # include aw-first skill by default
+WITH_ENGRAM=true      # include engram-first skill by default
 
 # Rust skills skipped by default unless --with-rust is passed
 RUST_SKILLS=("rust-pro" "rust-async-patterns" "pyo3-maturin")
@@ -51,8 +51,8 @@ Options:
   --without-rust     Skip Rust skills (default).
   --with-flutter     Include Flutter/Dart skills. Default: skipped.
   --without-flutter  Skip Flutter/Dart skills (default).
-  --with-aw          Include aw-first skill (default).
-  --without-aw       Skip aw-first skill (for environments without aw).
+  --with-engram      Include engram-first skill (default).
+  --without-engram   Skip engram-first skill (for environments without eg).
   --all              Include both Rust and Flutter/Dart skills (all 43). The default already targets every detected host.
   --link             Symlink skill folders from this repo (dev). Default is copy.
   --mirror-native    Also copy skills into native host dirs (duplicates ~/.agents/skills; for old hosts)
@@ -114,8 +114,8 @@ is_flutter_skill() {
     return 1
 }
 
-is_aw_skill() {
-    [[ "$1" == "aw-first" ]]
+is_engram_skill() {
+    [[ "$1" == "engram-first" ]]
 }
 
 should_skip_skill() {
@@ -126,7 +126,7 @@ should_skip_skill() {
     if ! $WITH_FLUTTER && is_flutter_skill "$name"; then
         return 0
     fi
-    if ! $WITH_AW && is_aw_skill "$name"; then
+    if ! $WITH_ENGRAM && is_engram_skill "$name"; then
         return 0
     fi
     return 1
@@ -195,10 +195,16 @@ manifest_has() {
     [[ -f "$manifest" ]] && grep -qxF "$name" "$manifest"
 }
 
-# True when this repo installed the skill under the current or the pre-rename manifest.
+# True when this repo installed the skill under the current or a pre-rename manifest.
 managed_here() {
     local dest="$1" name="$2"
-    manifest_has "$dest/$MANIFEST_NAME" "$name" || manifest_has "$dest/$LEGACY_MANIFEST_NAME" "$name"
+    local manifest_name
+    for manifest_name in "$MANIFEST_NAME" "${LEGACY_MANIFEST_NAMES[@]}"; do
+        if manifest_has "$dest/$manifest_name" "$name"; then
+            return 0
+        fi
+    done
+    return 1
 }
 
 # True when an existing skill dir is an unmodified copy from this repo.
@@ -213,7 +219,7 @@ prune_our_skills() {
     [[ -d "$dest" ]] || return 0
     assert_not_source_tree "$dest"
     local manifest="$dest/$MANIFEST_NAME"
-    local legacy="$dest/$LEGACY_MANIFEST_NAME"
+    local legacy_name
     local skill name dest_skill
     for skill in "$SKILLS_DIR"/*; do
         [[ -d "$skill" ]] || continue
@@ -234,7 +240,11 @@ prune_our_skills() {
         local tmp="$manifest.tmp.$$"
         : > "$tmp"
         local source_manifest
-        for source_manifest in "$manifest" "$legacy"; do
+        local manifests=("$manifest")
+        for legacy_name in "${LEGACY_MANIFEST_NAMES[@]}"; do
+            manifests+=("$dest/$legacy_name")
+        done
+        for source_manifest in "${manifests[@]}"; do
             [[ -f "$source_manifest" ]] || continue
             while IFS= read -r name; do
                 [[ -e "$dest/$name" || -L "$dest/$name" ]] && printf '%s\n' "$name" >> "$tmp"
@@ -242,7 +252,9 @@ prune_our_skills() {
         done
         sort -u "$tmp" -o "$tmp"
         mv -f "$tmp" "$manifest"
-        rm -f -- "$legacy"
+        for legacy_name in "${LEGACY_MANIFEST_NAMES[@]}"; do
+            rm -f -- "$dest/$legacy_name"
+        done
     fi
 }
 
@@ -254,7 +266,7 @@ sync_skills() {
         mkdir -p "$dest"
     fi
     local manifest="$dest/$MANIFEST_NAME"
-    local legacy="$dest/$LEGACY_MANIFEST_NAME"
+    local legacy_name
     local manifest_tmp="$dest/$MANIFEST_NAME.tmp.$$"
     if ! $DRY_RUN; then
         : > "$manifest_tmp"
@@ -304,7 +316,9 @@ sync_skills() {
     if ! $DRY_RUN; then
         sort -u "$manifest_tmp" -o "$manifest_tmp"
         mv -f "$manifest_tmp" "$manifest"
-        rm -f -- "$legacy"
+        for legacy_name in "${LEGACY_MANIFEST_NAMES[@]}"; do
+            rm -f -- "$dest/$legacy_name"
+        done
     fi
 }
 
@@ -429,8 +443,8 @@ while [[ $# -gt 0 ]]; do
         --without-rust) WITH_RUST=false; shift ;;
         --with-flutter) WITH_FLUTTER=true; shift ;;
         --without-flutter) WITH_FLUTTER=false; shift ;;
-        --with-aw) WITH_AW=true; shift ;;
-        --without-aw) WITH_AW=false; shift ;;
+        --with-engram|--with-aw|--with-eg) WITH_ENGRAM=true; shift ;;
+        --without-engram|--without-aw|--without-eg) WITH_ENGRAM=false; shift ;;
         --all)     WITH_RUST=true; WITH_FLUTTER=true; shift ;;
         --link)    MODE="link"; shift ;;
         --mirror-native) MIRROR_NATIVE=true; shift ;;
@@ -472,7 +486,7 @@ fi
 N_SKILLS="$(skill_count)"
 
 log "========================================================"
-log "==> Agent Grimoire Setup"
+log "==> Precept Setup"
 log "    repo:        $REPO_DIR"
 log "    scope:       $SCOPE"
 log "    mode:        $MODE"
@@ -487,10 +501,10 @@ if $WITH_FLUTTER; then
 else
     log "    flutter skills: skipped by default (pass --with-flutter to enable)"
 fi
-if $WITH_AW; then
-    log "    aw skill:    enabled (aw-first; default; pass --without-aw to skip)"
+if $WITH_ENGRAM; then
+    log "    engram skill: enabled (engram-first; default; pass --without-engram to skip)"
 else
-    log "    aw skill:    skipped (pass --with-aw to enable)"
+    log "    engram skill: skipped (pass --with-engram to enable)"
 fi
 $DRY_RUN && log "    dry-run:     yes"
 log "========================================================"

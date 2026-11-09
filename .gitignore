@@ -29,5 +29,6 @@ __pycache__/
 # ZCode session state
 .zcode/
 
-# Agent Weave code index and memory
+# Engram code index and memory
+.engram/
 .aw/
