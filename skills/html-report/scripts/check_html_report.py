@@ -11,7 +11,23 @@ import re
 import sys
 
 MAX_BYTES = 1_000_000
-PRESETS = ("dossier", "zen-garden", "chronicle")
+PRESETS = (
+    "dossier",
+    "zen-garden",
+    "chronicle",
+    "sumi-ink",
+    "shoji-grid",
+    "aizome-indigo",
+    "yugen-noir",
+    "simple-white",
+    "plotly-white",
+    "ggplot2-grammar",
+    "apple-hig",
+    "material-you",
+    "geist-zinc",
+)
+LAYOUTS = ("L1", "L2", "L3", "L4", "L5", "L6")
+VOICES = ("V1", "V2", "V3", "V4")
 FONT_STYLE_HOST = "fonts.googleapis.com"
 FONT_FILE_HOST = "fonts.gstatic.com"
 CHART_HOST = "cdn.jsdelivr.net"
@@ -346,6 +362,17 @@ def _csp_failures(parser: ReportParser) -> list[str]:
     return failures
 
 
+def _axis_failures(attrs: dict[str, str]) -> list[str]:
+    failures: list[str] = []
+    layout = attrs.get("data-layout", "")
+    voice = attrs.get("data-voice", "")
+    if layout and layout not in LAYOUTS:
+        failures.append(f"data-layout must be one of {LAYOUTS}, found '{layout}'")
+    if voice and voice not in VOICES:
+        failures.append(f"data-voice must be one of {VOICES}, found '{voice}'")
+    return failures
+
+
 def _parser_failures(parser: ReportParser) -> list[str]:
     preset = parser.html_attrs.get("data-preset", "")
     checks = (
@@ -375,7 +402,9 @@ def _parser_failures(parser: ReportParser) -> list[str]:
             f"buttons without type=button: {parser.buttons_without_type}",
         ),
     )
-    return [message for passed, message in checks if not passed]
+    failures = [message for passed, message in checks if not passed]
+    failures.extend(_axis_failures(parser.html_attrs))
+    return failures
 
 
 def _strip_comments(text: str) -> str:

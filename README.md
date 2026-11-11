@@ -24,7 +24,7 @@ precept/
 │   ├── data-storytelling/           # Decision-ready narratives for business stakeholders
 │   ├── data-visualization/          # Plotly-first charts, layout optimization & anti-overlap QA
 │   ├── deprecation-migration/       # Safe removal, replacement & sunsetting of legacy APIs (+ 2 references)
-│   ├── design-system/               # 3-tier DTCG tokens, component specs, responsive rules (+ 1 reference)
+│   ├── design-system/               # 3-tier DTCG tokens, component specs, responsive rules (+ 2 references)
 │   ├── doubt-driven-development/    # Adversarial stress-testing of non-trivial architectural choices (+ 1 reference)
 │   ├── dart-modern-idioms/          # Dart 3.x idioms, Effective Dart, async safety, strict analysis (+ 1 reference)
 │   ├── debugging-and-error-recovery/  # Stop-the-line triage: reproduce, localize, fix the cause, guard recurrence
@@ -81,7 +81,7 @@ precept/
 | **`data-storytelling`** | Decision narrative from **already-validated** metrics. Does not analyze or invent numbers. |
 | **`data-visualization`** | Plotly-first clean visual creation, SVG export, text density hygiene, and anti-overlap QA. |
 | **`deprecation-migration`** | Safely sunset, replace, and migrate legacy APIs/systems using Strangler, Adapter, and Feature Flags. |
-| **`design-system`** | Build minimalist 3-tier W3C DTCG tokens, dual light/dark themes, component specs, and responsive layout with a YAGNI token diet. |
+| **`design-system`** | Build minimalist 3-tier W3C DTCG tokens, 7 Zen archetypes, 4 typographic voices, 6 layout geometries, dual light/dark themes, and component specs with a YAGNI token diet. |
 | **`doubt-driven-development`** | Adversarial review to stress-test high-risk decisions and uncover unstated assumptions. |
 | **`dart-modern-idioms`** | Dart 3.x sealed classes, exhaustive switches, pattern matching, records, Effective Dart, async safety, strict analysis. |
 | **`debugging-and-error-recovery`** | Stop-the-line triage: reproduce, localize, reduce, fix the cause, and guard recurrence. |
@@ -93,7 +93,7 @@ precept/
 | **`flutter-state-management`** | Riverpod 3.x Notifier/AsyncNotifier, Bloc/Cubit, native `ChangeNotifier`/`ValueNotifier` state patterns. |
 | **`flutter-testing-verification`** | Deterministic unit/widget/golden/integration tests, Fakes over Mocks, `pumpApp` harness, multi-viewport testing. |
 | **`flutter-ui-responsive-a11y`** | Adaptive responsive UI, Material 3 theming, `Semantics`, RTL/ARB localization, RenderFlex overflow fixes. |
-| **`html-report`** | Single-file, self-contained HTML reports with a blocking structural and rendered visual gate, single-preset output from three Zen presets, dual-theme tokens, and print/PDF fidelity. |
+| **`html-report`** | Single-file, self-contained HTML reports with a blocking structural and rendered visual gate, single-preset output from seven Zen presets, dual-theme tokens, and print/PDF fidelity. |
 | **`plotly-dash`** | Production-grade Plotly Dash apps with modular layouts, disciplined callbacks, state hygiene & performance. |
 | **`polars-duckdb`** | High-performance tabular data wrangling, ETL, and analytical SQL with Polars, DuckDB, PyArrow, and Pandas 2.x. |
 | **`precommit-initialization`** | Initialize, standardize, and maintain pre-commit hooks, multi-stage pipelines (pre-commit, pre-push), and security hygiene gates across Python, Rust, and polyglot repositories. |
@@ -109,8 +109,8 @@ precept/
 | **`tech-research`** | SOTA methods, benchmark evaluation, and conditional recommendations before implementation. |
 | **`technical-reporting`** | Saved formal markdown: benchmarks, ADRs, Mermaid, asset paths. Not Plotly charts or QBR narrative. |
 | **`ui-accessibility`** | Audit WCAG 2.2 AA, keyboard and focus models, ARIA, contrast, target size, and false minimalism. |
-| **`ux-critic`** | Red-team rendered UI with Dieter Rams, heuristic critique, a subtraction pass, and one required deletion. |
-| **`ux-product-shaper`** | Shape Surface Mode, IA, user flows, YAGNI scope, and the 8-state contract before UI work. |
+| **`ux-critic`** | Red-team rendered UI with Dieter Rams, heuristic critique, 5-axis design compliance, a subtraction pass, and one required deletion. |
+| **`ux-product-shaper`** | Spec-design-driven UI/UX discovery: 5-axis Socratic grill (Gate 1 & Gate 2), Surface Mode (A/B/C), Zen archetype, layout geometry, and 8-state contract. |
 | **`verify-and-stop`** | Disciplined execution and termination protocol. Verifies minimal acceptance criteria with a single decisive check, presents proof, and stops immediately without runaway loops. |
 
 ---

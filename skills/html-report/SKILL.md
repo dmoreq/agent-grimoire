@@ -3,8 +3,8 @@ name: html-report
 description: >-
   Build a single-file, offline-first, interactive, print-ready HTML report for
   audits, architecture explainers, comparison matrices, and decision memos using
-  Zen Minimalism and three curated presets (dossier, zen-garden, chronicle).
-  Not for short answers, Git-tracked Markdown, or server-backed Dash apps.
+  13 curated presets across Zen Minimalism, Scientific/Plotly, Platform Native,
+  and Modern Monochrome. Not for short answers or server apps.
 risk: safe
 source: local
 date_added: "2026-10-28"
@@ -12,7 +12,7 @@ date_added: "2026-10-28"
 
 # HTML Report Skill
 
-Deliver findings as one offline-capable HTML file. HTML is a presentation format; the analysis and numbers come from the owning skill. Every report strictly follows **Zen Minimalism** principles and ships with three built-in aesthetic and typographic presets.
+Deliver findings as one offline-capable HTML file. HTML is a presentation format; the analysis and numbers come from the owning skill. Every report ships with one palette from **13 built-in presets** across 4 style families. Layout (`data-layout`) and voice (`data-voice`) are separate axes. Mix rules live in the **design-system** composition grammar.
 
 ## When to Use
 - The user asks for an HTML report, visual explainer, dashboard page, audit page, or decision memo.
@@ -36,11 +36,15 @@ Deliver findings as one offline-capable HTML file. HTML is a presentation format
 - Never write an undated file at the repository root.
 - Review artifacts (screenshots, audits, record) live in `.tmp/` or `docs/reports/`, never beside the report.
 
-## Preset & Typography Contract (Single Preset)
+## Preset & Typography Contract (Single Preset Across 13 Curated Archetypes)
 
-Exactly one preset is fixed at generation time via `data-preset` on `<html>`; never expose a runtime preset switcher. Route **`dossier`** to audits, engineering reports, and decision memos; **`zen-garden`** to contemplative deep dives; **`chronicle`** to executive narratives and QBRs. Default to `dossier`.
+Exactly one preset is fixed at generation time via `data-preset` on `<html>`; never expose a runtime preset switcher. `data-preset` is the palette. Set `data-layout` (`L1`–`L6`) and `data-voice` (`V1`–`V4`) from the locked composition. When either attribute is absent, use that palette's canonical triple. Offer 2-3 unranked job-band options, or follow the locked choice from `ux-product-shaper`. Hex, type, and geometry live in `references/html-report-scaffold.md`:
 
-Load the Google Fonts stylesheet with `display=swap` and local fallbacks; it is the only default network request. The approved Chart.js exception in Step 2 is the sole additional request. Use a 60ch-70ch measure, body prose `>=0.9375rem`, labels `>=0.75rem`, and code `>=0.82rem`. The palette, type pairings, nine editorial roles, and per-preset layout live in `references/html-report-scaffold.md`.
+- **Zen Minimalism (7)**: `dossier`, `zen-garden`, `chronicle`, `sumi-ink`, `shoji-grid`, `aizome-indigo`, `yugen-noir`.
+- **Scientific & Plotly Grammar (3)**: `simple-white`, `plotly-white`, `ggplot2-grammar`.
+- **Platform Native & Modern Monochrome (3)**: `apple-hig`, `material-you`, `geist-zinc`.
+
+Load the Google Fonts stylesheet with `display=swap` and local fallbacks; it is the only default network request. The approved Chart.js exception in Step 2 is the sole additional request. Use a 60ch-70ch measure, body prose `>=0.9375rem`, labels `>=0.75rem`, and code `>=0.82rem`. Token blocks, nine editorial roles, and layout rules live in `references/html-report-scaffold.md`.
 
 ## Chart Interaction Contract
 - Use native SVG, not a library: hover/focus tooltip, legend dimming, and chart/table cross-highlight.
@@ -48,11 +52,11 @@ Load the Google Fonts stylesheet with `display=swap` and local fallbacks; it is 
 - Chart SVG uses `role="group"`; each mark uses `role="img"`, `tabindex="0"`, `aria-label`; tooltip uses `role="status"` and `visibility`. Respect reduced motion and print.
 - The table is the accessible source; see the scaffold pattern.
 
-## Zen Minimalism Wording & Paragraphing Rules
-1. **Kanso (Essentialist Prose)**: Strip ornamental adjectives, hype superlatives, and throat-clearing intros. Open every section with a single declarative thesis sentence containing the primary number and direction.
-2. **Ma (Paragraph Breathing Room)**: Keep paragraphs at 2-3 sentences, <= 60 words (60ch-70ch measure; target 66ch). Never emit dense wall-of-text paragraphs; let whitespace separate distinct ideas.
-3. **Shibumi (Understated Precision)**: State exact deltas (`+8.36 pp`, `N = 4,365,797`) in calm, active voice. Let verified numbers carry authority rather than exclamation marks.
-4. **Sequential Chapter Rhythm**: Guide the eye through numbered architectural chapters (`01`, `02`, `03`...) where the chapter lead states *why it matters* in <= 25 words before presenting the table or chart.
+## Wording & Paragraphing Rules
+1. **Essentialist Prose (*Kanso*)**: Strip ornamental adjectives, hype superlatives, and throat-clearing intros. Open every section with a single declarative thesis sentence containing the primary number and direction.
+2. **Paragraph Breathing Room (*Ma*)**: Keep paragraphs at 2-3 sentences, <= 60 words (60ch-70ch measure; target 66ch). Never emit dense wall-of-text paragraphs.
+3. **Understated Precision (*Shibumi*)**: State exact deltas (`+8.36 pp`, `N = 4,365,797`) in calm, active voice.
+4. **Sequential Chapter Rhythm**: Guide the eye through numbered chapters (`01`, `02`, `03`...) where the chapter lead states *why it matters* in <= 25 words before presenting the table or chart.
 
 ## Visual Quality Bar (Blocking)
 
@@ -65,7 +69,7 @@ Judge rendered output, never source alone. Render matrix, hard-fail list, craft 
 ## Workflow
 
 ### Step 1: Calibrate Scope and Preset
-Choose one preset from the routing table. Honor user instructions, then project tokens from **design-system**, then preset defaults. Ban cold slate/blue defaults, purple gradients, neon dashboards, rainbow charts, emoji headers, and nested cards; never use pure `#FFFFFF` or `#000000` in light mode.
+Choose one palette from the 13-preset catalog and the layout and voice from the locked composition. Honor user instructions, then project tokens from **design-system**, then the canonical triple. Ban generic SaaS purple gradients, neon dashboards, rainbow charts, emoji headers, and nested cards; never use pure `#000000` ink on warm paper presets.
 
 ### Step 2: Enforce a Self-Contained and Secure Architecture
 - Emit `<!DOCTYPE html>` with `meta charset`, `meta viewport`, a restrictive `Content-Security-Policy` meta, the Google Fonts `<link>`, inline `<style>`, and inline `<script>`.
@@ -77,7 +81,7 @@ Choose one preset from the routing table. Honor user instructions, then project 
 - Use `rem` units. Body prose `>=0.9375rem`, labels `>=0.75rem`, code `>=0.82rem`. Use the nine editorial roles and print rules in `references/html-report-scaffold.md`.
 
 ### Step 4: Structure for Scanning and Progressive Disclosure
-1. Header: declarative serif title, one provenance line, and a single `Theme` button. No eyebrow, status pill, preset switcher, expand/collapse, or copy-summary controls.
+1. Header: declarative title, one provenance line, and a single `Theme` button. No eyebrow, status pill, preset switcher, expand/collapse, or copy-summary controls.
 2. Use numbered section navigation for 4+ sections, a thesis callout, and 3-4 KPI cards. Keep the primary conclusion visible without a click.
 3. Tag audit claims as `FACT`, `INFERENCE`, `DECISION`, or `RISK`; cite `file:line` or a source. Wrap wide tables in `.table-wrap`; put secondary detail inside `<details>`.
 4. Use `addEventListener`, never inline `onclick`. Apply **design-system** YAGNI: one primary action, no unrequested chrome, whitespace over nested cards.
@@ -99,35 +103,21 @@ This review gate is blocking. Do not call the report complete until every profil
 - **Classify by consumption**: Internal is session-only, unshared, and unprinted; Shared is persisted, attached, or read by others; Print is any print/PDF intent; Executive is a decision or leadership audience. If two profiles fit, choose the stricter one; when uncertain, default to Shared.
 - **Structural check**: run `scripts/check_html_report.py` from this skill directory; it must exit 0 with `PASS`.
 - **Visual check**: render the chosen preset at desktop 1440x900, mobile 390x844, 320px reflow, and print/PDF in light and dark. Fix Critical and Important findings and re-render; bound the loop to 2 cycles.
-- **Shared**: `ui-accessibility` must return `Pass`.
-- **Print**: same as Shared, with the print/PDF layout check.
+- **Shared / Print**: `ui-accessibility` must return `Pass` (with print/PDF layout checked for Print).
 - **Executive**: `ux-critic` must return `Ship` or `Ship with fixes` with zero Critical findings.
-- **Record**: write `docs/reports/YYYY-MM-DD_<topic>_review.md` and link screenshots and audits.
-- Missing screenshots, an unrun audit, or `Not tested` blocks delivery. Do not claim visual verification from source.
+- **Record**: write `docs/reports/YYYY-MM-DD_<topic>_review.md` and link screenshots and audits. Missing screenshots, an unrun audit, or `Not tested` blocks delivery.
 - `verify-and-stop` remains the final decisive check: one file, one preset, no request outside the font stylesheet or approved Chart.js exception, both themes render, print expands details.
 
 ## Verification Checklist
-
-Delivery is blocked until every checked item is true.
-
-- [ ] One complete HTML file with inline CSS, JavaScript, SVG, data, and the Google Fonts `<link>` block.
-- [ ] Exactly one preset is fixed at generation time; no preset switcher is present.
-- [ ] The profile is classified by consumption rules; uncertain cases default to Shared.
-- [ ] Header contains only the title, one provenance line, and the Theme button.
-- [ ] Display serifs use light/regular weights, optical sizing, and tight tracking.
-- [ ] Prose follows the 2-3 sentence, <= 60 word, 60ch-70ch budget.
-- [ ] No Tailwind CDN and no live `fetch()`; the font stylesheet and the approved Chart.js block are the only allowed requests.
-- [ ] CSP meta is present and restricts `default-src`, `connect-src`, `object-src`, `base-uri`, and `form-action` to `'none'`.
-- [ ] No credential-shaped strings remain; the validator secret patterns pass.
-- [ ] Light and dark themes work; print expands details and hides the Theme button.
-- [ ] Desktop, mobile, 320px reflow, and print were rendered and inspected.
-- [ ] Zero hard-fail defects; Critical and Important findings fixed within 2 cycles.
-- [ ] Shared and Print reports passed `ui-accessibility`; executive reports passed `ux-critic`.
-- [ ] The review record exists and links every screenshot and audit.
-- [ ] No gate is unrun, `Not tested`, or `Fail`.
+- [ ] Single HTML file with inline CSS/JS/SVG/data, Google Fonts `<link>`, and CSP meta (`default-src`, `connect-src`, `object-src`, `base-uri`, `form-action` `'none'`).
+- [ ] One preset fixed; no preset switcher; `data-layout` and `data-voice` set when they differ from the canonical triple; minimal header.
+- [ ] Profile classified; display weights `300`-`600` with optical sizing; prose obeys the 2-3 sentence, <= 60 word, 60ch-70ch budget.
+- [ ] No Tailwind CDN, no `fetch()`, no secrets; light, dark, and print (`details` expanded) work.
+- [ ] Desktop, mobile, 320px reflow, and print rendered and inspected; Shared/Print passed `ui-accessibility`; Executive passed `ux-critic`.
 
 ## Related Skills
-- Use **design-system** for project tokens, component specs, theme parity, and the Zen minimalism/YAGNI doctrine; this skill consumes them.
+- Use **ux-product-shaper** to run the 5-Axis Spec-Design-Driven grill first.
+- Use **design-system** for project tokens, component specs, theme parity, and the minimalism/YAGNI doctrine.
 - Use **ui-accessibility** for shared, interactive, or print reports; audit contrast, keyboard, focus, and table semantics.
 - Use **ux-critic** for executive or decision reports; critique hierarchy, state honesty, and microcopy.
 - Use **technical-reporting** for Markdown reports, ADRs, Mermaid, and `docs/reports/YYYY-MM-DD_*.md` conventions.
@@ -135,4 +125,3 @@ Delivery is blocked until every checked item is true.
 - Use **plotly-dash** for server callbacks, routing, `dcc.Store`, or background jobs.
 - Use **data-storytelling** for a Hook -> Ask decision narrative.
 - Use **verify-and-stop** for the decisive artifact check.
-- The gate decision stays with this skill; audit skills supply evidence, not waivers.

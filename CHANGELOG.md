@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.2.0] - 2026-11-11
+
+### Changed
+- **Composition grammar (`design-system`)**: Palette, layout, voice, and density are independent axes. A delegated task selects a legal mix from a job band with a stable task-slug hash. HTML reports keep one `data-preset` palette and may set `data-layout` and `data-voice`. Existing reports without those attributes keep the palette's canonical triple.
+
+### Added
+- **Spec-Design-Driven UI/UX Discovery Workflow (`ux-product-shaper`)**: Interactive 2-gate Socratic grill across Surface Mode A/B/C, 13 archetypes in 4 style families, layouts `L1`-`L6`, voices `V1`-`V4`, and density scopes. Unranked trade-offs follow `rules/AGENTS.md` §2. Contradiction Halt and four UI/UX Goldfish lenses stay in the product brief path.
+- **13-preset design catalog (`design-system`, `html-report`, `ux-critic`, `dashboard-design`, `data-visualization`)**: Zen Minimalism expands from 3 warm-beige presets to 7 (`sumi-ink`, `shoji-grid`, `aizome-indigo`, `yugen-noir` added). Scientific/Plotly (`simple-white`, `plotly-white`, `ggplot2-grammar`), Platform Native (`apple-hig`, `material-you`), and Modern Monochrome (`geist-zinc`) publish token rows. Mode C, six layouts, and four typographic voices ship with the catalog.
+
 ## [4.1.0] - 2026-11-11
 
 ### Added

@@ -18,20 +18,21 @@ Failure signals:
 - A decorative illustration heavier than the primary action.
 - The eye lands on a logo or navigation before the task.
 
-### 1.2 Spatial Rhythm and Alignment
+### 1.2 Spatial Rhythm, *Ma*, and Layout Geometry (`L1`-`L6`)
 
 Pass conditions:
 - Macro whitespace between sections is larger than micro whitespace inside a group.
-- Left edges align across headings, cards, and table columns.
+- Left edges align across headings, cards, and table columns (or follow the chosen layout geometry: `L1: sidebar-rail`, `L2: contemplative-column`, `L3: chapter-banner`, `L4: fukinsei-split`, `L5: shoji-bento`, `L6: yugen-canvas`).
 - Spacing comes from a 4px or 8px scale, not arbitrary values.
-- Typography stays within 2 primary families plus one monospace face.
+- In `L5: shoji-bento` lattices, `1px` exposed hairlines separate flush cells with zero nested bordered cards inside cells.
+- Typography stays within 2 primary families plus one monospace face across the 4 curated voices (`V1`-`V4`).
 - Reports use the 9 editorial roles; product UI uses at most 5 size tokens.
 - Prose measure stays within 60ch-70ch, target 66ch.
 
 Failure signals:
 - Section gaps smaller than card padding.
 - Mixed alignment axes across the same column.
-- A single card with 17px padding in a 16px system.
+- Nested bordered cards inside a `shoji-bento` lattice.
 - A third display face or an arbitrary one-off font size.
 - A prose column wider than 70ch or narrower than 60ch.
 
@@ -58,7 +59,7 @@ Pass conditions:
 - Helper text appears before the mistake, not after.
 - The same concept uses one term throughout.
 - Body paragraphs stay at 2-3 sentences (`<= 60 words`) with one job each.
-- Display weights stay at 300-400; UI labels use 500; emphasis uses 600; 700 is absent.
+- Display weights stay at 300-400 (or 500 for sans-dominant `V3`/`V4`); UI labels use 500; emphasis uses 600; 700 is absent.
 - Body prose is at least 0.9375rem, labels at least 0.75rem, and code at least 0.82rem.
 - Numeric columns, deltas, and axes use tabular numerals.
 - Chart labels are readable and non-overlapping: percentages use two decimals, counts are abbreviated, and exact values remain in the table.
@@ -71,16 +72,17 @@ Failure signals:
 - A 700-weight display heading, 0.7rem labels, or proportional numeric columns.
 - Integer-only percent labels, overlapping chart labels, or a chart that hides exact values from keyboard users.
 
-### 1.5 Mode Fit
+### 1.5 Mode Fit and Zen Archetype Fidelity
 
 Pass conditions:
-- Persuade surfaces use expressive hierarchy and narrative.
-- Operate surfaces use density, familiarity, and calm hierarchy.
-- The visual ambition matches the product brief.
+- Persuade surfaces (`Mode A`) use expressive hierarchy and narrative.
+- Operate surfaces (`Mode B`) use density, familiarity, and calm hierarchy.
+- Studio hybrid surfaces (`Mode C`) keep tool chrome recessed (`1px` shoji borders, collapsible *Yugen* drawers) so the primary canvas breathes.
+- The visual palette, layout, and voice match the recorded composition and the domain's trust requirements. A legal cross-axis mix passes. A canonical triple outside that palette's best-fit job fails.
 
 Failure signals:
 - A brand hero inside an admin console.
-- A flat, low-contrast table on a launch page.
+- Casual asymmetric wabi-sabi applied to financial or clinical numbers where tabular precision is required.
 - Decorative motion in a high-frequency workflow.
 
 ### 1.6 YAGNI and Signifier Honesty
@@ -167,6 +169,7 @@ Save as `docs/reports/YYYY-MM-DD_ux-critique_<topic>.md`.
 - Date: YYYY-MM-DD
 - Revision: <commit>
 - Viewports: <desktop, mobile>
+- Locked 5-Axis Matrix: <Mode A/B/C · Archetype · Layout L1-L6 · Voice V1-V4 · Density>
 - Evidence: <screenshot paths>
 - Product brief: <path>
 - Design system: <path>
@@ -190,7 +193,7 @@ Save as `docs/reports/YYYY-MM-DD_ux-critique_<topic>.md`.
 ### <Issue Title>
 
 - Severity: Critical | Important | Suggestion | Nit
-- Dimension: Focal point and squint test | Spatial rhythm and *Ma* alignment | State honesty | Microcopy, *Kanso* wording, and paragraph rhythm | Mode fit and *Shibumi* restraint | YAGNI and signifier honesty
+- Dimension: Focal point and squint test | Spatial rhythm, *Ma*, and layout geometry (`L1`-`L6`) | State honesty | Microcopy, *Kanso* wording, and paragraph rhythm | Mode fit, archetype fidelity, and *Shibumi* restraint | YAGNI and signifier honesty
 - Heuristic: <Nielsen number or Not applicable>
 - Evidence: <screenshot path and region>
 - Finding: <what is wrong>
@@ -213,7 +216,8 @@ Save as `docs/reports/YYYY-MM-DD_ux-critique_<topic>.md`.
 - Critiquing source code instead of a rendered screen.
 - Vague feedback such as "make it pop" or "improve the UX".
 - Proposing a full redesign for a spacing defect.
-- Ignoring the product brief's Surface Mode.
+- Ignoring the product brief's Surface Mode or recorded composition.
+- Failing a legal cross of palette and layout because it is not the canonical triple.
 - Treating an accessibility failure as a visual preference.
 - Inventing a user metric without evidence.
 - Marking an untested heuristic as a pass.

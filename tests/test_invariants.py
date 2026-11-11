@@ -544,6 +544,10 @@ def test_html_report_scaffold_integrity():
         'data-preset="dossier"',
         'data-preset="zen-garden"',
         'data-preset="chronicle"',
+        'data-preset="sumi-ink"',
+        'data-preset="shoji-grid"',
+        'data-preset="aizome-indigo"',
+        'data-preset="yugen-noir"',
     ):
         assert preset in scaffold, f"Missing scaffold preset '{preset}'"
     for removed in (
@@ -710,6 +714,51 @@ def test_html_report_validator_css_and_preset_parsing(tmp_path):
         "missing preset token block" in result.stdout
         or "missing token block for chosen preset" in result.stdout
     )
+
+
+def test_html_report_validator_accepts_composition_axes(tmp_path):
+    """A non-canonical layout and voice pass. An unknown layout fails."""
+    mixed = HTML_REPORT_FIXTURE.replace(
+        '<html lang="en" data-preset="dossier" data-theme="light">',
+        '<html lang="en" data-preset="aizome-indigo" data-layout="L4" '
+        'data-voice="V4" data-theme="light">',
+    ).replace(
+        ':root, :root[data-preset="dossier"] { --bg: #F7F4EE; }',
+        ':root[data-preset="aizome-indigo"] { --bg: #F3F6F8; }',
+    )
+    passed = _run_html_report_validator(tmp_path, mixed)
+    assert passed.returncode == 0, passed.stdout + passed.stderr
+
+    unknown = HTML_REPORT_FIXTURE.replace(
+        '<html lang="en" data-preset="dossier" data-theme="light">',
+        '<html lang="en" data-preset="dossier" data-layout="L9" data-theme="light">',
+    )
+    failed = _run_html_report_validator(tmp_path, unknown)
+    assert failed.returncode == 1, failed.stdout + failed.stderr
+    assert "data-layout" in failed.stdout
+
+
+def test_composition_grammar_present():
+    """The mix rules live in one file and the design-system skill points at it."""
+    path = SKILLS_DIR / "design-system" / "references" / "composition-grammar.md"
+    text = path.read_text(encoding="utf-8")
+    for marker in (
+        "editorial-brief",
+        "long-form",
+        "ops-monitor",
+        "quant-surface",
+        "studio-night",
+        "native-consumer",
+        "developer-console",
+        "data-layout",
+        "task slug",
+        "SHA-256",
+        "close-brief",
+        "latency-wall",
+    ):
+        assert marker in text, f"composition grammar missing '{marker}'"
+    skill = (SKILLS_DIR / "design-system" / "SKILL.md").read_text(encoding="utf-8")
+    assert "references/composition-grammar.md" in skill
 
 
 def test_html_report_validator_rejects_secrets(tmp_path):
@@ -1090,7 +1139,7 @@ def test_readme_reference_counts_match_directories():
         "codebase-contracts": 1,
         "dashboard-design": 10,
         "deprecation-migration": 2,
-        "design-system": 1,
+        "design-system": 2,
         "doubt-driven-development": 1,
         "html-report": 2,
         "python-pro": 1,

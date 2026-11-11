@@ -1,22 +1,28 @@
-# HTML Report Scaffold (Zen Minimalism 3-Preset & Editorial Typography Architecture)
+# HTML Report Scaffold (Zen Minimalism 7-Preset, 6-Layout & Editorial Typography Architecture)
 
-Reference for `html-report`. Copy the skeleton and trim only data sections the report does not need. Preserve the Google Fonts `<link>`, the 3-preset system (`dossier` default, `zen-garden`, `chronicle`) with distinct typography per preset, dual light/dark theme parity, offline self-containment, and print fidelity.
+Reference for `html-report`. Copy the skeleton and trim only data sections the report does not need. Preserve the Google Fonts `<link>`, the 7-preset system (`dossier` default, `zen-garden`, `chronicle`, `sumi-ink`, `shoji-grid`, `aizome-indigo`, `yugen-noir`) with distinct typography and spatial geometry per preset, dual light/dark theme parity, offline self-containment, and print fidelity.
 
-## 1. The Three Curated Presets & Typography Pairings
+## 1. The Seven Curated Presets, Layouts & Typography Pairings
 
-| Preset Attribute | UI Label | Default? | Palette & Distinct Typography Pairing |
+| Preset Attribute | UI Label & Zen Principle | Default? | Palette, Typography Pairing & Spatial Layout Architecture |
 | :--- | :--- | :--- | :--- |
-| `data-preset="dossier"` | **Clinical Dossier** | **Yes (Default)** | **Palette**: Soft Parchment (`#F7F4EE`), Cream (`#FDFBF7`), Muted Clay (`#9E583B`).<br>**Typography**: `'Fraunces'` (optical-size variable editorial serif, weight `350`/`400`) + `'Inter'` (precision UI sans) + `'JetBrains Mono'` (tabular data).<br>**Layout**: Compact `240px` sticky chapter sidebar (`01`-`06`) + fluid evidence column (`1220px` max-width). |
-| `data-preset="zen-garden"` | **Zen Garden** | User Option 2 | **Palette**: Raked Limestone (`#F4F1EA`), Warm Stone (`#F9F7F2`), Kyoto Moss (`#4A6B53`).<br>**Typography**: `'Cormorant Garamond'` (high-contrast classical serif, weight `300`/`400`, lyrical italics) + `'Inter'` (weight `400`/`500`, airy `1.75` line-height) + `'JetBrains Mono'`.<br>**Layout**: Centered `960px` contemplative single-column flow with `5.25rem` vertical *Ma* breathing room. |
-| `data-preset="chronicle"` | **Slow Chronicle** | User Option 3 | **Palette**: Warm Paper (`#FBF9F5`), Sand (`#F5F0E6`), Earth Terracotta (`#A65638`).<br>**Typography**: `'Cormorant Garamond'` (oversized `1.65rem` pull-quotes & chapter banners, weight `300`/`400`) + `'Plus Jakarta Sans'` (warm geometric humanist body) + `'JetBrains Mono'`.<br>**Layout**: `1020px` single-column magazine flow with full-width horizontal chapter headers (`01`-`06`). |
+| `data-preset="dossier"` | **Clinical Dossier** (*Shibumi*) | **Yes (Default)** | **Palette**: Soft Parchment (`#F7F4EE`), Cream (`#FDFBF7`), Muted Clay (`#9E583B`).<br>**Typography**: `'Fraunces'` (optical-size variable editorial serif, weight `350`/`400`) + `'Inter'` (precision UI sans) + `'JetBrains Mono'` (tabular data).<br>**Layout (`L1`)**: Compact `240px` sticky chapter sidebar (`01`-`06`) + fluid evidence column (`1220px` max-width). |
+| `data-preset="zen-garden"` | **Zen Garden** (*Karesansui* / *Ma*) | Option 2 | **Palette**: Raked Limestone (`#F4F1EA`), Warm Stone (`#F9F7F2`), Kyoto Moss (`#4A6B53`).<br>**Typography**: `'Cormorant Garamond'` (high-contrast classical serif, weight `300`/`400`, lyrical italics) + `'Inter'` (weight `400`/`500`, airy `1.75` line-height) + `'JetBrains Mono'`.<br>**Layout (`L2`)**: Centered `960px` contemplative single-column flow with `5.25rem` vertical *Ma* breathing room. |
+| `data-preset="chronicle"` | **Slow Chronicle** (*Wabi-Sabi*) | Option 3 | **Palette**: Warm Paper (`#FBF9F5`), Sand (`#F5F0E6`), Earth Terracotta (`#A65638`).<br>**Typography**: `'Cormorant Garamond'` (oversized `1.65rem` pull-quotes & chapter banners, weight `300`/`400`) + `'Plus Jakarta Sans'` (warm geometric humanist body) + `'JetBrains Mono'`.<br>**Layout (`L3`)**: `1020px` single-column magazine flow with full-width horizontal chapter headers (`01`-`06`). |
+| `data-preset="sumi-ink"` | **Sumi-e Ink Wash** (*Kanso* / *Fukinsei*) | Option 4 | **Palette**: Rice Paper (`#F6F6F4`), Pure Washi (`#FFFFFF`), Sumi Charcoal (`#141413`), Hanko Vermilion (`#B8332A`).<br>**Typography**: `'Newsreader'` (sharp literary editorial serif, weight `350`/`400`) + `'Inter'` + `'JetBrains Mono'`.<br>**Layout (`L4`)**: Asymmetric *Fukinsei* golden-ratio split (`38%` sticky narrative context + `62%` evidence stage, `1320px` max-width). |
+| `data-preset="shoji-grid"` | **Shoji Architectural Lattice** (*Seijaku*) | Option 5 | **Palette**: Shoji White (`#F8F7F4`), Crisp Alabaster (`#FFFFFF`), Zinc Ink (`#18181B`), Slate Cobalt (`#2E5A88`).<br>**Typography**: `'IBM Plex Sans'` (weight `400`/`500`, industrial Swiss-Japanese clarity) + `'IBM Plex Mono'` (`tabular-nums`).<br>**Layout (`L5`)**: Exposed `1px` structural hairline bento lattice (`1280px` max-width, flush cells, zero outer card radius). |
+| `data-preset="aizome-indigo"` | **Aizome Mineral Craft** (*Datsuzoku*) | Option 6 | **Palette**: Mineral Mist (`#F3F6F8`), Ice Stone (`#FAFBFD`), Deep Slate (`#16212B`), Japan Indigo (`#264348`).<br>**Typography**: `'Space Grotesk'` (display headings, weight `400`/`500`) + `'IBM Plex Sans'` (body) + `'JetBrains Mono'`.<br>**Layout (`L1`/`L5`)**: `240px` sticky rail + crisp technical evidence grid (`1240px` max-width). |
+| `data-preset="yugen-noir"` | **Yugen Kintsugi Nocturne** (*Yugen*) | Option 7 | **Palette**: Warm Alabaster (`#F5F3EF` light) / Obsidian Lacquer (`#0B0B0C` dark), Burnished Ochre (`#9A7228` light) / Kintsugi Gold (`#D4A853` dark).<br>**Typography**: `'Instrument Serif'` (weight `400`, refined verticality) + `'Inter'` + `'JetBrains Mono'`.<br>**Layout (`L6`)**: Progressive-depth primary stage (`1120px` max-width) with high-contrast gold-seam thesis callouts and collapsible deep-dive drawers. |
 
-The reference defines all three presets. A generated report keeps exactly one preset token block and deletes the other two. It never includes a preset switcher.
+The reference defines all seven presets. A generated report keeps **exactly one** preset token block and deletes the other six. It never includes a runtime preset switcher.
+
+`data-preset` is the palette. Optional `data-layout` (`L1`–`L6`) and `data-voice` (`V1`–`V4`) record a mix from the **design-system** composition grammar. When either attribute is absent, use the canonical layout and voice in the table above. Do not add a second preset block to express a mix.
 
 ## 2. Document Skeleton (with Required Google Fonts Link)
 
 ```html
 <!DOCTYPE html>
-<html lang="en" data-preset="dossier" data-theme="light">
+<html lang="en" data-preset="dossier" data-layout="L1" data-voice="V1" data-theme="light">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -231,6 +237,146 @@ The reference defines all three presets. A generated report keeps exactly one pr
   --container-max: 1020px;
 }
 
+/* PRESET 4: sumi-ink (Sumi-e Ink Wash & Hanko Vermilion — Newsreader + Inter + JetBrains Mono) */
+:root[data-preset="sumi-ink"] {
+  --bg-page: #F6F6F4;
+  --bg-card: #FFFFFF;
+  --bg-subtle: #EBEBE7;
+  --text-primary: #141413;
+  --text-secondary: #52524E;
+  --border: #DCDCD6;
+  --border-strong: #AEAEA6;
+  --accent: #B8332A;
+  --accent-subtle: #F7E3E1;
+  --status-ok: #256343;
+  --status-bad: #9E2626;
+  --chart-ps: #B8332A;
+  --chart-prod: #52524E;
+  --chart-old: #85857F;
+  --chart-pos: #256343;
+  --chart-neg: #9E2626;
+
+  --font-display: 'Newsreader', "Iowan Old Style", Georgia, serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --display-weight: 350;
+  --display-tracking: -0.02em;
+  --display-size: clamp(2.45rem, 4.4vw, 3.8rem);
+  --text-thesis: 1.48rem;
+  --chapter-size: var(--text-3xl);
+  --kpi-size: var(--text-2xl);
+  --body-lh: 1.68;
+
+  --radius-card: 0px;
+  --section-pad: 4rem;
+  --container-max: 1320px;
+}
+
+/* PRESET 5: shoji-grid (Shoji Architectural Lattice — IBM Plex Sans + IBM Plex Mono) */
+:root[data-preset="shoji-grid"] {
+  --bg-page: #F8F7F4;
+  --bg-card: #FFFFFF;
+  --bg-subtle: #F0EFEA;
+  --text-primary: #18181B;
+  --text-secondary: #52525B;
+  --border: #E4E3DD;
+  --border-strong: #B8B6AE;
+  --accent: #2E5A88;
+  --accent-subtle: #E3ECF5;
+  --status-ok: #246345;
+  --status-bad: #9C2B2B;
+  --chart-ps: #2E5A88;
+  --chart-prod: #52525B;
+  --chart-old: #82828A;
+  --chart-pos: #246345;
+  --chart-neg: #9C2B2B;
+
+  --font-display: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --display-weight: 400;
+  --display-tracking: -0.022em;
+  --display-size: clamp(2.25rem, 3.8vw, 3.25rem);
+  --text-thesis: 1.32rem;
+  --chapter-size: 2.35rem;
+  --kpi-size: 2.35rem;
+  --body-lh: 1.62;
+
+  --radius-card: 0px;
+  --section-pad: 3rem;
+  --container-max: 1280px;
+}
+
+/* PRESET 6: aizome-indigo (Aizome Mineral Craft — Space Grotesk + IBM Plex Sans + JetBrains Mono) */
+:root[data-preset="aizome-indigo"] {
+  --bg-page: #F3F6F8;
+  --bg-card: #FAFBFD;
+  --bg-subtle: #E6EDF2;
+  --text-primary: #16212B;
+  --text-secondary: #4A5A68;
+  --border: #D3DEE6;
+  --border-strong: #9FB2C2;
+  --accent: #264348;
+  --accent-subtle: #DFECEF;
+  --status-ok: #236647;
+  --status-bad: #992B2B;
+  --chart-ps: #264348;
+  --chart-prod: #4A5A68;
+  --chart-old: #788A99;
+  --chart-pos: #236647;
+  --chart-neg: #992B2B;
+
+  --font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --display-weight: 400;
+  --display-tracking: -0.024em;
+  --display-size: clamp(2.3rem, 4vw, 3.45rem);
+  --text-thesis: 1.38rem;
+  --chapter-size: 2.5rem;
+  --kpi-size: 2.45rem;
+  --body-lh: 1.65;
+
+  --radius-card: var(--radius-sm);
+  --section-pad: 3.5rem;
+  --container-max: 1240px;
+}
+
+/* PRESET 7: yugen-noir (Yugen Kintsugi Nocturne — Instrument Serif + Inter + JetBrains Mono) */
+:root[data-preset="yugen-noir"] {
+  --bg-page: #F5F3EF;
+  --bg-card: #FCFBF9;
+  --bg-subtle: #EBE7DF;
+  --text-primary: #1C1A17;
+  --text-secondary: #57524A;
+  --border: #DDD7CB;
+  --border-strong: #B5AC9C;
+  --accent: #9A7228;
+  --accent-subtle: #F3ECE0;
+  --status-ok: #2B6648;
+  --status-bad: #992B2B;
+  --chart-ps: #9A7228;
+  --chart-prod: #57524A;
+  --chart-old: #878079;
+  --chart-pos: #2B6648;
+  --chart-neg: #992B2B;
+
+  --font-display: 'Instrument Serif', "Palatino Linotype", Georgia, serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --display-weight: 400;
+  --display-tracking: -0.015em;
+  --display-size: clamp(2.65rem, 4.8vw, 4.1rem);
+  --text-thesis: 1.55rem;
+  --chapter-size: var(--text-3xl);
+  --kpi-size: 2.65rem;
+  --body-lh: 1.7;
+
+  --radius-card: var(--radius-md);
+  --section-pad: 4.25rem;
+  --container-max: 1120px;
+}
+
 /* Dark Theme Parity (Auto OS + Manual Toggle) */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -414,6 +560,18 @@ button, .filter-input {
 }
 :root[data-preset="chronicle"] .chapter-index { font-size: 2.35rem; margin-bottom: 0; }
 :root[data-preset="chronicle"] .thesis-box p { font-size: 1.65rem; line-height: 1.38; }
+
+/* PRESET 4 LAYOUT (sumi-ink): Fukinsei Asymmetric 38% / 62% Split */
+:root[data-preset="sumi-ink"] .report-section { grid-template-columns: minmax(260px, 38%) 1fr; gap: 3.5rem; }
+:root[data-preset="sumi-ink"] .thesis-box { border-left: 4px solid var(--accent); }
+
+/* PRESET 5 LAYOUT (shoji-grid): Exposed 1px Structural Lattice */
+:root[data-preset="shoji-grid"] .report-section { grid-template-columns: 220px 1fr; gap: 0; border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
+:root[data-preset="shoji-grid"] .section-sidebar { padding: 1.5rem; border-right: 1px solid var(--border); }
+:root[data-preset="shoji-grid"] .section-content { padding: 1.5rem; }
+
+/* PRESET 7 LAYOUT (yugen-noir): Progressive-Depth Stage + Gold Seam */
+:root[data-preset="yugen-noir"] .thesis-box { border-left: 3px solid var(--accent); border-top: 1px solid var(--accent); }
 
 .thesis-box {
   background: var(--bg-card);
@@ -717,7 +875,7 @@ python3 <skill-dir>/scripts/check_html_report.py <report>.html
 
 `<skill-dir>` is the directory containing this skill, for example `~/.agents/skills/html-report`.
 
-The validator checks the document skeleton, exactly one preset token block with no switcher, the Theme control, the Google Fonts stylesheet, CSP directives, dual-theme and reduced-motion CSS, print rules, optical sizing, `tabular-nums`, focus visibility, table headers, button types, duplicate IDs, inline event handlers, URL schemes, inline network calls, exact-origin external assets, sidecar paths, secret patterns, unresolved placeholders, and chart interaction markers when charts exist. It does not judge visual quality; run the render matrix in `references/review-gate.md`.
+The validator checks the document skeleton, exactly one preset token block with no switcher, optional `data-layout` and `data-voice`, the Theme control, the Google Fonts stylesheet, CSP directives, dual-theme and reduced-motion CSS, print rules, optical sizing, `tabular-nums`, focus visibility, table headers, button types, duplicate IDs, inline event handlers, URL schemes, inline network calls, exact-origin external assets, sidecar paths, secret patterns, unresolved placeholders, and chart interaction markers when charts exist. It does not judge visual quality; run the render matrix in `references/review-gate.md`.
 
 Keep this manual grep block as a fallback when the script cannot run. It cannot prove exact origins or size bounds; use the validator for the blocking verdict.
 

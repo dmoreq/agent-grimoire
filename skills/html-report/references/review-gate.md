@@ -88,7 +88,7 @@ Write the record beside the report, or in the host artifact directory for a sess
 
 - Report: `docs/reports/YYYY-MM-DD_<topic>.html`
 - Profile: Internal | Shared | Print | Executive
-- Preset rendered: <dossier | zen-garden | chronicle>
+- Preset rendered: <dossier | zen-garden | chronicle | sumi-ink | shoji-grid | aizome-indigo | yugen-noir>
 - Views rendered: desktop 1440x900, mobile 390x844, 320px reflow, print/PDF
 - Themes rendered: light, dark
 
