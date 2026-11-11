@@ -109,17 +109,17 @@ fi
 assert_contains "$OUT_MISSING" "requires a comma-separated host list" "missing --host value did not report a usage error"
 echo "  Invalid host values are rejected"
 
-# Test 5: Non-dry portable install writes 32 base skills and no optional skills.
+# Test 5: Non-dry portable install writes 33 base skills and no optional skills.
 INSTALL_HOME="$TEST_HOME/install"
 HOME="$INSTALL_HOME" "$REPO_DIR/setup.sh" --host portable >/dev/null
 SKILL_COUNT="$(find "$INSTALL_HOME/.agents/skills" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')"
-[[ "$SKILL_COUNT" == "32" ]] || fail "portable install wrote $SKILL_COUNT skills, expected 32"
+[[ "$SKILL_COUNT" == "33" ]] || fail "portable install wrote $SKILL_COUNT skills, expected 33"
 [[ -f "$INSTALL_HOME/.agents/skills/.precept-managed" ]] || fail "portable install did not write a manifest"
 [[ ! -e "$INSTALL_HOME/.agents/skills/.agent-grimoire-managed" ]] || fail "portable install wrote the grimoire manifest"
 [[ ! -e "$INSTALL_HOME/.agents/skills/.agent-skills-managed" ]] || fail "portable install wrote the legacy manifest"
 [[ ! -d "$INSTALL_HOME/.agents/skills/rust-pro" ]] || fail "portable install included rust-pro"
 [[ ! -d "$INSTALL_HOME/.agents/skills/flutter-architecture-data" ]] || fail "portable install included Flutter by default"
-echo "  Non-dry portable install writes 32 base skills and a manifest"
+echo "  Non-dry portable install writes 33 base skills and a manifest"
 
 # Test 5a: a pre-rename .agent-skills-managed manifest authorizes an update, then is replaced.
 LEGACY_HOME="$TEST_HOME/legacy"
@@ -149,20 +149,20 @@ grep -qxF "code-review" "$GRIMOIRE_DEST/.precept-managed" || fail "grimoire inst
 grep -Fq "name: code-review" "$GRIMOIRE_DEST/code-review/SKILL.md" || fail "grimoire manifest did not authorize the skill update"
 echo "  .agent-grimoire-managed migrates into .precept-managed and is removed"
 
-# Test 5b: --with-flutter installs 40 skills including Dart/Flutter.
+# Test 5b: --with-flutter installs 41 skills including Dart/Flutter.
 FLUTTER_HOME="$TEST_HOME/flutter"
 HOME="$FLUTTER_HOME" "$REPO_DIR/setup.sh" --host portable --with-flutter >/dev/null
 FLUTTER_COUNT="$(find "$FLUTTER_HOME/.agents/skills" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')"
-[[ "$FLUTTER_COUNT" == "40" ]] || fail "flutter install wrote $FLUTTER_COUNT skills, expected 40"
+[[ "$FLUTTER_COUNT" == "41" ]] || fail "flutter install wrote $FLUTTER_COUNT skills, expected 41"
 [[ -f "$FLUTTER_HOME/.agents/skills/flutter-architecture-data/SKILL.md" ]] || fail "flutter install missing flutter-architecture-data"
 [[ -f "$FLUTTER_HOME/.agents/skills/dart-modern-idioms/SKILL.md" ]] || fail "flutter install missing dart-modern-idioms"
 [[ ! -d "$FLUTTER_HOME/.agents/skills/rust-pro" ]] || fail "flutter install included rust-pro"
-echo "  --with-flutter installs 40 skills including Dart/Flutter"
+echo "  --with-flutter installs 41 skills including Dart/Flutter"
 
 # Test 5c: running without Flutter removes previously installed Flutter skills.
 HOME="$FLUTTER_HOME" "$REPO_DIR/setup.sh" --host portable >/dev/null
 REVOKED_COUNT="$(find "$FLUTTER_HOME/.agents/skills" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')"
-[[ "$REVOKED_COUNT" == "32" ]] || fail "revoke left $REVOKED_COUNT skills, expected 32"
+[[ "$REVOKED_COUNT" == "33" ]] || fail "revoke left $REVOKED_COUNT skills, expected 33"
 [[ ! -e "$FLUTTER_HOME/.agents/skills/flutter-architecture-data" ]] || fail "revoke kept flutter-architecture-data"
 [[ ! -e "$FLUTTER_HOME/.agents/skills/dart-modern-idioms" ]] || fail "revoke kept dart-modern-idioms"
 [[ -f "$FLUTTER_HOME/.agents/skills/code-review/SKILL.md" ]] || fail "revoke removed a base skill"

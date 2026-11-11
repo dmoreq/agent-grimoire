@@ -1100,7 +1100,7 @@ def test_readme_reference_counts_match_directories():
         "ui-accessibility": 1,
         "ux-critic": 1,
         "ux-product-shaper": 1,
-        "verify-and-stop": 1,
+        "verify-and-stop": 2,
         "dart-modern-idioms": 1,
         "flutter-architecture-data": 1,
         "flutter-codegen-release": 1,

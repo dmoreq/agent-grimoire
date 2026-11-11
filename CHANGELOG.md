@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.1.0] - 2026-11-11
+
+### Added
+- `skills/debugging-and-error-recovery`: stop-the-line triage (reproduce, localize, reduce, fix the cause, guard).
+- Adopted text from the 2026-11-11 agent-skills / Astryx comparison: spec interview stop, Phase 0 map, Prove-It, cite-or-flag, keep-or-revert, comment budget, deprecation compulsory/advisory, Definition of Done reference.
+- Short pattern deltas only: security Always/Ask/Never, API Hyrum/One-Version/idempotency, symptom-first alerts. No new skills for those topics.
+
 ## [4.0.0] - 2026-11-09
 
 ### Changed

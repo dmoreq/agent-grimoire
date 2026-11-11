@@ -96,6 +96,8 @@ Always type function parameters/returns, public APIs, and class attributes that 
 ## Design Principles
 Apply pragmatically: clear names, focused modules, composition over deep inheritance, tests for critical behavior. DRY only when the abstraction is cheaper than repetition.
 
+For a public contract: any observable behavior can become a dependency (Hyrum's Law). Keep one live version of a call. Honour an idempotency key: atomic claim, payload mismatch fails loud, retention longer than the longest retry.
+
 ## Optional ADR
 For significant choices (framework, ORM vs SQL, sync vs async *at the service boundary*):
 - **Context**: constraints and drivers

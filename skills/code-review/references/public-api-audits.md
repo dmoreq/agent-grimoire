@@ -101,6 +101,12 @@ outside the package tree, or explicitly include as intentional data with the siz
 
 Do not stop at an inventory and claim a deep review is complete. Inventory establishes coverage; consumer inspection establishes semantic findings.
 
+## 2a. Public-contract principles
+
+- **Hyrum's Law**: Any observable behavior can become a caller dependency. Treat an accidental behavior as a contract once a caller relies on it.
+- **One-Version**: Prefer one live contract. Do not ship two behaviors for the same call without a named removal version.
+- **Idempotency keys**: Claim the key atomically. A repeated key with a different payload fails loud. Keep the key longer than the longest retry.
+
 ## 3. Probe contracts at their boundaries
 
 Prioritize a small counterexample matrix over broad speculative rewrites:

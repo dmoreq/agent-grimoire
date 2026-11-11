@@ -30,17 +30,24 @@ Move from an unproven idea to an owner-approved design spec before code exists.
 - Approved spec: `docs/designs/YYYY-MM-DD_<feature>.md`.
 - Session fallback: the host artifact directory, or `.tmp/`, with the same date prefix.
 - Never write an undated file at the repository root.
+- If that path already holds an incomplete brief or spec, do not overwrite it. Continue that file, or ask which path to use.
 
 ## Workflow
 
 ### 0. Intake
 Read the predecessor artifact in this order: explicit path, concepts brief, discussion summary, then interactive chat. Confirm the parsed context with the owner before drafting.
 
+### 0a. Phase 0 capability map
+When one request bundles independently testable capabilities, write a map before Gate 1: module id, dependency, and build order. The owner approves the map before any module spec.
+
 ### 1. Gate 1: Requirements and Architecture Lock
-1. Drill the problem with one open-ended question per turn. Ask again until the problem statement, consumers, hard constraints, and out-of-scope boundaries are clear.
-2. Stop on contradictory requests under the Contradiction Halt rule in `rules/AGENTS.md` §2.
-3. When architectures diverge, apply Architecture Ownership: up to three options, no ranking, owner decides. Do not use structured question tools for open-ended exploration.
-4. Summarize the anchored hypothesis in 2-3 sentences. Wait for explicit readiness confirmation before spawning reviewers.
+1. Drill the problem with one open-ended question per turn. Attach a one-sentence guess and a confidence percent. Ask again until the problem statement, consumers, hard constraints, and out-of-scope boundaries are clear.
+2. Stop asking when you can predict the owner's reaction to the next three questions. Otherwise ask again or step back.
+3. Accept only an explicit yes. "Sounds good", silence, and "whatever you think" do not confirm.
+4. After that yes, state the intent and end the turn. Do not draft the spec and do not call tools in that turn.
+5. Stop on contradictory requests under the Contradiction Halt rule in `rules/AGENTS.md` §2.
+6. When architectures diverge, apply Architecture Ownership: up to three options, no ranking, owner decides. Do not use structured question tools for open-ended exploration.
+7. Summarize the anchored hypothesis in 2-3 sentences. Wait for explicit readiness confirmation before spawning reviewers.
 
 ### 2. Multi-Lens Brainstorm Fan-Out
 Dispatch read-only Goldfish subagents per lens using risk-based tiering. Prompt cards live in `references/spec-templates-and-standards.md`.
@@ -81,6 +88,7 @@ Write the spec against the template in `references/spec-templates-and-standards.
 - Apply the Alternatives Rule and the Heilmeier questions.
 - Fill Critical User Journeys in Given / When / Then form.
 - Write to disk. Do not dump the draft into chat.
+- After the spec is on disk, end the turn. Owner approval is a later turn.
 
 ### 5. Gate 2: Consolidated Review
 1. Hand the spec to **doubt-driven-development** and run the five-lens Goldfish review across both ranges.
@@ -91,6 +99,7 @@ Default cadence is the two gates above. Pause section by section only when the o
 
 ## Rules
 - One question per turn. Options must be action-oriented, with no `(Recommended)` prefix on architecture choices.
+- Do not use narration, a research dump, or a pull-request citation as evidence. Cite a file, a probe, or an owner decision.
 - Never present large drafts in chat. Write the artifact and link it.
 - Plain English. No promotional adjectives, no flattery, no apologies.
 - Reviewers are read-only and stateless. A same-context review is not a Goldfish review.

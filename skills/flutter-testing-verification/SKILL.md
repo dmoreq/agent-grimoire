@@ -80,6 +80,7 @@ flutter test --coverage
 - **Shared mutable state across tests**: Never share a mutable `FakeRepository` instance across multiple `test()` blocks without resetting it inside `setUp()`.
 
 ## Related Skills
+- For a bug, write the failing reproduction before the fix. Do not re-run a clean green command when no code changed (`python-testing` Prove-It).
 - Use **flutter-architecture-data** when testing repositories, services, or ViewModels.
 - Use **flutter-state-management** when testing Notifiers, Cubits, or provider wiring.
 - Use **dart-modern-idioms** when Dart async safety or pattern matching affects test structure.

@@ -74,6 +74,7 @@ When auditing an existing module for bloat, duplicate dialect branches, or expor
 
 ## 4. Trust Boundaries & Ceiling Markers
 - **Non-Negotiables**: Never simplify away trust boundaries, security checks, accessibility, or error handling that prevents data loss (`rules/AGENTS.md` §2).
+- **Comment budget**: Keep a file header within about 12 lines. A body comment states a reason, a constraint, an invariant, or a quirk. Do not narrate the next line.
 - **Root Cause vs. Local Band-Aid**: Grep every caller of the target function before editing. One guard at the root cause is a smaller, safer diff than patching five callers. If the root fix is blocked, record the blocker and keep the workaround confined to one layer.
 - **Ceiling Markers**: When shipping a deliberate simplification with a known scaling threshold (e.g., in-memory dict, global lock, linear scan), document the ceiling inline:
   ```python

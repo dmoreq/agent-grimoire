@@ -13,6 +13,7 @@ date_added: "2026-09-22"
 Enforces strict termination discipline for coding agents. Complete the requested task, verify the acceptance criteria with a decisive command, present the proof, and stop. Never continue into unprompted refactoring, speculative cleanup, or endless loop cycles.
 
 - Load `references/subagent-verification.md` when coordinating multi-stage delegated agent workflows or reviewing parent/child verification chains.
+- Load `references/definition-of-done.md` when distinguishing a standing Done bar from this task's acceptance criteria.
 
 ## When to Use
 - Implementation or fix is complete and requires definitive validation
@@ -83,6 +84,7 @@ Keep existing untracked files untouched and out of the commit unless the user ex
 - Pass the reviewer the exact revision you will ship, compare verdict commit SHAs against HEAD, and confirm arrival before acting.
 
 ## Related Skills
+- Use **debugging-and-error-recovery** when a failure's cause is not yet identified.
 - Use **python-testing** to write or debug targeted test assertions.
 - Use **code-review** for pre-merge multi-axis inspection.
 - Use **precommit-initialization** to configure targeted git hook gates.

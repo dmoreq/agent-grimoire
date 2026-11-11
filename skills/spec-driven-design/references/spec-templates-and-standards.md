@@ -141,6 +141,7 @@ Challenge:
 3. Threat Vectors: What are the risks of injection (SQL, command, prompt injection for LLMs), SSRF, auth bypass, and multi-tenancy cross-talk?
 4. Abuse & Exhaustion: How can an adversary exhaust token budgets, saturate CPU/RAM, poison shared data, or trigger cascading denial-of-service?
 5. Authorization Fallback: Does any failure branch fail open or silently fall back to permissive default permissions?
+6. Control tier: Which controls are Always, Ask first, or Never? Is model output treated as untrusted input?
 
 For each finding return: Severity, Dimension, Security Hazard, Hardening Requirement.
 ```
