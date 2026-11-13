@@ -29,7 +29,7 @@ Create clear, accurate, readable charts with Plotly (default for interactive/HTM
 - Use **dashboard-design** when embedding charts into multi-metric KPI strips, ranked breakdown lists, or monitoring grids.
 - Use **ui-accessibility** to audit chart contrast, legends, and text alternatives for WCAG 2.2.
 - Use **data-science** or **polars-duckdb** to compute and validate metrics before plotting.
-- Use **html-report** when exported SVG or Plotly figures must be assembled into one offline HTML deliverable (`dossier`, `zen-garden`, or `chronicle`).
+- Use **html-report** when exported SVG or Plotly figures must be assembled into one offline HTML deliverable. Follow the locked composition.
 - Use **plotly-dash** when the figure becomes an interactive application.
 - Use **technical-reporting** when embedding exported SVG figures into a saved markdown report.
 - Use **data-storytelling** when the chart supports an executive business recommendation.
@@ -60,9 +60,13 @@ Every color in a chart must perform exactly one of four jobs:
 4. **Diverging (deviation around a meaningful zero/baseline)**: Use a symmetric two-hue ramp (`RdBu`, `Coolwarm`, or Crimson-to-Forest) anchored strictly at the neutral reference value (`zmid=0`).
 - **Consistency Invariant**: When generating multiple charts in one analysis, bind each category (`"PlaceSearch"`, `"Historical"`, `"Control"`, `"Treatment"`) to the same CSS variable (`var(--chart-ps)`, `var(--chart-prod)`, `var(--chart-old)`, `var(--chart-pos)`, `var(--chart-neg)`) across every figure.
 
-## 4. Plotly Defaults & Anti-Overlap Rules
+## 4. Plotly Built-In Templates (`simple_white`, `plotly_white`, `ggplot2`) & Anti-Overlap Rules
 - Use `plotly.express` (`px`) for concise construction; refine with `fig.update_layout()` and `fig.update_traces()`.
-- Always set `template="plotly_white"`, explicit `width` and `height` (e.g., `width=900, height=520`), and axis automargins:
+- **Select the Plotly Template Matching the Locked Palette**: `simple-white` uses `simple_white`, `plotly-white` uses `plotly_white`, and `ggplot2-grammar` uses `ggplot2`. Other palettes keep the semantic series in section 3, remapped to that family's published data colors. Do not reuse the dossier clay series on a cool or scientific surface.
+  - **`simple_white`** *(Publication / Tufte Spine)*: Pure `#FFFFFF` canvas, zero interior gridlines, crisp axis lines (`showline=True, ticks="outside"`). Best for high data-ink academic figures, executive print memos, and charts with direct data labels.
+  - **`plotly_white`** *(Default Clean Analytical)*: Pure `#FFFFFF` canvas with delicate `#EBF0F8` gridlines (`1px`) and zero outer plot box. Best for interactive dashboards and multi-series comparisons where gridlines aid value lookup.
+  - **`ggplot2`** *(Wickham / Wilkinson Grammar of Graphics)*: Signature `#EBEBEB` warm-grey plot canvas (`plot_bgcolor="#EBEBEB"`, `paper_bgcolor="#FFFFFF"`) with crisp `#FFFFFF` major and minor gridlines and `#F8766D` / `#00BFC4` / `#619CFF` data marks. Best for statistical distributions, faceted small multiples (`facet_col`), and R/Tidyverse-familiar audiences.
+- Always set an explicit `template`, `width`, and `height` (e.g., `width=900, height=520`), and axis automargins:
   ```python
   fig.update_layout(template="plotly_white", width=900, height=520, margin=dict(l=60, r=40, t=70, b=60))
   fig.update_xaxes(automargin=True, title_text="...")

@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.2.1] - 2026-11-13
+
+### Added
+- **Global Rule (`rules/AGENTS.md` §4)**: Added `Execution Reuse & Artifact Caching Gate (Pre-Run Check)` requiring agents to reuse valid prior outputs/checkpoints when inputs and logic are unchanged, and persist reusable intermediate/final results to disk.
+
+### Changed
+- **Global Rule (`rules/AGENTS.md` §4)**: Updated `Subprocess & Memory Safety` and `Progress Visibility for Long Tasks` to enforce continuous host RAM / OOM monitoring (terminate immediately for parameter tuning at `>= 85%` RAM or rapid swap growth), 1-minute in-script flushed telemetry, and 5-minute agent status reports with current results, `%` completed, `ETA`, and RAM/OOM status.
+
+## [4.2.0] - 2026-11-11
+
+### Changed
+- **Composition grammar (`design-system`)**: Palette, layout, voice, and density are independent axes. A delegated task selects a legal mix from a job band with a stable task-slug hash. HTML reports keep one `data-preset` palette and may set `data-layout` and `data-voice`. Existing reports without those attributes keep the palette's canonical triple.
+
+### Added
+- **Spec-Design-Driven UI/UX Discovery Workflow (`ux-product-shaper`)**: Interactive 2-gate Socratic grill across Surface Mode A/B/C, 13 archetypes in 4 style families, layouts `L1`-`L6`, voices `V1`-`V4`, and density scopes. Unranked trade-offs follow `rules/AGENTS.md` §2. Contradiction Halt and four UI/UX Goldfish lenses stay in the product brief path.
+- **13-preset design catalog (`design-system`, `html-report`, `ux-critic`, `dashboard-design`, `data-visualization`)**: Zen Minimalism expands from 3 warm-beige presets to 7 (`sumi-ink`, `shoji-grid`, `aizome-indigo`, `yugen-noir` added). Scientific/Plotly (`simple-white`, `plotly-white`, `ggplot2-grammar`), Platform Native (`apple-hig`, `material-you`), and Modern Monochrome (`geist-zinc`) publish token rows. Mode C, six layouts, and four typographic voices ship with the catalog.
+
+## [4.1.0] - 2026-11-11
+
+### Added
+- `skills/debugging-and-error-recovery`: stop-the-line triage (reproduce, localize, reduce, fix the cause, guard).
+- Adopted text from the 2026-11-11 agent-skills / Astryx comparison: spec interview stop, Phase 0 map, Prove-It, cite-or-flag, keep-or-revert, comment budget, deprecation compulsory/advisory, Definition of Done reference.
+- Short pattern deltas only: security Always/Ask/Never, API Hyrum/One-Version/idempotency, symptom-first alerts. No new skills for those topics.
+
 ## [4.0.0] - 2026-11-09
 
 ### Changed

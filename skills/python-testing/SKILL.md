@@ -29,6 +29,7 @@ Design and maintain fast, deterministic, high-signal Python test suites with `py
 
 ## Related Skills
 - Required for **Python** behavior changes before **code-review**.
+- Use **debugging-and-error-recovery** when a failure is not yet localized.
 - Use **verify-and-stop** to run the decisive test check once and terminate cleanly.
 
 ## 1. Core Testing Invariants
@@ -71,10 +72,12 @@ Design and maintain fast, deterministic, high-signal Python test suites with `py
   - Place characterization lock tests inside the package that **owns** the symbol under test; a lower-layer library must never import a higher-layer consumer package solely to run tests.
 
 ## 5. Bug-Fixing Loop
-1. **Reproduce** the bug with a minimal failing test (`RED`).
-2. **Isolate** the root cause.
-3. **Fix** the code with the smallest clean diff (`GREEN`).
-4. **Guard** by keeping the regression test in the suite.
+1. **Discover the runner** from the repo config (`pyproject.toml`, `package.json`, `Makefile`). Do not assume `pytest` when another command is the project runner.
+2. **Prove-It.** Commit the minimal failing test before the fix (`RED`).
+3. **Isolate** the root cause. If it is not local, hand off to **debugging-and-error-recovery**.
+4. **Fix** the code with the smallest clean diff (`GREEN`).
+5. **Guard** by keeping the regression test in the suite.
+6. After a clean pass and no code change, do not run the same command again. Reuse that proof.
 
 ## Final Checklist
 - [ ] Tests assert public behavior and contracts, not private internals

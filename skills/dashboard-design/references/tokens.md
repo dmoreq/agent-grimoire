@@ -47,7 +47,7 @@ To keep a single copy, declare each token once with `light-dark()` (`--color-car
 
 ## Integration with Design System (W3C DTCG Tokens)
 
-When operating inside a project governed by the **design-system** skill, map the starter tokens to the semantic tier:
+When a composition is locked, `--color-accent` is that palette's `--intent-primary`, not the starter `#3e63dd`. The starter ramp applies only when no composition is locked. Map the starter names onto the semantic tier:
 - `--color-page` -> `var(--bg-canvas)`
 - `--color-card` -> `var(--bg-surface)`
 - `--color-soft` -> `var(--bg-subtle)`

@@ -28,7 +28,7 @@ Transform validated analysis into a calm, authoritative, decision-ready narrativ
 - **Required:** base the story on validated findings from **data-science**. Do not invent numbers.
 - Use **data-visualization** for supporting charts (layout and overlap live there).
 - Use **technical-reporting** only when the user asked to save a formal technical file.
-- Use **html-report** when the validated narrative must become a stakeholder-facing HTML brief (`dossier`, `zen-garden`, or `chronicle`).
+- Use **html-report** when the validated narrative must become a stakeholder-facing HTML brief. Follow the locked composition.
 
 ## Core Structure (Architectural Chapters 01-06)
 1. **01 · Hook (The Thesis)** - Open with one declarative sentence naming the core metric, exact delta, and operational consequence.

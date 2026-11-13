@@ -40,6 +40,8 @@ Plan and execute safe replacement, consolidation, or removal of legacy APIs, mod
 2. Who depends on it (internal callers, `__all__` facades, sibling repos, external API/UI consumers)?
 3. Is the replacement proven equivalent on frozen production inputs?
 4. What is the incremental migration path (Adapter, Namespace Shim, Strangler, or Feature Flag)?
+5. Is the deprecation compulsory (break at a named version) or advisory (warning only)?
+6. Is this zombie code: reachable, unowned, and kept only because removal feels risky? Name an owner or schedule removal.
 
 ## 2. Core Equivalence & Migration Rules
 

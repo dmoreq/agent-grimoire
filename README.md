@@ -24,9 +24,10 @@ precept/
 │   ├── data-storytelling/           # Decision-ready narratives for business stakeholders
 │   ├── data-visualization/          # Plotly-first charts, layout optimization & anti-overlap QA
 │   ├── deprecation-migration/       # Safe removal, replacement & sunsetting of legacy APIs (+ 2 references)
-│   ├── design-system/               # 3-tier DTCG tokens, component specs, responsive rules (+ 1 reference)
+│   ├── design-system/               # 3-tier DTCG tokens, component specs, responsive rules (+ 2 references)
 │   ├── doubt-driven-development/    # Adversarial stress-testing of non-trivial architectural choices (+ 1 reference)
 │   ├── dart-modern-idioms/          # Dart 3.x idioms, Effective Dart, async safety, strict analysis (+ 1 reference)
+│   ├── debugging-and-error-recovery/  # Stop-the-line triage: reproduce, localize, fix the cause, guard recurrence
 │   ├── engram-first/                # Fast code-intelligence routing (eg CLI & engram MCP)
 │   ├── flutter-architecture-data/   # Feature-first MVVM, Repository/Service, Result<T> (+ 1 reference)
 │   ├── flutter-codegen-release/     # build_runner, flavors, obfuscation, CI/CD (+ 1 reference)
@@ -53,7 +54,7 @@ precept/
 │   ├── ui-accessibility/            # WCAG 2.2 audits, keyboard/focus, ARIA (+ 1 reference)
 │   ├── ux-critic/                   # Heuristic and visual critique, steering vocabulary (+ 1 reference)
 │   ├── ux-product-shaper/           # Surface Mode, IA, 8-state product briefs (+ 1 reference)
-│   └── verify-and-stop/             # Termination discipline, decisive checks & runaway prevention (+ 1 reference)
+│   └── verify-and-stop/             # Termination discipline, decisive checks & runaway prevention (+ 2 references)
 ├── tests/                           # Automated schema validation & invariant verification
 ├── setup.sh                         # Unified setup (skips Rust & Flutter by default; see --help)
 ├── package.sh                       # Offline distribution packager (tar.gz & zip)
@@ -80,9 +81,10 @@ precept/
 | **`data-storytelling`** | Decision narrative from **already-validated** metrics. Does not analyze or invent numbers. |
 | **`data-visualization`** | Plotly-first clean visual creation, SVG export, text density hygiene, and anti-overlap QA. |
 | **`deprecation-migration`** | Safely sunset, replace, and migrate legacy APIs/systems using Strangler, Adapter, and Feature Flags. |
-| **`design-system`** | Build minimalist 3-tier W3C DTCG tokens, dual light/dark themes, component specs, and responsive layout with a YAGNI token diet. |
+| **`design-system`** | Build minimalist 3-tier W3C DTCG tokens, 7 Zen archetypes, 4 typographic voices, 6 layout geometries, dual light/dark themes, and component specs with a YAGNI token diet. |
 | **`doubt-driven-development`** | Adversarial review to stress-test high-risk decisions and uncover unstated assumptions. |
 | **`dart-modern-idioms`** | Dart 3.x sealed classes, exhaustive switches, pattern matching, records, Effective Dart, async safety, strict analysis. |
+| **`debugging-and-error-recovery`** | Stop-the-line triage: reproduce, localize, reduce, fix the cause, and guard recurrence. |
 | **`engram-first`** | Routing policy for code agents with the `eg` code index: callers, callees, impact, paths, helper search, duplicate detection, and memory. |
 | **`flutter-architecture-data`** | Feature-first MVVM architecture, Repository/Service patterns, `Result<T>`/`Command`, immutable models, DI. |
 | **`flutter-codegen-release`** | `build_runner` codegen, dependency hygiene, crash bootstrap, flavors, obfuscation, CI/CD release gates. |
@@ -91,7 +93,7 @@ precept/
 | **`flutter-state-management`** | Riverpod 3.x Notifier/AsyncNotifier, Bloc/Cubit, native `ChangeNotifier`/`ValueNotifier` state patterns. |
 | **`flutter-testing-verification`** | Deterministic unit/widget/golden/integration tests, Fakes over Mocks, `pumpApp` harness, multi-viewport testing. |
 | **`flutter-ui-responsive-a11y`** | Adaptive responsive UI, Material 3 theming, `Semantics`, RTL/ARB localization, RenderFlex overflow fixes. |
-| **`html-report`** | Single-file, self-contained HTML reports with a blocking structural and rendered visual gate, single-preset output from three Zen presets, dual-theme tokens, and print/PDF fidelity. |
+| **`html-report`** | Single-file, self-contained HTML reports with a blocking structural and rendered visual gate, single-preset output from seven Zen presets, dual-theme tokens, and print/PDF fidelity. |
 | **`plotly-dash`** | Production-grade Plotly Dash apps with modular layouts, disciplined callbacks, state hygiene & performance. |
 | **`polars-duckdb`** | High-performance tabular data wrangling, ETL, and analytical SQL with Polars, DuckDB, PyArrow, and Pandas 2.x. |
 | **`precommit-initialization`** | Initialize, standardize, and maintain pre-commit hooks, multi-stage pipelines (pre-commit, pre-push), and security hygiene gates across Python, Rust, and polyglot repositories. |
@@ -107,8 +109,8 @@ precept/
 | **`tech-research`** | SOTA methods, benchmark evaluation, and conditional recommendations before implementation. |
 | **`technical-reporting`** | Saved formal markdown: benchmarks, ADRs, Mermaid, asset paths. Not Plotly charts or QBR narrative. |
 | **`ui-accessibility`** | Audit WCAG 2.2 AA, keyboard and focus models, ARIA, contrast, target size, and false minimalism. |
-| **`ux-critic`** | Red-team rendered UI with Dieter Rams, heuristic critique, a subtraction pass, and one required deletion. |
-| **`ux-product-shaper`** | Shape Surface Mode, IA, user flows, YAGNI scope, and the 8-state contract before UI work. |
+| **`ux-critic`** | Red-team rendered UI with Dieter Rams, heuristic critique, 5-axis design compliance, a subtraction pass, and one required deletion. |
+| **`ux-product-shaper`** | Spec-design-driven UI/UX discovery: 5-axis Socratic grill (Gate 1 & Gate 2), Surface Mode (A/B/C), Zen archetype, layout geometry, and 8-state contract. |
 | **`verify-and-stop`** | Disciplined execution and termination protocol. Verifies minimal acceptance criteria with a single decisive check, presents proof, and stops immediately without runaway loops. |
 
 ---
@@ -129,6 +131,7 @@ precept/
 | Tone, no emoji, LaTeX minimization, ASD-STE100, git/secrets, memory safety, temp files | `rules/AGENTS.md` §1 & §4 | Skills |
 | YAGNI Code Generation Ladder (stdlib/native first) | `rules/AGENTS.md` §2 | Skills (kernel-wide) |
 | Verify-and-Stop Invariant (runaway prevention) | `rules/AGENTS.md` §3 + `verify-and-stop` | Ongoing loops |
+| Stop-the-line debugging triage | `debugging-and-error-recovery` | Green-suite termination (`verify-and-stop`) |
 | Static code graph navigation, helper discovery, duplicate detection | `engram-first` | Broad grep loops, full file reads |
 | Subagent delegation, parallel planning & peer-review | `rules/AGENTS.md` §1 | Skills |
 | Skip formal reports; tables first; date-prefixed files | `rules/AGENTS.md` §5 stub | Full viz encyclopedias |
@@ -206,6 +209,7 @@ precept/
 | **Rust Concurrency**| **`rust-async-patterns`** | Tokio, channels, streams | `rust-pro`; `code-review` | Optional (Rust skill) |
 | **Optimization** | **`algorithm-optimization`** | KPI/quality degradation on real data | `data-visualization` (charts); `technical-reporting` or `html-report` (saved deliverable) | Optional |
 | **Testing** | **`python-testing`** | Logic change from `python-pro` or cleanup | Pre-merge verification safety net | **Required for logic changes** |
+| **Debug** | **`debugging-and-error-recovery`** | Unexpected failure whose cause is unknown | Reduced case + regression guard; `python-testing`; `verify-and-stop` | Optional |
 | **Cleanup** | **`code-simplification`** | Deep nesting, Cyclomatic/Cognitive complexity flagged | Verified by tests; returned to `code-review` | Optional |
 | **Smells** | **`code-smells`** | Named Fowler smells in a Python tree or a review | Candidate table; `code-simplification` for a rewrite; `codebase-minimalism` for semantic duplication; `verify-and-stop` | Optional |
 | **QA Gate** | **`code-review`** | PR/diff from implementation or refactoring | Merged when passing six review axes and complexity gates; `codebase-contracts` for drift; `ui-accessibility` for UI review; `html-report` for an HTML audit page | **Required on merge path** |
@@ -368,6 +372,7 @@ code-review
 | Build PyO3 / Maturin extension for Python hotspot | **`pyo3-maturin`** |
 | Optimize quality / accuracy / KPI on real data | **`algorithm-optimization`** |
 | Write or debug pytest suites | **`python-testing`** |
+| Unexpected failure; cause not yet known | **`debugging-and-error-recovery`** |
 | Refactor working code to reduce nesting/complexity | **`code-simplification`** |
 | Name Fowler code smells in a Python tree | **`code-smells`** |
 | Review PR/diff before merge (correctness, safety, YAGNI) | **`code-review`** |
@@ -397,10 +402,10 @@ Skills install into `~/.agents/skills` because that is the root those hosts alre
 
 ```bash
 chmod +x setup.sh
-./setup.sh                 # Installs 32 of 43 skills (skips 3 Rust + 8 Flutter/Dart)
-./setup.sh --with-rust     # 35 of 43: adds Rust skills
-./setup.sh --with-flutter  # 40 of 43: adds Flutter/Dart skills
-./setup.sh --all           # 43 of 43: adds both optional groups
+./setup.sh                 # Installs 33 of 44 skills (skips 3 Rust + 8 Flutter/Dart)
+./setup.sh --with-rust     # 36 of 44: adds Rust skills
+./setup.sh --with-flutter  # 41 of 44: adds Flutter/Dart skills
+./setup.sh --all           # 44 of 44: adds both optional groups
 ```
 
 Useful flags:

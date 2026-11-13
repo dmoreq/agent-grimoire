@@ -38,6 +38,8 @@ Load `references/implementation-playbook.md` **only** for a named profiler recip
 3. Simple readable fixes and container/representation upgrades before rewrites.
 4. Re-measure after each meaningful change in a clean process.
 5. Stop when the target is met.
+6. Keep or revert. If the re-measure misses the bar set before the run, revert the change.
+7. Leave a regression check that fails when the hotspot crosses the measured baseline.
 
 ## Optimization Process
 

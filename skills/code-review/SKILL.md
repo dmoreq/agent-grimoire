@@ -85,7 +85,7 @@ For diff reviews, execute automated and structural gates before manual semantic 
 4. **Omission Checklist (Verify What Is Missing)**:
    - **Error Path Cleanup**: Are open resources (files, sockets, DB transactions) released in failure branches?
    - **Callers of Deleted Symbols & Dangling References**: Confirm every reference—code importer, sibling script, and non-code config/docs—was retargeted in the same commit. Grep the whole tree (`git grep -nw '<name>' <rev> -- .`), never hand-written globs that risk missing files at different depths. A deleted target still referenced is a **Critical** dangling reference.
-   - **Observability**: Are new error states logged with contextual parameters?
+   - **Observability**: Are new error states logged with contextual parameters? A new metric names the user-visible symptom first.
    - **Negative & Edge Tests**: Are empty collections, `None` inputs, and timeouts tested?
    - **Documentation Sync**: Are `CHANGELOG.md`, `__all__`, or `README.md` updated for public changes? If a directory README or spec documents the changed behavior, run a **codebase-contracts** drift check instead of guessing.
    - **Commit-Message Claims vs Artifact**: Verify each concrete claim in the commit message against the tree, not the intent. A message asserting a cleanup ("no longer references X", "removes Y") is a testable statement; if the tree still violates it, that is a finding, and the message itself becomes misleading evidence for downstream reviewers.
@@ -93,7 +93,8 @@ For diff reviews, execute automated and structural gates before manual semantic 
 When re-reviewing an amended commit: verify the delta directly (`git diff <old> <new> --name-only`) to confirm it contains ONLY requested changes. Re-run the original check against the new revision to verify closure.
 5. **Semantic & Architectural Review**:
    - **Correctness**: Does what it claims; edge and error paths; no obvious race conditions.
-   - **Safety & Security**: Inputs validated; parameterized queries; no hardcoded or leaked secrets.
+   - **Safety & Security**: Inputs validated; parameterized queries; no hardcoded or leaked secrets. Classify each control as Always, Ask first, or Never. Treat model output as untrusted input.
+   - **Observability**: Name the user-visible symptom before adding a metric. Alert on that symptom, not on the suspected cause.
    - **Performance & Concurrency**: No extra work on hot paths; no shared mutable state across async tasks/threads without locks.
    - **Maintainability**: Do not detect smells here. Hand structural smells to **code-smells** and cross-module duplication to **codebase-minimalism**. Do not open a second finding for the same row.
    - When a **code-smells** plan marks a hard-threshold breach from `rules/AGENTS.md` §3, record **Important**. Record **Critical** only when that plan marks it extreme: more than double the hard cap, with no written justification.
