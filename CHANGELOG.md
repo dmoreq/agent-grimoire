@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.2.1] - 2026-11-13
+
+### Added
+- **Global Rule (`rules/AGENTS.md` §4)**: Added `Execution Reuse & Artifact Caching Gate (Pre-Run Check)` requiring agents to reuse valid prior outputs/checkpoints when inputs and logic are unchanged, and persist reusable intermediate/final results to disk.
+
+### Changed
+- **Global Rule (`rules/AGENTS.md` §4)**: Updated `Subprocess & Memory Safety` and `Progress Visibility for Long Tasks` to enforce continuous host RAM / OOM monitoring (terminate immediately for parameter tuning at `>= 85%` RAM or rapid swap growth), 1-minute in-script flushed telemetry, and 5-minute agent status reports with current results, `%` completed, `ETA`, and RAM/OOM status.
+
 ## [4.2.0] - 2026-11-11
 
 ### Changed

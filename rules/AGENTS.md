@@ -99,18 +99,25 @@ repository's `AGENTS.md`, not here.
 - **Git Safety**: Do not run destructive git commands (`reset --hard`, force-push) unless explicitly requested.
 - **High-Risk Operations**: Treat production data stores, live Elasticsearch, and large dataset jobs as high-risk: confirm before running, keep limits/workers conservative, and prefer dry-runs/samples.
 - **Tool Isolation**: Prefer the repository's virtualenv / `uv` / package manager over global tool installations.
+- **Execution Reuse & Artifact Caching Gate (Pre-Run Check)**:
+  - Before running any heavy or time-consuming script, evaluate:
+    1. Whether a valid prior output, checkpoint, or cached result already exists for the same inputs and logic. Never re-run a script when inputs and code are unchanged—reuse the existing output directly.
+    2. Whether the script's output can be reused by downstream steps in the plan. If reusable, persist the intermediate or final results to disk (e.g., Parquet, JSON, SQLite, or checkpoint files) so subsequent steps read from the saved artifact instead of re-computing.
 - **Subprocess & Memory Safety**:
   - Guard external calls (Python scripts, batch jobs, CLI commands) against out-of-memory (OOM) host freezes.
   - Verify logic on small samples (100–1,000 rows or dry-runs) before executing full-volume processing.
   - Stream or chunk datasets line-by-line; never load unbounded files entirely into memory at once.
   - Bound worker processes conservatively (target <= 4 workers); avoid unconstrained process pools.
-  - Set explicit command timeouts; terminate runaway processes immediately if memory escalates.
+  - Set explicit command timeouts; monitor host RAM continuously and terminate the process immediately to tune parameters (batch size, chunking, worker count) if memory usage risks OOM (e.g., host RAM >= 85% or rapid swap growth).
 - **Progress Visibility for Long Tasks**:
-  - Scripts, batch jobs, or loops running over 5 seconds (or >100 iterations) must provide continuous progress feedback.
-  - Use `tqdm` (or `tqdm.auto`) for batch workloads when installed or permissible.
-  - Fall back to standard library `logging` or periodic flushed stdout counters if extra dependencies are restricted.
-  - Output completed counts, total items, elapsed time, and rate or estimated completion.
-  - Throttle reporting intervals (for example, every 5%–10% or 1–5 seconds) to avoid log flooding.
+  - Scripts, batch jobs, or loops running over 5 seconds (or >100 iterations) must provide continuous progress feedback (`tqdm`, `logging`, or flushed stdout counters).
+  - **In-Script Telemetry (Every 1 Minute)**: Heavy scripts (> 60 seconds) must emit a flushed progress log every 1 minute (60 seconds).
+  - **Agent Status Report (Every 5 Minutes)**: For tasks running >= 5 minutes, the agent must report progress to the user every 5 minutes.
+  - Every 1-minute in-script log and 5-minute agent report must include:
+    1. **Current results achieved** (processed count, intermediate metrics, or current best score).
+    2. **Completion percentage** (`%` completed of total workload).
+    3. **Estimated Time Remaining (`ETA`)** based on elapsed throughput.
+    4. **Host RAM & OOM risk status** (process RSS, host RAM `%`, OOM risk check; if OOM risk is detected, stop the process immediately and tune before resuming).
 - **Temporary File Strategy**:
   - Use a dedicated, gitignored temporary directory (e.g., `.tmp/` or conversation scratch directory) for intermediate files, downloads, extracts, and scratch builds.
   - Ensure the temporary directory is listed in `.gitignore` before creating transient files.
